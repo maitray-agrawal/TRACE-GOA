@@ -1,0 +1,117 @@
+// ============================================================================
+// TigerGraph GSQL Schema Definition for HHGOA Fraud Investigation
+// Graph Name: FraudInvestigationGraph
+// ============================================================================
+
+CREATE GRAPH FraudInvestigationGraph()
+
+USE GRAPH FraudInvestigationGraph
+
+// ----------------------------------------------------------------------------
+// Vertices
+// ----------------------------------------------------------------------------
+CREATE VERTEX Customer(
+    PRIMARY_ID id STRING,
+    first_name STRING,
+    last_name STRING,
+    phone STRING,
+    risk_tier STRING,
+    created_at UINT
+) WITH STATS="OUTDEGREE_BY_EDGETYPE"
+
+CREATE VERTEX Account(
+    PRIMARY_ID id STRING,
+    account_type STRING,
+    status STRING,
+    balance DOUBLE,
+    currency STRING DEFAULT "USD"
+) WITH STATS="OUTDEGREE_BY_EDGETYPE"
+
+CREATE VERTEX Transaction(
+    PRIMARY_ID id STRING,
+    amount DOUBLE,
+    timestamp UINT,
+    product_code STRING,
+    risk_score DOUBLE,
+    billing_region STRING,
+    dist1 DOUBLE,
+    dist2 DOUBLE
+) WITH STATS="OUTDEGREE_BY_EDGETYPE"
+
+CREATE VERTEX Card(
+    PRIMARY_ID id STRING,
+    bin STRING,
+    issuer STRING,
+    brand STRING,
+    category STRING
+) WITH STATS="OUTDEGREE_BY_EDGETYPE"
+
+CREATE VERTEX Device(
+    PRIMARY_ID id STRING,
+    device_type STRING,
+    os_name STRING,
+    browser_name STRING,
+    screen_resolution STRING,
+    is_emulator BOOL
+) WITH STATS="OUTDEGREE_BY_EDGETYPE"
+
+CREATE VERTEX IP(
+    PRIMARY_ID id STRING,
+    ip_type STRING,
+    country_code STRING,
+    isp STRING,
+    reputation DOUBLE
+) WITH STATS="OUTDEGREE_BY_EDGETYPE"
+
+CREATE VERTEX Email(
+    PRIMARY_ID id STRING,
+    domain STRING,
+    is_disposable BOOL
+) WITH STATS="OUTDEGREE_BY_EDGETYPE"
+
+CREATE VERTEX Address(
+    PRIMARY_ID id STRING,
+    region STRING,
+    country STRING,
+    postal_code STRING
+) WITH STATS="OUTDEGREE_BY_EDGETYPE"
+
+CREATE VERTEX Merchant(
+    PRIMARY_ID id STRING,
+    category STRING,
+    risk_level STRING,
+    terminal_count INT
+) WITH STATS="OUTDEGREE_BY_EDGETYPE"
+
+CREATE VERTEX Case(
+    PRIMARY_ID id STRING,
+    trigger_type STRING,
+    risk_score DOUBLE,
+    confidence DOUBLE,
+    status STRING,
+    final_outcome STRING,
+    created_at UINT,
+    closed_at UINT
+) WITH STATS="OUTDEGREE_BY_EDGETYPE"
+
+CREATE VERTEX FraudPattern(
+    PRIMARY_ID id STRING,
+    name STRING,
+    severity STRING,
+    description STRING
+) WITH STATS="OUTDEGREE_BY_EDGETYPE"
+
+// ----------------------------------------------------------------------------
+// Edges
+// ----------------------------------------------------------------------------
+CREATE DIRECTED EDGE OWNS(FROM Customer, TO Account) WITH REVERSE_EDGE="OWNED_BY"
+CREATE DIRECTED EDGE PERFORMS_TRANSACTION(FROM Account, TO Transaction, timestamp UINT) WITH REVERSE_EDGE="TRANSACTION_OF"
+CREATE DIRECTED EDGE USES_CARD(FROM Transaction, TO Card) WITH REVERSE_EDGE="CARD_USED_IN"
+CREATE DIRECTED EDGE USES_DEVICE(FROM Transaction, TO Device) WITH REVERSE_EDGE="DEVICE_USED_IN"
+CREATE DIRECTED EDGE ORIGINATES_FROM_IP(FROM Transaction, TO IP) WITH REVERSE_EDGE="IP_ORIGIN_OF"
+CREATE DIRECTED EDGE ASSOCIATED_EMAIL(FROM Transaction, TO Email) WITH REVERSE_EDGE="EMAIL_ASSOCIATED_WITH"
+CREATE DIRECTED EDGE SHIPPED_TO_ADDRESS(FROM Transaction, TO Address) WITH REVERSE_EDGE="ADDRESS_SHIPPED_TO"
+CREATE DIRECTED EDGE INVOLVES_MERCHANT(FROM Transaction, TO Merchant) WITH REVERSE_EDGE="MERCHANT_INVOLVED_IN"
+CREATE DIRECTED EDGE FLAGGED_IN_CASE(FROM Transaction, TO Case) WITH REVERSE_EDGE="CASE_CONTAINS_TRANSACTION"
+CREATE DIRECTED EDGE INVOLVES_ENTITY(FROM Case, TO Customer) WITH REVERSE_EDGE="CUSTOMER_FLAGGED_IN_CASE"
+CREATE DIRECTED EDGE IDENTIFIED_PATTERN(FROM Case, TO FraudPattern, confidence DOUBLE) WITH REVERSE_EDGE="PATTERN_IDENTIFIED_IN"

@@ -1,0 +1,38 @@
+// ============================================================================
+// Query: device_reuse_detection
+// Description: Identifies devices associated with multiple distinct accounts,
+// customers, or credit cards within a configurable time window.
+// ============================================================================
+
+CREATE OR REPLACE QUERY device_reuse_detection(STRING target_device_id, INT threshold = 2) FOR GRAPH FraudInvestigationGraph {
+    TYPEDEF TUPLE<STRING txn_id, DOUBLE amount, UINT timestamp, STRING card_id, STRING account_id> TxnInfo;
+    MapAccum<VERTEX<Device>, SetAccum<STRING>> @@device_accounts;
+    MapAccum<VERTEX<Device>, SetAccum<STRING>> @@device_cards;
+    MapAccum<VERTEX<Device>, ListAccum<TxnInfo>> @@device_txns;
+
+    StartDevice = { Device.* };
+    IF target_device_id != "" THEN
+        StartDevice = SELECT d FROM StartDevice:d WHERE d.id == target_device_id;
+    END;
+
+    Txns = SELECT t FROM StartDevice:d -(<USES_DEVICE:e)- Transaction:t
+           ACCUM
+               @@device_txns += (d -> TxnInfo(t.id, t.amount, t.timestamp, "", ""));
+
+    // Traverse to cards used
+    Cards = SELECT c FROM Txns:t -(USES_CARD:e)- Card:c
+            ACCUM
+                FOREACH (d, tList) IN @@device_txns DO
+                    FOREACH item IN tList DO
+                        IF item.txn_id == t.id THEN
+                            @@device_cards += (d -> c.id);
+                        END;
+                    END;
+                END;
+
+    // Filter to devices exceeding reuse threshold
+    SuspiciousDevices = SELECT d FROM StartDevice:d
+                        WHERE @@device_cards.get(d).size() >= threshold;
+
+    PRINT SuspiciousDevices, @@device_cards, @@device_txns;
+}

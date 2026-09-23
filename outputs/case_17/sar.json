@@ -1,0 +1,46 @@
+{
+  "document_header": {
+    "filing_type": "SUSPICIOUS_ACTIVITY_REPORT",
+    "status": "DRAFT / SIMULATED FOR HACKATHON",
+    "statutory_authority": "Bank Secrecy Act, 31 U.S.C. 5318(g); 31 CFR Chapter X",
+    "generated_at": "2026-09-23T16:30:17Z",
+    "filing_institution": "HHGOA Federal Financial Reserve Bank",
+    "case_reference_id": "CASE-017"
+  },
+  "subjects": [
+    {
+      "subject_id": "CUST_0017",
+      "relationship_role": "PRIMARY_SUSPECT",
+      "risk_tier": "HIGH"
+    }
+  ],
+  "suspicious_activity_summary": {
+    "primary_typology": "DEVICE_FARM",
+    "aggregate_amount_usd": 12500.0,
+    "risk_score": 0.9,
+    "confidence_score": 0.917,
+    "activity_start_time": 1715061200,
+    "activity_end_time": 1715061200,
+    "transaction_count": 1,
+    "transactions_involved": [
+      "TXN_BENCH_017"
+    ]
+  },
+  "fraud_indicators_and_graph_evidence": [
+    "Device DEV_0028 linked to 5 distinct payment cards/accounts",
+    "Elevated baseline transaction anomaly score (0.900)",
+    "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
+  ],
+  "investigation_findings": [],
+  "narrative_rationale": "Investigation docket CASE-017 revealed structured anomalies consistent with DEVICE_FARM. Graph analysis through TigerGraph uncovered cross-entity linkages involving subject CUST_0017. Cumulative aggregate activity of $12500.00 satisfies the $5,000 BSA threshold for mandatory suspicious activity reporting. Internal controls and policy constraints require immediate account freeze and supervisory escalation.",
+  "regulatory_policy_basis": [
+    "FinCEN 31 CFR \u00a7 1020.320: Reports by banks of suspicious transactions",
+    "FFIEC Bank Secrecy Act / Anti-Money Laundering Examination Manual",
+    "HHGOA AML Policy Section 4.2: Automated Graph Syndicate Escalations"
+  ],
+  "filing_disposition": {
+    "recommended_status": "SUBMIT_TO_COMPLIANCE",
+    "requires_signoff_by": "FRAUD_MANAGER",
+    "law_enforcement_contact_recommended": true
+  }
+}

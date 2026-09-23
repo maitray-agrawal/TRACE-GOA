@@ -1,0 +1,68 @@
+{
+  "case_id": "CASE-006",
+  "status": "RESOLVED",
+  "risk_score": 0.22,
+  "confidence": 0.415,
+  "findings": [
+    "Investigation CASE-006 concluded with risk 0.22 and confidence 0.41. Patterns identified: None. Primary recommendation: ALLOW_TRANSACTION."
+  ],
+  "timeline": [
+    {
+      "step_name": "TRIGGER_INGEST",
+      "status": "COMPLETED",
+      "details": "Ingesting fraud signal trigger and initializing investigation docket",
+      "timestamp": 1790181017.0568328,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "GRAPH_INVESTIGATION",
+      "status": "COMPLETED",
+      "details": "Querying TigerGraph 2-hop neighborhood for transaction TXN_BENCH_006",
+      "timestamp": 1790181017.0642083,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "EVIDENCE_COLLECTION",
+      "status": "COMPLETED",
+      "details": "Synthesizing GraphRAG evidence pack from graph topologies and institutional policy",
+      "timestamp": 1790181017.069012,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "FRAUD_PATTERN_DETECTION",
+      "status": "COMPLETED",
+      "details": "Evaluating 5 canonical fraud typologies against deterministic pattern engine",
+      "timestamp": 1790181017.0693586,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "RISK_ASSESSMENT",
+      "status": "COMPLETED",
+      "details": "Calculating deterministic multi-factor risk and confidence scores",
+      "timestamp": 1790181017.0697556,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "ACTION_PLANNER",
+      "status": "COMPLETED",
+      "details": "Formulating prioritized Next-Best Action candidates against PolicyEngine",
+      "timestamp": 1790181017.069792,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "ACTION_EXECUTION",
+      "status": "COMPLETED",
+      "details": "Executing mock action ALLOW_TRANSACTION (No supervisor approval required)",
+      "timestamp": 1790181017.069856,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "INVESTIGATION_COMPLETE",
+      "status": "COMPLETED",
+      "details": "Investigation complete. Current status: RESOLVED",
+      "timestamp": 1790181017.0854034,
+      "time_str": "22:00:17"
+    }
+  ],
+  "detected_patterns": []
+}

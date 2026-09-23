@@ -1,0 +1,9 @@
+{
+  "case_id": "CASE-019",
+  "risk_score": 0.64,
+  "confidence": 0.8,
+  "primary_fraud_pattern": "NONE",
+  "decision_summary": "Investigation CASE-019 concluded with risk 0.64 and confidence 0.80. Patterns identified: None. Primary recommendation: MONITOR_TRANSACTION.",
+  "requires_approval": false,
+  "approval_route": "NONE"
+}

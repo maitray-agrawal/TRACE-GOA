@@ -1,0 +1,9 @@
+{
+  "case_id": "CASE-018",
+  "risk_score": 0.84,
+  "confidence": 0.902,
+  "primary_fraud_pattern": "CARD_TESTING",
+  "decision_summary": "Investigation CASE-018 concluded with risk 0.84 and confidence 0.90. Patterns identified: Velocity Card Testing, Account Takeover & Address Laundering. Primary recommendation: BLOCK_TRANSACTION.",
+  "requires_approval": true,
+  "approval_route": "SENIOR_ANALYST"
+}

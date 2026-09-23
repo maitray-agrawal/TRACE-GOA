@@ -1,0 +1,40 @@
+{
+  "case_id": "CASE-016",
+  "recommended_actions": [
+    {
+      "action": "BLOCK_TRANSACTION",
+      "priority": "HIGH",
+      "confidence": 0.89,
+      "reason": "Transaction blocking requires Senior Analyst review.",
+      "supporting_evidence": [
+        "Shipping address distance divergence: dist2 = 350.0 miles from historical billing address",
+        "Originating IP distance divergence: dist1 = 25.0 miles",
+        "Elevated baseline transaction anomaly score (0.930)"
+      ],
+      "policy_basis": [
+        "POL-003: Payment Authorization Denial Standard"
+      ],
+      "approval_required": true,
+      "approval_route": "SENIOR_ANALYST",
+      "execution_status": "PENDING"
+    },
+    {
+      "action": "ESCALATE_TO_ANALYST",
+      "priority": "HIGH",
+      "confidence": 0.89,
+      "reason": "Action permitted subject to supervisory concurrence.",
+      "supporting_evidence": [
+        "Shipping address distance divergence: dist2 = 350.0 miles from historical billing address",
+        "Originating IP distance divergence: dist1 = 25.0 miles",
+        "Elevated baseline transaction anomaly score (0.930)"
+      ],
+      "policy_basis": [
+        "POL-GEN: General Investigation Guidance"
+      ],
+      "approval_required": true,
+      "approval_route": "ANALYST",
+      "execution_status": "PENDING"
+    }
+  ],
+  "executed_actions": []
+}

@@ -1,0 +1,187 @@
+{
+  "case_id": "CASE-001",
+  "trigger_txn_id": "TXN_BENCH_001",
+  "subject_customer_id": "CUST_0001",
+  "status": "AWAITING_APPROVAL",
+  "risk_score": 0.94,
+  "confidence": 0.9550000000000001,
+  "fraud_patterns": [
+    "DEVICE_FARM",
+    "ATO_ADDRESS_LAUNDER"
+  ],
+  "supporting_evidence": [
+    {
+      "id": "EV_SUP_1",
+      "source": "GRAPH",
+      "direction": "SUPPORTING",
+      "title": "Device DEV_0001 exhibits headless/emulator signature",
+      "details": {
+        "pattern_id": "DEVICE_FARM",
+        "name": "Device Emulation Farm",
+        "confidence": 0.8,
+        "supporting_evidence": [
+          "Device DEV_0001 exhibits headless/emulator signature",
+          "Device DEV_0001 linked to 4 distinct payment cards/accounts"
+        ],
+        "contradicting_evidence": [],
+        "entities": [
+          "DEV_0001"
+        ],
+        "transactions": [
+          "TXN_BENCH_001"
+        ],
+        "graph_paths": [
+          "Transaction(TXN_BENCH_001) -> Device(DEV_0001) <- Multiple Cards/Accounts"
+        ]
+      },
+      "weight": 1.0,
+      "timestamp": 1790181016.7930942
+    },
+    {
+      "id": "EV_SUP_2",
+      "source": "GRAPH",
+      "direction": "SUPPORTING",
+      "title": "Device DEV_0001 linked to 4 distinct payment cards/accounts",
+      "details": {
+        "pattern_id": "DEVICE_FARM",
+        "name": "Device Emulation Farm",
+        "confidence": 0.8,
+        "supporting_evidence": [
+          "Device DEV_0001 exhibits headless/emulator signature",
+          "Device DEV_0001 linked to 4 distinct payment cards/accounts"
+        ],
+        "contradicting_evidence": [],
+        "entities": [
+          "DEV_0001"
+        ],
+        "transactions": [
+          "TXN_BENCH_001"
+        ],
+        "graph_paths": [
+          "Transaction(TXN_BENCH_001) -> Device(DEV_0001) <- Multiple Cards/Accounts"
+        ]
+      },
+      "weight": 1.0,
+      "timestamp": 1790181016.7931042
+    },
+    {
+      "id": "EV_SUP_3",
+      "source": "GRAPH",
+      "direction": "SUPPORTING",
+      "title": "Elevated baseline transaction anomaly score (0.940)",
+      "details": {
+        "pattern_id": "ATO_ADDRESS_LAUNDER",
+        "name": "Account Takeover & Address Laundering",
+        "confidence": 0.72,
+        "supporting_evidence": [
+          "Elevated baseline transaction anomaly score (0.940)"
+        ],
+        "contradicting_evidence": [
+          "Shipping address matches historical registered billing location"
+        ],
+        "entities": [],
+        "transactions": [
+          "TXN_BENCH_001"
+        ],
+        "graph_paths": [
+          "Transaction(TXN_BENCH_001) -> Divergent Delivery Address (dist2: 0.0 mi)"
+        ]
+      },
+      "weight": 1.0,
+      "timestamp": 1790181016.7931087
+    },
+    {
+      "id": "EV_STEPUP_4",
+      "source": "EXTERNAL_STEP_UP",
+      "direction": "SUPPORTING",
+      "title": "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)",
+      "details": {
+        "status": "FAILED_TIMEOUT",
+        "device_id": "UNKNOWN"
+      },
+      "weight": 1.0,
+      "timestamp": 1790181016.8077214
+    }
+  ],
+  "contradicting_evidence": [
+    {
+      "id": "EV_CON_1",
+      "source": "GRAPH",
+      "direction": "CONTRADICTING",
+      "title": "Shipping address matches historical registered billing location",
+      "details": {
+        "pattern_id": "ATO_ADDRESS_LAUNDER",
+        "name": "Account Takeover & Address Laundering",
+        "confidence": 0.72,
+        "supporting_evidence": [
+          "Elevated baseline transaction anomaly score (0.940)"
+        ],
+        "contradicting_evidence": [
+          "Shipping address matches historical registered billing location"
+        ],
+        "entities": [],
+        "transactions": [
+          "TXN_BENCH_001"
+        ],
+        "graph_paths": [
+          "Transaction(TXN_BENCH_001) -> Divergent Delivery Address (dist2: 0.0 mi)"
+        ]
+      },
+      "weight": 1.0,
+      "timestamp": 1790181016.7931125
+    }
+  ],
+  "missing_evidence": [
+    "Customer out-of-band biometric/OTP confirmation",
+    "Secondary device location match"
+  ],
+  "uncertainty_level": "RESOLVED",
+  "findings": [
+    "Investigation CASE-001 concluded with risk 0.94 and confidence 0.96. Patterns identified: Device Emulation Farm, Account Takeover & Address Laundering. Primary recommendation: BLOCK_TRANSACTION.",
+    "Device DEV_0001 exhibits headless/emulator signature",
+    "Device DEV_0001 linked to 4 distinct payment cards/accounts",
+    "Elevated baseline transaction anomaly score (0.940)"
+  ],
+  "recommended_actions": [
+    {
+      "action": "BLOCK_TRANSACTION",
+      "priority": "HIGH",
+      "confidence": 0.9550000000000001,
+      "reason": "Transaction blocking requires Senior Analyst review.",
+      "supporting_evidence": [
+        "Device DEV_0001 exhibits headless/emulator signature",
+        "Device DEV_0001 linked to 4 distinct payment cards/accounts",
+        "Elevated baseline transaction anomaly score (0.940)"
+      ],
+      "policy_basis": [
+        "POL-003: Payment Authorization Denial Standard"
+      ],
+      "approval_required": true,
+      "approval_route": "SENIOR_ANALYST",
+      "execution_status": "PENDING"
+    },
+    {
+      "action": "BLOCK_ACCOUNT",
+      "priority": "CRITICAL",
+      "confidence": 0.9550000000000001,
+      "reason": "Account freeze requires Fraud Manager authorization.",
+      "supporting_evidence": [
+        "Device DEV_0001 exhibits headless/emulator signature",
+        "Device DEV_0001 linked to 4 distinct payment cards/accounts",
+        "Elevated baseline transaction anomaly score (0.940)"
+      ],
+      "policy_basis": [
+        "POL-002: Executive Account Lockout Directive"
+      ],
+      "approval_required": true,
+      "approval_route": "FRAUD_MANAGER",
+      "execution_status": "PENDING"
+    }
+  ],
+  "executed_actions": [],
+  "approvals": [],
+  "investigator": "TigerGraph-Agent-v1",
+  "final_outcome": null,
+  "created_at": 1790181016.5140803,
+  "updated_at": 1790181016.8215477
+}

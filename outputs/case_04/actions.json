@@ -1,0 +1,38 @@
+{
+  "case_id": "CASE-004",
+  "recommended_actions": [
+    {
+      "action": "FILE_REPORT",
+      "priority": "CRITICAL",
+      "confidence": 0.922,
+      "reason": "SAR filing strictly requires Fraud Manager approval and legal compliance review.",
+      "supporting_evidence": [
+        "Elevated baseline transaction anomaly score (0.920)",
+        "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
+      ],
+      "policy_basis": [
+        "REG-BSA-31CFR: FinCEN Suspicious Activity Reporting"
+      ],
+      "approval_required": true,
+      "approval_route": "FRAUD_MANAGER",
+      "execution_status": "PENDING"
+    },
+    {
+      "action": "BLOCK_ACCOUNT",
+      "priority": "CRITICAL",
+      "confidence": 0.922,
+      "reason": "Account freeze requires Fraud Manager authorization.",
+      "supporting_evidence": [
+        "Elevated baseline transaction anomaly score (0.920)",
+        "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
+      ],
+      "policy_basis": [
+        "POL-002: Executive Account Lockout Directive"
+      ],
+      "approval_required": true,
+      "approval_route": "FRAUD_MANAGER",
+      "execution_status": "PENDING"
+    }
+  ],
+  "executed_actions": []
+}

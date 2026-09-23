@@ -1,0 +1,76 @@
+{
+  "case_id": "CASE-019",
+  "trigger_txn_id": "TXN_BENCH_019",
+  "subject_customer_id": "CUST_0019",
+  "status": "RESOLVED",
+  "risk_score": 0.64,
+  "confidence": 0.8,
+  "fraud_patterns": [],
+  "supporting_evidence": [
+    {
+      "id": "EV_STEPUP_1",
+      "source": "EXTERNAL_STEP_UP",
+      "direction": "SUPPORTING",
+      "title": "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)",
+      "details": {
+        "status": "FAILED_TIMEOUT",
+        "device_id": "UNKNOWN"
+      },
+      "weight": 1.0,
+      "timestamp": 1790181017.7732654
+    }
+  ],
+  "contradicting_evidence": [],
+  "missing_evidence": [
+    "Customer out-of-band biometric/OTP confirmation",
+    "Secondary device location match"
+  ],
+  "uncertainty_level": "RESOLVED",
+  "findings": [
+    "Investigation CASE-019 concluded with risk 0.64 and confidence 0.80. Patterns identified: None. Primary recommendation: MONITOR_TRANSACTION."
+  ],
+  "recommended_actions": [
+    {
+      "action": "MONITOR_TRANSACTION",
+      "priority": "HIGH",
+      "confidence": 0.8,
+      "reason": "Routine operational action permitted without escalation.",
+      "supporting_evidence": [
+        "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
+      ],
+      "policy_basis": [
+        "POL-004: Low-Friction Customer Assurance Protocol"
+      ],
+      "approval_required": false,
+      "approval_route": "NONE",
+      "execution_status": "EXECUTED"
+    },
+    {
+      "action": "WARN_CUSTOMER",
+      "priority": "HIGH",
+      "confidence": 0.8,
+      "reason": "Routine operational action permitted without escalation.",
+      "supporting_evidence": [
+        "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
+      ],
+      "policy_basis": [
+        "POL-004: Low-Friction Customer Assurance Protocol"
+      ],
+      "approval_required": false,
+      "approval_route": "NONE",
+      "execution_status": "PENDING"
+    }
+  ],
+  "executed_actions": [
+    {
+      "action": "MONITOR_TRANSACTION",
+      "executed_at": 1790181017.7733693,
+      "status": "SUCCESS"
+    }
+  ],
+  "approvals": [],
+  "investigator": "TigerGraph-Agent-v1",
+  "final_outcome": null,
+  "created_at": 1790181016.747829,
+  "updated_at": 1790181017.7782483
+}

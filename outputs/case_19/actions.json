@@ -1,0 +1,42 @@
+{
+  "case_id": "CASE-019",
+  "recommended_actions": [
+    {
+      "action": "MONITOR_TRANSACTION",
+      "priority": "HIGH",
+      "confidence": 0.8,
+      "reason": "Routine operational action permitted without escalation.",
+      "supporting_evidence": [
+        "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
+      ],
+      "policy_basis": [
+        "POL-004: Low-Friction Customer Assurance Protocol"
+      ],
+      "approval_required": false,
+      "approval_route": "NONE",
+      "execution_status": "EXECUTED"
+    },
+    {
+      "action": "WARN_CUSTOMER",
+      "priority": "HIGH",
+      "confidence": 0.8,
+      "reason": "Routine operational action permitted without escalation.",
+      "supporting_evidence": [
+        "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
+      ],
+      "policy_basis": [
+        "POL-004: Low-Friction Customer Assurance Protocol"
+      ],
+      "approval_required": false,
+      "approval_route": "NONE",
+      "execution_status": "PENDING"
+    }
+  ],
+  "executed_actions": [
+    {
+      "action": "MONITOR_TRANSACTION",
+      "executed_at": 1790181017.7733693,
+      "status": "SUCCESS"
+    }
+  ]
+}

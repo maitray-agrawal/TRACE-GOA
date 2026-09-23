@@ -1,0 +1,9 @@
+{
+  "case_id": "CASE-003",
+  "risk_score": 0.73,
+  "confidence": 0.84,
+  "primary_fraud_pattern": "ATO_ADDRESS_LAUNDER",
+  "decision_summary": "Investigation CASE-003 concluded with risk 0.73 and confidence 0.84. Patterns identified: Account Takeover & Address Laundering. Primary recommendation: BLOCK_TRANSACTION.",
+  "requires_approval": true,
+  "approval_route": "SENIOR_ANALYST"
+}

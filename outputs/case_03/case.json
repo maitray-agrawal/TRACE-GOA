@@ -1,0 +1,142 @@
+{
+  "case_id": "CASE-003",
+  "trigger_txn_id": "TXN_BENCH_003",
+  "subject_customer_id": "CUST_0003",
+  "status": "AWAITING_APPROVAL",
+  "risk_score": 0.73,
+  "confidence": 0.84,
+  "fraud_patterns": [
+    "ATO_ADDRESS_LAUNDER"
+  ],
+  "supporting_evidence": [
+    {
+      "id": "EV_SUP_1",
+      "source": "GRAPH",
+      "direction": "SUPPORTING",
+      "title": "Shipping address distance divergence: dist2 = 350.0 miles from historical billing address",
+      "details": {
+        "pattern_id": "ATO_ADDRESS_LAUNDER",
+        "name": "Account Takeover & Address Laundering",
+        "confidence": 0.85,
+        "supporting_evidence": [
+          "Shipping address distance divergence: dist2 = 350.0 miles from historical billing address",
+          "Originating IP distance divergence: dist1 = 25.0 miles",
+          "Elevated baseline transaction anomaly score (0.730)"
+        ],
+        "contradicting_evidence": [],
+        "entities": [],
+        "transactions": [
+          "TXN_BENCH_003"
+        ],
+        "graph_paths": [
+          "Transaction(TXN_BENCH_003) -> Divergent Delivery Address (dist2: 350.0 mi)"
+        ]
+      },
+      "weight": 1.0,
+      "timestamp": 1790181016.9056242
+    },
+    {
+      "id": "EV_SUP_2",
+      "source": "GRAPH",
+      "direction": "SUPPORTING",
+      "title": "Originating IP distance divergence: dist1 = 25.0 miles",
+      "details": {
+        "pattern_id": "ATO_ADDRESS_LAUNDER",
+        "name": "Account Takeover & Address Laundering",
+        "confidence": 0.85,
+        "supporting_evidence": [
+          "Shipping address distance divergence: dist2 = 350.0 miles from historical billing address",
+          "Originating IP distance divergence: dist1 = 25.0 miles",
+          "Elevated baseline transaction anomaly score (0.730)"
+        ],
+        "contradicting_evidence": [],
+        "entities": [],
+        "transactions": [
+          "TXN_BENCH_003"
+        ],
+        "graph_paths": [
+          "Transaction(TXN_BENCH_003) -> Divergent Delivery Address (dist2: 350.0 mi)"
+        ]
+      },
+      "weight": 1.0,
+      "timestamp": 1790181016.9056304
+    },
+    {
+      "id": "EV_SUP_3",
+      "source": "GRAPH",
+      "direction": "SUPPORTING",
+      "title": "Elevated baseline transaction anomaly score (0.730)",
+      "details": {
+        "pattern_id": "ATO_ADDRESS_LAUNDER",
+        "name": "Account Takeover & Address Laundering",
+        "confidence": 0.85,
+        "supporting_evidence": [
+          "Shipping address distance divergence: dist2 = 350.0 miles from historical billing address",
+          "Originating IP distance divergence: dist1 = 25.0 miles",
+          "Elevated baseline transaction anomaly score (0.730)"
+        ],
+        "contradicting_evidence": [],
+        "entities": [],
+        "transactions": [
+          "TXN_BENCH_003"
+        ],
+        "graph_paths": [
+          "Transaction(TXN_BENCH_003) -> Divergent Delivery Address (dist2: 350.0 mi)"
+        ]
+      },
+      "weight": 1.0,
+      "timestamp": 1790181016.905633
+    }
+  ],
+  "contradicting_evidence": [],
+  "missing_evidence": [],
+  "uncertainty_level": "LOW",
+  "findings": [
+    "Investigation CASE-003 concluded with risk 0.73 and confidence 0.84. Patterns identified: Account Takeover & Address Laundering. Primary recommendation: BLOCK_TRANSACTION.",
+    "Shipping address distance divergence: dist2 = 350.0 miles from historical billing address",
+    "Originating IP distance divergence: dist1 = 25.0 miles",
+    "Elevated baseline transaction anomaly score (0.730)"
+  ],
+  "recommended_actions": [
+    {
+      "action": "BLOCK_TRANSACTION",
+      "priority": "HIGH",
+      "confidence": 0.84,
+      "reason": "Transaction blocking requires Senior Analyst review.",
+      "supporting_evidence": [
+        "Shipping address distance divergence: dist2 = 350.0 miles from historical billing address",
+        "Originating IP distance divergence: dist1 = 25.0 miles",
+        "Elevated baseline transaction anomaly score (0.730)"
+      ],
+      "policy_basis": [
+        "POL-003: Payment Authorization Denial Standard"
+      ],
+      "approval_required": true,
+      "approval_route": "SENIOR_ANALYST",
+      "execution_status": "PENDING"
+    },
+    {
+      "action": "ESCALATE_TO_ANALYST",
+      "priority": "HIGH",
+      "confidence": 0.84,
+      "reason": "Action permitted subject to supervisory concurrence.",
+      "supporting_evidence": [
+        "Shipping address distance divergence: dist2 = 350.0 miles from historical billing address",
+        "Originating IP distance divergence: dist1 = 25.0 miles",
+        "Elevated baseline transaction anomaly score (0.730)"
+      ],
+      "policy_basis": [
+        "POL-GEN: General Investigation Guidance"
+      ],
+      "approval_required": true,
+      "approval_route": "ANALYST",
+      "execution_status": "PENDING"
+    }
+  ],
+  "executed_actions": [],
+  "approvals": [],
+  "investigator": "TigerGraph-Agent-v1",
+  "final_outcome": null,
+  "created_at": 1790181016.5408902,
+  "updated_at": 1790181016.920156
+}

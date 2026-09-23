@@ -1,0 +1,130 @@
+{
+  "case_id": "CASE-020",
+  "status": "AWAITING_APPROVAL",
+  "risk_score": 0.98,
+  "confidence": 0.96,
+  "findings": [
+    "Investigation CASE-020 concluded with risk 0.98 and confidence 0.96. Patterns identified: Device Emulation Farm, Account Takeover & Address Laundering. Primary recommendation: BLOCK_TRANSACTION.",
+    "Device DEV_0001 exhibits headless/emulator signature",
+    "Device DEV_0001 linked to 4 distinct payment cards/accounts",
+    "Elevated baseline transaction anomaly score (0.980)"
+  ],
+  "timeline": [
+    {
+      "step_name": "TRIGGER_INGEST",
+      "status": "COMPLETED",
+      "details": "Ingesting fraud signal trigger and initializing investigation docket",
+      "timestamp": 1790181017.7933562,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "GRAPH_INVESTIGATION",
+      "status": "COMPLETED",
+      "details": "Querying TigerGraph 2-hop neighborhood for transaction TXN_BENCH_020",
+      "timestamp": 1790181017.8005898,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "EVIDENCE_COLLECTION",
+      "status": "COMPLETED",
+      "details": "Synthesizing GraphRAG evidence pack from graph topologies and institutional policy",
+      "timestamp": 1790181017.8061674,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "FRAUD_PATTERN_DETECTION",
+      "status": "COMPLETED",
+      "details": "Evaluating 5 canonical fraud typologies against deterministic pattern engine",
+      "timestamp": 1790181017.8065002,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "RISK_ASSESSMENT",
+      "status": "COMPLETED",
+      "details": "Calculating deterministic multi-factor risk and confidence scores",
+      "timestamp": 1790181017.806985,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "UNCERTAINTY_CHECK",
+      "status": "COMPLETED",
+      "details": "Uncertainty detected: Risk=0.98, Confidence=0.69. Insufficient evidence to justify unilateral freeze. Entering Additional Evidence Loop.",
+      "timestamp": 1790181017.8070245,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "EVIDENCE_PROCESSOR",
+      "status": "COMPLETED",
+      "details": "Simulated customer response received: Step-up authentication failed / OTP expired (Hostile / ATO Signal)",
+      "timestamp": 1790181017.8205929,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "REASSESSMENT",
+      "status": "COMPLETED",
+      "details": "Confidence upgraded after step-up failure to 0.96",
+      "timestamp": 1790181017.8207355,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "ACTION_PLANNER",
+      "status": "COMPLETED",
+      "details": "Formulating prioritized Next-Best Action candidates against PolicyEngine",
+      "timestamp": 1790181017.8207633,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "APPROVAL_CHECK",
+      "status": "COMPLETED",
+      "details": "Primary action BLOCK_TRANSACTION requires electronic approval from SENIOR_ANALYST",
+      "timestamp": 1790181017.8208117,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "INVESTIGATION_COMPLETE",
+      "status": "COMPLETED",
+      "details": "Investigation complete. Current status: AWAITING_APPROVAL",
+      "timestamp": 1790181017.843999,
+      "time_str": "22:00:17"
+    }
+  ],
+  "detected_patterns": [
+    {
+      "pattern_id": "DEVICE_FARM",
+      "name": "Device Emulation Farm",
+      "confidence": 0.8,
+      "supporting_evidence": [
+        "Device DEV_0001 exhibits headless/emulator signature",
+        "Device DEV_0001 linked to 4 distinct payment cards/accounts"
+      ],
+      "contradicting_evidence": [],
+      "entities": [
+        "DEV_0001"
+      ],
+      "transactions": [
+        "TXN_BENCH_020"
+      ],
+      "graph_paths": [
+        "Transaction(TXN_BENCH_020) -> Device(DEV_0001) <- Multiple Cards/Accounts"
+      ]
+    },
+    {
+      "pattern_id": "ATO_ADDRESS_LAUNDER",
+      "name": "Account Takeover & Address Laundering",
+      "confidence": 0.72,
+      "supporting_evidence": [
+        "Elevated baseline transaction anomaly score (0.980)"
+      ],
+      "contradicting_evidence": [
+        "Shipping address matches historical registered billing location"
+      ],
+      "entities": [],
+      "transactions": [
+        "TXN_BENCH_020"
+      ],
+      "graph_paths": [
+        "Transaction(TXN_BENCH_020) -> Divergent Delivery Address (dist2: 0.0 mi)"
+      ]
+    }
+  ]
+}

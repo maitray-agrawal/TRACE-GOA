@@ -1,0 +1,44 @@
+// ============================================================================
+// TigerGraph GSQL Data Loading Job for HHGOA
+// Graph: FraudInvestigationGraph
+// ============================================================================
+
+USE GRAPH FraudInvestigationGraph
+
+CREATE LOADING JOB load_fraud_data FOR GRAPH FraudInvestigationGraph {
+    DEFINE FILENAME txn_file;
+    DEFINE FILENAME cust_file;
+    DEFINE FILENAME dev_file;
+    DEFINE FILENAME case_file;
+
+    // Load Customers & Accounts
+    LOAD cust_file TO VERTEX Customer VALUES($0, $1, $2, $3, $4, $5) USING HEADER="true", SEPARATOR=",";
+    LOAD cust_file TO VERTEX Account VALUES($6, $7, $8, $9, "USD") USING HEADER="true", SEPARATOR=",";
+    LOAD cust_file TO EDGE OWNS VALUES($0, $6) USING HEADER="true", SEPARATOR=",";
+
+    // Load Devices
+    LOAD dev_file TO VERTEX Device VALUES($0, $1, $2, $3, $4, $5) USING HEADER="true", SEPARATOR=",";
+
+    // Load Transactions & Direct Edges
+    LOAD txn_file TO VERTEX Transaction VALUES($0, $1, $2, $3, $4, $5, $6, $7) USING HEADER="true", SEPARATOR=",";
+    LOAD txn_file TO VERTEX Card VALUES($8, $9, $10, $11, $12) USING HEADER="true", SEPARATOR=",";
+    LOAD txn_file TO VERTEX IP VALUES($13, $14, $15, $16, $17) USING HEADER="true", SEPARATOR=",";
+    LOAD txn_file TO VERTEX Email VALUES($18, $19, $20) USING HEADER="true", SEPARATOR=",";
+    LOAD txn_file TO VERTEX Address VALUES($21, $22, $23, $24) USING HEADER="true", SEPARATOR=",";
+    LOAD txn_file TO VERTEX Merchant VALUES($25, $26, $27, $28) USING HEADER="true", SEPARATOR=",";
+
+    // Edges
+    LOAD txn_file TO EDGE PERFORMS_TRANSACTION VALUES($29, $0, $2) USING HEADER="true", SEPARATOR=",";
+    LOAD txn_file TO EDGE USES_CARD VALUES($0, $8) USING HEADER="true", SEPARATOR=",";
+    LOAD txn_file TO EDGE USES_DEVICE VALUES($0, $30) USING HEADER="true", SEPARATOR=",";
+    LOAD txn_file TO EDGE ORIGINATES_FROM_IP VALUES($0, $13) USING HEADER="true", SEPARATOR=",";
+    LOAD txn_file TO EDGE ASSOCIATED_EMAIL VALUES($0, $18) USING HEADER="true", SEPARATOR=",";
+    LOAD txn_file TO EDGE SHIPPED_TO_ADDRESS VALUES($0, $21) USING HEADER="true", SEPARATOR=",";
+    LOAD txn_file TO EDGE INVOLVES_MERCHANT VALUES($0, $25) USING HEADER="true", SEPARATOR=",";
+
+    // Historical Cases
+    LOAD case_file TO VERTEX Case VALUES($0, $1, $2, $3, $4, $5, $6, $7) USING HEADER="true", SEPARATOR=",";
+    LOAD case_file TO EDGE FLAGGED_IN_CASE VALUES($8, $0) USING HEADER="true", SEPARATOR=",";
+    LOAD case_file TO EDGE INVOLVES_ENTITY VALUES($0, $9) USING HEADER="true", SEPARATOR=",";
+    LOAD case_file TO EDGE IDENTIFIED_PATTERN VALUES($0, $10, $11) USING HEADER="true", SEPARATOR=",";
+}

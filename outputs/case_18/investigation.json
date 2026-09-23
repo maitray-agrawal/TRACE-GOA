@@ -1,0 +1,128 @@
+{
+  "case_id": "CASE-018",
+  "status": "AWAITING_APPROVAL",
+  "risk_score": 0.84,
+  "confidence": 0.902,
+  "findings": [
+    "Investigation CASE-018 concluded with risk 0.84 and confidence 0.90. Patterns identified: Velocity Card Testing, Account Takeover & Address Laundering. Primary recommendation: BLOCK_TRANSACTION.",
+    "Transaction amount $1.50 is in micro-charge probing range (< $10.00)",
+    "Elevated baseline transaction anomaly score (0.840)"
+  ],
+  "timeline": [
+    {
+      "step_name": "TRIGGER_INGEST",
+      "status": "COMPLETED",
+      "details": "Ingesting fraud signal trigger and initializing investigation docket",
+      "timestamp": 1790181017.6911101,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "GRAPH_INVESTIGATION",
+      "status": "COMPLETED",
+      "details": "Querying TigerGraph 2-hop neighborhood for transaction TXN_BENCH_018",
+      "timestamp": 1790181017.6989634,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "EVIDENCE_COLLECTION",
+      "status": "COMPLETED",
+      "details": "Synthesizing GraphRAG evidence pack from graph topologies and institutional policy",
+      "timestamp": 1790181017.7037964,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "FRAUD_PATTERN_DETECTION",
+      "status": "COMPLETED",
+      "details": "Evaluating 5 canonical fraud typologies against deterministic pattern engine",
+      "timestamp": 1790181017.7041252,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "RISK_ASSESSMENT",
+      "status": "COMPLETED",
+      "details": "Calculating deterministic multi-factor risk and confidence scores",
+      "timestamp": 1790181017.7045696,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "UNCERTAINTY_CHECK",
+      "status": "COMPLETED",
+      "details": "Uncertainty detected: Risk=0.84, Confidence=0.62. Insufficient evidence to justify unilateral freeze. Entering Additional Evidence Loop.",
+      "timestamp": 1790181017.704607,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "EVIDENCE_PROCESSOR",
+      "status": "COMPLETED",
+      "details": "Simulated customer response received: Step-up authentication failed / OTP expired (Hostile / ATO Signal)",
+      "timestamp": 1790181017.7175448,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "REASSESSMENT",
+      "status": "COMPLETED",
+      "details": "Confidence upgraded after step-up failure to 0.90",
+      "timestamp": 1790181017.717678,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "ACTION_PLANNER",
+      "status": "COMPLETED",
+      "details": "Formulating prioritized Next-Best Action candidates against PolicyEngine",
+      "timestamp": 1790181017.7177036,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "APPROVAL_CHECK",
+      "status": "COMPLETED",
+      "details": "Primary action BLOCK_TRANSACTION requires electronic approval from SENIOR_ANALYST",
+      "timestamp": 1790181017.7177536,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "INVESTIGATION_COMPLETE",
+      "status": "COMPLETED",
+      "details": "Investigation complete. Current status: AWAITING_APPROVAL",
+      "timestamp": 1790181017.7403438,
+      "time_str": "22:00:17"
+    }
+  ],
+  "detected_patterns": [
+    {
+      "pattern_id": "CARD_TESTING",
+      "name": "Velocity Card Testing",
+      "confidence": 0.5,
+      "supporting_evidence": [
+        "Transaction amount $1.50 is in micro-charge probing range (< $10.00)"
+      ],
+      "contradicting_evidence": [],
+      "entities": [
+        "ACCT_0018"
+      ],
+      "transactions": [
+        "TXN_BENCH_018"
+      ],
+      "graph_paths": [
+        "Account(ACCT_0018) -> High-Frequency Rapid Transactions (0 events in 300s)"
+      ]
+    },
+    {
+      "pattern_id": "ATO_ADDRESS_LAUNDER",
+      "name": "Account Takeover & Address Laundering",
+      "confidence": 0.72,
+      "supporting_evidence": [
+        "Elevated baseline transaction anomaly score (0.840)"
+      ],
+      "contradicting_evidence": [
+        "Shipping address matches historical registered billing location"
+      ],
+      "entities": [],
+      "transactions": [
+        "TXN_BENCH_018"
+      ],
+      "graph_paths": [
+        "Transaction(TXN_BENCH_018) -> Divergent Delivery Address (dist2: 0.0 mi)"
+      ]
+    }
+  ]
+}

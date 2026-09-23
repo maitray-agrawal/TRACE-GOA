@@ -1,0 +1,21 @@
+// ============================================================================
+// Query: similar_cases
+// Description: Retrieves historical cases that share structural graph patterns,
+// shared entity attributes, or identical detected fraud typologies.
+// ============================================================================
+
+CREATE OR REPLACE QUERY similar_cases(STRING target_pattern_name, DOUBLE min_risk = 0.50, INT top_k = 5) FOR GRAPH FraudInvestigationGraph {
+    TYPEDEF TUPLE<STRING case_id, STRING trigger_type, DOUBLE risk_score, DOUBLE confidence, STRING outcome, STRING pattern> CaseResult;
+    ListAccum<CaseResult> @@matched_cases;
+
+    AllCases = { Case.* };
+
+    Filtered = SELECT c FROM AllCases:c -(IDENTIFIED_PATTERN:e)- FraudPattern:p
+               WHERE (target_pattern_name == "" OR p.name == target_pattern_name)
+                 AND c.risk_score >= min_risk
+               ACCUM @@matched_cases += CaseResult(c.id, c.trigger_type, c.risk_score, c.confidence, c.final_outcome, p.name)
+               ORDER BY c.risk_score DESC
+               LIMIT top_k;
+
+    PRINT @@matched_cases;
+}

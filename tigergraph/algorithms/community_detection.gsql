@@ -1,0 +1,31 @@
+// ============================================================================
+// TigerGraph Graph Algorithm: Weakly Connected Components (WCC) & Louvain
+// Description: Uncovers tightly bound fraud rings and syndicates across
+// customer, device, IP, and payment card topologies.
+// ============================================================================
+
+CREATE OR REPLACE QUERY community_detection(INT max_iter = 10) FOR GRAPH FraudInvestigationGraph {
+    MinAccum<INT> @community_id;
+    MapAccum<INT, INT> @@community_sizes;
+    MapAccum<INT, ListAccum<STRING>> @@fraud_clusters;
+
+    // Initialize each entity vertex with its internal numerical hash
+    AllVertices = { Customer.*, Account.*, Device.*, IP.*, Card.* };
+    AllVertices = SELECT s FROM AllVertices:s
+                  POST-ACCUM s.@community_id = getvid(s);
+
+    // Propagate minimum ID iteratively across bi-directional graph relations
+    WHILE True LIMIT max_iter DO
+        Active = SELECT t FROM AllVertices:s -(:e)-> :t
+                 ACCUM t.@community_id += s.@community_id
+                 HAVING t.@community_id < t.@community_id';
+    END;
+
+    // Aggregate community statistics
+    Res = SELECT s FROM AllVertices:s
+          POST-ACCUM
+              @@community_sizes += (s.@community_id -> 1),
+              @@fraud_clusters += (s.@community_id -> s.id);
+
+    PRINT @@community_sizes, @@fraud_clusters;
+}

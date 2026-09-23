@@ -1,0 +1,266 @@
+{
+  "case_id": "CASE-002",
+  "supporting_evidence": [
+    {
+      "id": "EV_SUP_1",
+      "source": "GRAPH",
+      "direction": "SUPPORTING",
+      "title": "Device DEV_0002 exhibits headless/emulator signature",
+      "details": {
+        "pattern_id": "DEVICE_FARM",
+        "name": "Device Emulation Farm",
+        "confidence": 0.8,
+        "supporting_evidence": [
+          "Device DEV_0002 exhibits headless/emulator signature",
+          "Device DEV_0002 linked to 3 distinct payment cards/accounts"
+        ],
+        "contradicting_evidence": [],
+        "entities": [
+          "DEV_0002"
+        ],
+        "transactions": [
+          "TXN_BENCH_002"
+        ],
+        "graph_paths": [
+          "Transaction(TXN_BENCH_002) -> Device(DEV_0002) <- Multiple Cards/Accounts"
+        ]
+      },
+      "weight": 1.0,
+      "timestamp": 1790181016.8517778
+    },
+    {
+      "id": "EV_SUP_2",
+      "source": "GRAPH",
+      "direction": "SUPPORTING",
+      "title": "Device DEV_0002 linked to 3 distinct payment cards/accounts",
+      "details": {
+        "pattern_id": "DEVICE_FARM",
+        "name": "Device Emulation Farm",
+        "confidence": 0.8,
+        "supporting_evidence": [
+          "Device DEV_0002 exhibits headless/emulator signature",
+          "Device DEV_0002 linked to 3 distinct payment cards/accounts"
+        ],
+        "contradicting_evidence": [],
+        "entities": [
+          "DEV_0002"
+        ],
+        "transactions": [
+          "TXN_BENCH_002"
+        ],
+        "graph_paths": [
+          "Transaction(TXN_BENCH_002) -> Device(DEV_0002) <- Multiple Cards/Accounts"
+        ]
+      },
+      "weight": 1.0,
+      "timestamp": 1790181016.8517842
+    },
+    {
+      "id": "EV_SUP_3",
+      "source": "GRAPH",
+      "direction": "SUPPORTING",
+      "title": "Elevated baseline transaction anomaly score (0.880)",
+      "details": {
+        "pattern_id": "ATO_ADDRESS_LAUNDER",
+        "name": "Account Takeover & Address Laundering",
+        "confidence": 0.72,
+        "supporting_evidence": [
+          "Elevated baseline transaction anomaly score (0.880)"
+        ],
+        "contradicting_evidence": [
+          "Shipping address matches historical registered billing location"
+        ],
+        "entities": [],
+        "transactions": [
+          "TXN_BENCH_002"
+        ],
+        "graph_paths": [
+          "Transaction(TXN_BENCH_002) -> Divergent Delivery Address (dist2: 0.0 mi)"
+        ]
+      },
+      "weight": 1.0,
+      "timestamp": 1790181016.8517876
+    },
+    {
+      "id": "EV_STEPUP_4",
+      "source": "EXTERNAL_STEP_UP",
+      "direction": "SUPPORTING",
+      "title": "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)",
+      "details": {
+        "status": "FAILED_TIMEOUT",
+        "device_id": "UNKNOWN"
+      },
+      "weight": 1.0,
+      "timestamp": 1790181016.8648262
+    }
+  ],
+  "contradicting_evidence": [
+    {
+      "id": "EV_CON_1",
+      "source": "GRAPH",
+      "direction": "CONTRADICTING",
+      "title": "Shipping address matches historical registered billing location",
+      "details": {
+        "pattern_id": "ATO_ADDRESS_LAUNDER",
+        "name": "Account Takeover & Address Laundering",
+        "confidence": 0.72,
+        "supporting_evidence": [
+          "Elevated baseline transaction anomaly score (0.880)"
+        ],
+        "contradicting_evidence": [
+          "Shipping address matches historical registered billing location"
+        ],
+        "entities": [],
+        "transactions": [
+          "TXN_BENCH_002"
+        ],
+        "graph_paths": [
+          "Transaction(TXN_BENCH_002) -> Divergent Delivery Address (dist2: 0.0 mi)"
+        ]
+      },
+      "weight": 1.0,
+      "timestamp": 1790181016.8517911
+    }
+  ],
+  "missing_evidence": [
+    "Customer out-of-band biometric/OTP confirmation",
+    "Secondary device location match"
+  ],
+  "uncertainty_level": "RESOLVED",
+  "graphrag_evidence_pack": {
+    "case_id": "CASE-002",
+    "question": "Assess transaction risk and determine next best action",
+    "graph_evidence": [
+      {
+        "entity_type": "Merchant",
+        "entity_id": "MERCH_001",
+        "attributes": {
+          "category": "crypto_gateway",
+          "risk_level": "HIGH",
+          "terminal_count": 2
+        }
+      },
+      {
+        "entity_type": "IP",
+        "entity_id": "198.51.0.12",
+        "attributes": {
+          "ip_type": "DATACENTER_PROXY",
+          "country_code": "US",
+          "isp": "CloudProxy LLC",
+          "reputation": 0.2
+        }
+      },
+      {
+        "entity_type": "Device",
+        "entity_id": "DEV_0002",
+        "attributes": {
+          "device_type": "emulator",
+          "os_name": "Linux/Android Emulator",
+          "browser_name": "HeadlessChrome",
+          "screen_resolution": "800x600",
+          "is_emulator": true
+        }
+      },
+      {
+        "entity_type": "Card",
+        "entity_id": "CARD_0002",
+        "attributes": {
+          "bin": "454020",
+          "issuer": "WellsFargo",
+          "brand": "visa",
+          "category": "credit"
+        }
+      },
+      {
+        "entity_type": "DeviceReuseAnomaly",
+        "entity_id": "DEV_0002",
+        "reused_count": 3,
+        "connected_cards": [
+          "CARD_0002",
+          "CARD_0009",
+          "CARD_0015"
+        ]
+      }
+    ],
+    "historical_cases": [
+      {
+        "case_id": "CASE-020",
+        "trigger_txn_id": "TXN_BENCH_020",
+        "subject_customer_id": "CUST_0020",
+        "pattern": "MULTI_PATTERN_SYNDICATE",
+        "risk_score": 0.98,
+        "confidence": 0.96,
+        "status": "INVESTIGATING",
+        "scenario_description": "Full-Scale Coordinated Attack: Device Farm + Synthetic IDs + Mule Funnel Network",
+        "expected_action": "BLOCK_ACCOUNT",
+        "created_at": 1715072000
+      },
+      {
+        "case_id": "CASE-014",
+        "trigger_txn_id": "TXN_BENCH_014",
+        "subject_customer_id": "CUST_0014",
+        "pattern": "DEVICE_FARM",
+        "risk_score": 0.95,
+        "confidence": 0.96,
+        "status": "INVESTIGATING",
+        "scenario_description": "Prepaid Card Exhaustion: Single mobile emulator laundering stolen gift cards",
+        "expected_action": "BLOCK_TRANSACTION",
+        "created_at": 1715050400
+      },
+      {
+        "case_id": "CASE-001",
+        "trigger_txn_id": "TXN_BENCH_001",
+        "subject_customer_id": "CUST_0001",
+        "pattern": "DEVICE_FARM",
+        "risk_score": 0.94,
+        "confidence": 0.96,
+        "status": "INVESTIGATING",
+        "scenario_description": "Device Farm Bot: 8 stolen credit cards tested on emulated device within 45 minutes",
+        "expected_action": "BLOCK_TRANSACTION",
+        "created_at": 1715003600
+      }
+    ],
+    "policy_evidence": [
+      {
+        "policy_id": "POL-001",
+        "topic": "Uncertainty & Step-Up Authentication",
+        "mandate": "When transaction risk is elevated (> 0.60) but graph evidence remains ambiguous or confidence is below 0.70, the system MUST NOT execute unilateral account freezing. An out-of-band Step-Up Authentication (SMS OTP, Biometric, or Call) must be triggered."
+      },
+      {
+        "policy_id": "POL-002",
+        "topic": "Account Freezing Directives",
+        "mandate": "Account freezing (BLOCK_ACCOUNT) is a punitive action requiring conclusive evidence (> 0.75 confidence) of coordinated syndicate membership, device emulation farms, or confirmed synthetic identity. Sign-off by a Fraud Manager is mandatory."
+      },
+      {
+        "policy_id": "POL-003",
+        "topic": "Transaction Authorization Denial",
+        "mandate": "Transactions exhibiting automated velocity card testing or high-velocity mule dispersal shall be blocked immediately upon Senior Analyst concurrence."
+      },
+      {
+        "policy_id": "REG-BSA-001",
+        "topic": "FinCEN Suspicious Activity Reports (SAR)",
+        "mandate": "Pursuant to 31 CFR \u00a7 1020.320, transactions aggregating $5,000 or more involving known or suspected illicit activity, money laundering, or structuring must be drafted as formal SAR filings."
+      },
+      {
+        "policy_id": "REG-E-001",
+        "topic": "Regulation E Consumer Liability",
+        "mandate": "Under CFPB Regulation E, consumers have limited liability for unauthorized electronic fund transfers if reported promptly. Accounts suspected of takeover (ATO) must be provisionally secured."
+      }
+    ],
+    "fraud_patterns": [],
+    "risk_signals": [
+      {
+        "signal": "TransactionAmount",
+        "value": 1571.31,
+        "interpretation": "Normal"
+      },
+      {
+        "signal": "BaselineRiskScore",
+        "value": 0.88,
+        "interpretation": "High"
+      }
+    ],
+    "contradictions": [],
+    "uncertainties": []
+  }
+}

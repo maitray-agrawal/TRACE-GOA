@@ -1,0 +1,116 @@
+{
+  "case_id": "CASE-004",
+  "status": "AWAITING_APPROVAL",
+  "risk_score": 0.92,
+  "confidence": 0.922,
+  "findings": [
+    "Investigation CASE-004 concluded with risk 0.92 and confidence 0.92. Patterns identified: Account Takeover & Address Laundering. Primary recommendation: FILE_REPORT.",
+    "Elevated baseline transaction anomaly score (0.920)"
+  ],
+  "timeline": [
+    {
+      "step_name": "TRIGGER_INGEST",
+      "status": "COMPLETED",
+      "details": "Ingesting fraud signal trigger and initializing investigation docket",
+      "timestamp": 1790181016.93617,
+      "time_str": "22:00:16"
+    },
+    {
+      "step_name": "GRAPH_INVESTIGATION",
+      "status": "COMPLETED",
+      "details": "Querying TigerGraph 2-hop neighborhood for transaction TXN_BENCH_004",
+      "timestamp": 1790181016.9433763,
+      "time_str": "22:00:16"
+    },
+    {
+      "step_name": "EVIDENCE_COLLECTION",
+      "status": "COMPLETED",
+      "details": "Synthesizing GraphRAG evidence pack from graph topologies and institutional policy",
+      "timestamp": 1790181016.9479249,
+      "time_str": "22:00:16"
+    },
+    {
+      "step_name": "FRAUD_PATTERN_DETECTION",
+      "status": "COMPLETED",
+      "details": "Evaluating 5 canonical fraud typologies against deterministic pattern engine",
+      "timestamp": 1790181016.9482656,
+      "time_str": "22:00:16"
+    },
+    {
+      "step_name": "RISK_ASSESSMENT",
+      "status": "COMPLETED",
+      "details": "Calculating deterministic multi-factor risk and confidence scores",
+      "timestamp": 1790181016.948712,
+      "time_str": "22:00:16"
+    },
+    {
+      "step_name": "UNCERTAINTY_CHECK",
+      "status": "COMPLETED",
+      "details": "Uncertainty detected: Risk=0.92, Confidence=0.64. Insufficient evidence to justify unilateral freeze. Entering Additional Evidence Loop.",
+      "timestamp": 1790181016.948752,
+      "time_str": "22:00:16"
+    },
+    {
+      "step_name": "EVIDENCE_PROCESSOR",
+      "status": "COMPLETED",
+      "details": "Simulated customer response received: Step-up authentication failed / OTP expired (Hostile / ATO Signal)",
+      "timestamp": 1790181016.9630413,
+      "time_str": "22:00:16"
+    },
+    {
+      "step_name": "REASSESSMENT",
+      "status": "COMPLETED",
+      "details": "Confidence upgraded after step-up failure to 0.92",
+      "timestamp": 1790181016.9631813,
+      "time_str": "22:00:16"
+    },
+    {
+      "step_name": "ACTION_PLANNER",
+      "status": "COMPLETED",
+      "details": "Formulating prioritized Next-Best Action candidates against PolicyEngine",
+      "timestamp": 1790181016.9632058,
+      "time_str": "22:00:16"
+    },
+    {
+      "step_name": "APPROVAL_CHECK",
+      "status": "COMPLETED",
+      "details": "Primary action FILE_REPORT requires electronic approval from FRAUD_MANAGER",
+      "timestamp": 1790181016.9632542,
+      "time_str": "22:00:16"
+    },
+    {
+      "step_name": "SAR_GENERATION",
+      "status": "COMPLETED",
+      "details": "FinCEN BSA threshold ($5,000) triggered. Assembling Suspicious Activity Report (SAR) draft.",
+      "timestamp": 1790181016.972501,
+      "time_str": "22:00:16"
+    },
+    {
+      "step_name": "INVESTIGATION_COMPLETE",
+      "status": "COMPLETED",
+      "details": "Investigation complete. Current status: AWAITING_APPROVAL",
+      "timestamp": 1790181016.9868004,
+      "time_str": "22:00:16"
+    }
+  ],
+  "detected_patterns": [
+    {
+      "pattern_id": "ATO_ADDRESS_LAUNDER",
+      "name": "Account Takeover & Address Laundering",
+      "confidence": 0.72,
+      "supporting_evidence": [
+        "Elevated baseline transaction anomaly score (0.920)"
+      ],
+      "contradicting_evidence": [
+        "Shipping address matches historical registered billing location"
+      ],
+      "entities": [],
+      "transactions": [
+        "TXN_BENCH_004"
+      ],
+      "graph_paths": [
+        "Transaction(TXN_BENCH_004) -> Divergent Delivery Address (dist2: 0.0 mi)"
+      ]
+    }
+  ]
+}

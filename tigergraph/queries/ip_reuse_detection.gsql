@@ -1,0 +1,28 @@
+// ============================================================================
+// Query: ip_reuse_detection
+// Description: Identifies IP addresses and subnets shared across disparate
+// customer accounts and payment instruments.
+// ============================================================================
+
+CREATE OR REPLACE QUERY ip_reuse_detection(STRING target_ip, INT min_accounts = 2) FOR GRAPH FraudInvestigationGraph {
+    SetAccum<STRING> @@distinct_accounts;
+    SetAccum<STRING> @@distinct_cards;
+    ListAccum<STRING> @@transaction_ids;
+
+    StartIP = { IP.* };
+    IF target_ip != "" THEN
+        StartIP = SELECT i FROM StartIP:i WHERE i.id == target_ip;
+    END;
+
+    Txns = SELECT t FROM StartIP:i -(<ORIGINATES_FROM_IP:e)- Transaction:t
+           ACCUM @@transaction_ids += t.id;
+
+    // Traverse to accounts
+    Accounts = SELECT a FROM Txns:t -(<PERFORMS_TRANSACTION:e)- Account:a
+               ACCUM @@distinct_accounts += a.id;
+
+    Cards = SELECT c FROM Txns:t -(USES_CARD:e)- Card:c
+            ACCUM @@distinct_cards += c.id;
+
+    PRINT StartIP, @@distinct_accounts.size() AS account_count, @@distinct_accounts, @@distinct_cards, @@transaction_ids;
+}

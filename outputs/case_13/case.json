@@ -1,0 +1,43 @@
+{
+  "case_id": "CASE-013",
+  "trigger_txn_id": "TXN_BENCH_013",
+  "subject_customer_id": "CUST_0013",
+  "status": "RESOLVED",
+  "risk_score": 0.18,
+  "confidence": 0.405,
+  "fraud_patterns": [],
+  "supporting_evidence": [],
+  "contradicting_evidence": [],
+  "missing_evidence": [],
+  "uncertainty_level": "LOW",
+  "findings": [
+    "Investigation CASE-013 concluded with risk 0.18 and confidence 0.41. Patterns identified: None. Primary recommendation: ALLOW_TRANSACTION."
+  ],
+  "recommended_actions": [
+    {
+      "action": "ALLOW_TRANSACTION",
+      "priority": "HIGH",
+      "confidence": 0.405,
+      "reason": "Routine operational action permitted without escalation.",
+      "supporting_evidence": [],
+      "policy_basis": [
+        "POL-004: Low-Friction Customer Assurance Protocol"
+      ],
+      "approval_required": false,
+      "approval_route": "NONE",
+      "execution_status": "EXECUTED"
+    }
+  ],
+  "executed_actions": [
+    {
+      "action": "ALLOW_TRANSACTION",
+      "executed_at": 1790181017.4469974,
+      "status": "SUCCESS"
+    }
+  ],
+  "approvals": [],
+  "investigator": "TigerGraph-Agent-v1",
+  "final_outcome": null,
+  "created_at": 1790181016.670097,
+  "updated_at": 1790181017.4516892
+}

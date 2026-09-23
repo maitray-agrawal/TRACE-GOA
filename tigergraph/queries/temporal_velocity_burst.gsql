@@ -1,0 +1,30 @@
+// ============================================================================
+// Query: temporal_velocity_burst
+// Description: Computes transaction count and velocity bursts within sliding
+// time windows to flag card testing, mule dispersal, and automated bot runs.
+// ============================================================================
+
+CREATE OR REPLACE QUERY temporal_velocity_burst(VERTEX<Account> target_account, UINT window_seconds = 300) FOR GRAPH FraudInvestigationGraph {
+    TYPEDEF TUPLE<STRING id, DOUBLE amount, UINT timestamp> TxnSummary;
+    ListAccum<TxnSummary> @@all_txns;
+    SumAccum<INT> @@burst_count = 0;
+    SumAccum<DOUBLE> @@burst_volume = 0.0;
+
+    Start = { target_account };
+
+    Txns = SELECT t FROM Start:a -(PERFORMS_TRANSACTION:e)- Transaction:t
+           ACCUM @@all_txns += TxnSummary(t.id, t.amount, t.timestamp)
+           ORDER BY t.timestamp DESC;
+
+    // Detect bursts within sliding window
+    FOREACH i IN RANGE[0, @@all_txns.size() - 1] DO
+        FOREACH j IN RANGE[i + 1, @@all_txns.size() - 1] DO
+            IF (@@all_txns.get(i).timestamp - @@all_txns.get(j).timestamp) <= window_seconds THEN
+                @@burst_count += 1;
+                @@burst_volume += @@all_txns.get(i).amount;
+            END;
+        END;
+    END;
+
+    PRINT target_account, @@all_txns.size() AS total_transactions, @@burst_count, @@burst_volume, @@all_txns;
+}

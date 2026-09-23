@@ -1,0 +1,122 @@
+[
+  {
+    "case_id": "CASE_HIST_001",
+    "trigger_txn_id": "TXN_HIST_001",
+    "subject_customer_id": "CUST_0031",
+    "pattern": "SYNTH_ID_SYNDICATE",
+    "risk_score": 0.88,
+    "confidence": 0.92,
+    "status": "CLOSED",
+    "final_outcome": "CONFIRMED_FRAUD",
+    "created_at": 1705086400,
+    "closed_at": 1705093600
+  },
+  {
+    "case_id": "CASE_HIST_002",
+    "trigger_txn_id": "TXN_HIST_002",
+    "subject_customer_id": "CUST_0032",
+    "pattern": "DEVICE_FARM",
+    "risk_score": 0.88,
+    "confidence": 0.92,
+    "status": "CLOSED",
+    "final_outcome": "CONFIRMED_FRAUD",
+    "created_at": 1705172800,
+    "closed_at": 1705180000
+  },
+  {
+    "case_id": "CASE_HIST_003",
+    "trigger_txn_id": "TXN_HIST_003",
+    "subject_customer_id": "CUST_0033",
+    "pattern": "CARD_TESTING",
+    "risk_score": 0.88,
+    "confidence": 0.92,
+    "status": "CLOSED",
+    "final_outcome": "CONFIRMED_FRAUD",
+    "created_at": 1705259200,
+    "closed_at": 1705266400
+  },
+  {
+    "case_id": "CASE_HIST_004",
+    "trigger_txn_id": "TXN_HIST_004",
+    "subject_customer_id": "CUST_0034",
+    "pattern": "MULE_DISPERSAL",
+    "risk_score": 0.88,
+    "confidence": 0.92,
+    "status": "CLOSED",
+    "final_outcome": "CONFIRMED_FRAUD",
+    "created_at": 1705345600,
+    "closed_at": 1705352800
+  },
+  {
+    "case_id": "CASE_HIST_005",
+    "trigger_txn_id": "TXN_HIST_005",
+    "subject_customer_id": "CUST_0035",
+    "pattern": "ATO_ADDRESS_LAUNDER",
+    "risk_score": 0.88,
+    "confidence": 0.92,
+    "status": "CLOSED",
+    "final_outcome": "CONFIRMED_FRAUD",
+    "created_at": 1705432000,
+    "closed_at": 1705439200
+  },
+  {
+    "case_id": "CASE_HIST_006",
+    "trigger_txn_id": "TXN_HIST_006",
+    "subject_customer_id": "CUST_0036",
+    "pattern": "SYNTH_ID_SYNDICATE",
+    "risk_score": 0.88,
+    "confidence": 0.92,
+    "status": "CLOSED",
+    "final_outcome": "CONFIRMED_FRAUD",
+    "created_at": 1705518400,
+    "closed_at": 1705525600
+  },
+  {
+    "case_id": "CASE_HIST_007",
+    "trigger_txn_id": "TXN_HIST_007",
+    "subject_customer_id": "CUST_0037",
+    "pattern": "DEVICE_FARM",
+    "risk_score": 0.88,
+    "confidence": 0.92,
+    "status": "CLOSED",
+    "final_outcome": "CONFIRMED_FRAUD",
+    "created_at": 1705604800,
+    "closed_at": 1705612000
+  },
+  {
+    "case_id": "CASE_HIST_008",
+    "trigger_txn_id": "TXN_HIST_008",
+    "subject_customer_id": "CUST_0038",
+    "pattern": "CARD_TESTING",
+    "risk_score": 0.88,
+    "confidence": 0.92,
+    "status": "CLOSED",
+    "final_outcome": "CONFIRMED_FRAUD",
+    "created_at": 1705691200,
+    "closed_at": 1705698400
+  },
+  {
+    "case_id": "CASE_HIST_009",
+    "trigger_txn_id": "TXN_HIST_009",
+    "subject_customer_id": "CUST_0039",
+    "pattern": "MULE_DISPERSAL",
+    "risk_score": 0.25,
+    "confidence": 0.92,
+    "status": "CLOSED",
+    "final_outcome": "CLEARED_FALSE_POSITIVE",
+    "created_at": 1705777600,
+    "closed_at": 1705784800
+  },
+  {
+    "case_id": "CASE_HIST_010",
+    "trigger_txn_id": "TXN_HIST_010",
+    "subject_customer_id": "CUST_0040",
+    "pattern": "ATO_ADDRESS_LAUNDER",
+    "risk_score": 0.25,
+    "confidence": 0.92,
+    "status": "CLOSED",
+    "final_outcome": "CLEARED_FALSE_POSITIVE",
+    "created_at": 1705864000,
+    "closed_at": 1705871200
+  }
+]

@@ -1,0 +1,33 @@
+// ============================================================================
+// Query: shared_identity_attributes
+// Description: Detects Synthetic Identity Syndicates by identifying shared
+// physical addresses, emails, and devices across ostensibly separate customers.
+// ============================================================================
+
+CREATE OR REPLACE QUERY shared_identity_attributes(VERTEX<Customer> target_customer) FOR GRAPH FraudInvestigationGraph {
+    SetAccum<VERTEX<Customer>> @@connected_customers;
+    ListAccum<STRING> @@shared_devices;
+    ListAccum<STRING> @@shared_addresses;
+    ListAccum<STRING> @@shared_emails;
+
+    Start = { target_customer };
+
+    // Traverse Customer -> Account -> Transaction -> Device/Address/Email
+    Accounts = SELECT a FROM Start:c -(OWNS:e)- Account:a;
+    Txns = SELECT t FROM Accounts:a -(PERFORMS_TRANSACTION:e)- Transaction:t;
+
+    Devs = SELECT d FROM Txns:t -(USES_DEVICE:e)- Device:d;
+    Addrs = SELECT ad FROM Txns:t -(SHIPPED_TO_ADDRESS:e)- Address:ad;
+    Emails = SELECT em FROM Txns:t -(ASSOCIATED_EMAIL:e)- Email:em;
+
+    // Reverse traverse from Devs/Addrs/Emails to other Transactions -> Accounts -> Customers
+    OtherTxns = SELECT t2 FROM Devs:d -(<USES_DEVICE:e)- Transaction:t2
+                WHERE t2 NOT IN Txns;
+
+    OtherAccounts = SELECT a2 FROM OtherTxns:t2 -(<PERFORMS_TRANSACTION:e)- Account:a2;
+    OtherCusts = SELECT c2 FROM OtherAccounts:a2 -(<OWNS:e)- Customer:c2
+                 WHERE c2 != target_customer
+                 ACCUM @@connected_customers += c2;
+
+    PRINT target_customer, @@connected_customers, Devs, Addrs, Emails;
+}

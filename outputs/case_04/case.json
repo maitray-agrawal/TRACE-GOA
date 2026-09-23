@@ -1,0 +1,128 @@
+{
+  "case_id": "CASE-004",
+  "trigger_txn_id": "TXN_BENCH_004",
+  "subject_customer_id": "CUST_0004",
+  "status": "AWAITING_APPROVAL",
+  "risk_score": 0.92,
+  "confidence": 0.922,
+  "fraud_patterns": [
+    "ATO_ADDRESS_LAUNDER"
+  ],
+  "supporting_evidence": [
+    {
+      "id": "EV_SUP_1",
+      "source": "GRAPH",
+      "direction": "SUPPORTING",
+      "title": "Elevated baseline transaction anomaly score (0.920)",
+      "details": {
+        "pattern_id": "ATO_ADDRESS_LAUNDER",
+        "name": "Account Takeover & Address Laundering",
+        "confidence": 0.72,
+        "supporting_evidence": [
+          "Elevated baseline transaction anomaly score (0.920)"
+        ],
+        "contradicting_evidence": [
+          "Shipping address matches historical registered billing location"
+        ],
+        "entities": [],
+        "transactions": [
+          "TXN_BENCH_004"
+        ],
+        "graph_paths": [
+          "Transaction(TXN_BENCH_004) -> Divergent Delivery Address (dist2: 0.0 mi)"
+        ]
+      },
+      "weight": 1.0,
+      "timestamp": 1790181016.948703
+    },
+    {
+      "id": "EV_STEPUP_2",
+      "source": "EXTERNAL_STEP_UP",
+      "direction": "SUPPORTING",
+      "title": "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)",
+      "details": {
+        "status": "FAILED_TIMEOUT",
+        "device_id": "UNKNOWN"
+      },
+      "weight": 1.0,
+      "timestamp": 1790181016.9631643
+    }
+  ],
+  "contradicting_evidence": [
+    {
+      "id": "EV_CON_1",
+      "source": "GRAPH",
+      "direction": "CONTRADICTING",
+      "title": "Shipping address matches historical registered billing location",
+      "details": {
+        "pattern_id": "ATO_ADDRESS_LAUNDER",
+        "name": "Account Takeover & Address Laundering",
+        "confidence": 0.72,
+        "supporting_evidence": [
+          "Elevated baseline transaction anomaly score (0.920)"
+        ],
+        "contradicting_evidence": [
+          "Shipping address matches historical registered billing location"
+        ],
+        "entities": [],
+        "transactions": [
+          "TXN_BENCH_004"
+        ],
+        "graph_paths": [
+          "Transaction(TXN_BENCH_004) -> Divergent Delivery Address (dist2: 0.0 mi)"
+        ]
+      },
+      "weight": 1.0,
+      "timestamp": 1790181016.9487107
+    }
+  ],
+  "missing_evidence": [
+    "Customer out-of-band biometric/OTP confirmation",
+    "Secondary device location match"
+  ],
+  "uncertainty_level": "RESOLVED",
+  "findings": [
+    "Investigation CASE-004 concluded with risk 0.92 and confidence 0.92. Patterns identified: Account Takeover & Address Laundering. Primary recommendation: FILE_REPORT.",
+    "Elevated baseline transaction anomaly score (0.920)"
+  ],
+  "recommended_actions": [
+    {
+      "action": "FILE_REPORT",
+      "priority": "CRITICAL",
+      "confidence": 0.922,
+      "reason": "SAR filing strictly requires Fraud Manager approval and legal compliance review.",
+      "supporting_evidence": [
+        "Elevated baseline transaction anomaly score (0.920)",
+        "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
+      ],
+      "policy_basis": [
+        "REG-BSA-31CFR: FinCEN Suspicious Activity Reporting"
+      ],
+      "approval_required": true,
+      "approval_route": "FRAUD_MANAGER",
+      "execution_status": "PENDING"
+    },
+    {
+      "action": "BLOCK_ACCOUNT",
+      "priority": "CRITICAL",
+      "confidence": 0.922,
+      "reason": "Account freeze requires Fraud Manager authorization.",
+      "supporting_evidence": [
+        "Elevated baseline transaction anomaly score (0.920)",
+        "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
+      ],
+      "policy_basis": [
+        "POL-002: Executive Account Lockout Directive"
+      ],
+      "approval_required": true,
+      "approval_route": "FRAUD_MANAGER",
+      "execution_status": "PENDING"
+    }
+  ],
+  "executed_actions": [],
+  "approvals": [],
+  "investigator": "TigerGraph-Agent-v1",
+  "final_outcome": null,
+  "created_at": 1790181016.5537908,
+  "updated_at": 1790181016.977783
+}

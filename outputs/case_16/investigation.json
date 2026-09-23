@@ -1,0 +1,90 @@
+{
+  "case_id": "CASE-016",
+  "status": "AWAITING_APPROVAL",
+  "risk_score": 0.93,
+  "confidence": 0.89,
+  "findings": [
+    "Investigation CASE-016 concluded with risk 0.93 and confidence 0.89. Patterns identified: Account Takeover & Address Laundering. Primary recommendation: BLOCK_TRANSACTION.",
+    "Shipping address distance divergence: dist2 = 350.0 miles from historical billing address",
+    "Originating IP distance divergence: dist1 = 25.0 miles",
+    "Elevated baseline transaction anomaly score (0.930)"
+  ],
+  "timeline": [
+    {
+      "step_name": "TRIGGER_INGEST",
+      "status": "COMPLETED",
+      "details": "Ingesting fraud signal trigger and initializing investigation docket",
+      "timestamp": 1790181017.5906916,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "GRAPH_INVESTIGATION",
+      "status": "COMPLETED",
+      "details": "Querying TigerGraph 2-hop neighborhood for transaction TXN_BENCH_016",
+      "timestamp": 1790181017.5984464,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "EVIDENCE_COLLECTION",
+      "status": "COMPLETED",
+      "details": "Synthesizing GraphRAG evidence pack from graph topologies and institutional policy",
+      "timestamp": 1790181017.603027,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "FRAUD_PATTERN_DETECTION",
+      "status": "COMPLETED",
+      "details": "Evaluating 5 canonical fraud typologies against deterministic pattern engine",
+      "timestamp": 1790181017.603365,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "RISK_ASSESSMENT",
+      "status": "COMPLETED",
+      "details": "Calculating deterministic multi-factor risk and confidence scores",
+      "timestamp": 1790181017.603992,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "ACTION_PLANNER",
+      "status": "COMPLETED",
+      "details": "Formulating prioritized Next-Best Action candidates against PolicyEngine",
+      "timestamp": 1790181017.604046,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "APPROVAL_CHECK",
+      "status": "COMPLETED",
+      "details": "Primary action BLOCK_TRANSACTION requires electronic approval from SENIOR_ANALYST",
+      "timestamp": 1790181017.6040978,
+      "time_str": "22:00:17"
+    },
+    {
+      "step_name": "INVESTIGATION_COMPLETE",
+      "status": "COMPLETED",
+      "details": "Investigation complete. Current status: AWAITING_APPROVAL",
+      "timestamp": 1790181017.628466,
+      "time_str": "22:00:17"
+    }
+  ],
+  "detected_patterns": [
+    {
+      "pattern_id": "ATO_ADDRESS_LAUNDER",
+      "name": "Account Takeover & Address Laundering",
+      "confidence": 0.85,
+      "supporting_evidence": [
+        "Shipping address distance divergence: dist2 = 350.0 miles from historical billing address",
+        "Originating IP distance divergence: dist1 = 25.0 miles",
+        "Elevated baseline transaction anomaly score (0.930)"
+      ],
+      "contradicting_evidence": [],
+      "entities": [],
+      "transactions": [
+        "TXN_BENCH_016"
+      ],
+      "graph_paths": [
+        "Transaction(TXN_BENCH_016) -> Divergent Delivery Address (dist2: 350.0 mi)"
+      ]
+    }
+  ]
+}

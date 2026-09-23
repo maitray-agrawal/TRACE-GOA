@@ -1,0 +1,158 @@
+{
+  "case_id": "CASE-005",
+  "trigger_txn_id": "TXN_BENCH_005",
+  "subject_customer_id": "CUST_0005",
+  "status": "AWAITING_APPROVAL",
+  "risk_score": 0.85,
+  "confidence": 0.905,
+  "fraud_patterns": [
+    "CARD_TESTING",
+    "ATO_ADDRESS_LAUNDER"
+  ],
+  "supporting_evidence": [
+    {
+      "id": "EV_SUP_1",
+      "source": "GRAPH",
+      "direction": "SUPPORTING",
+      "title": "Transaction amount $1.50 is in micro-charge probing range (< $10.00)",
+      "details": {
+        "pattern_id": "CARD_TESTING",
+        "name": "Velocity Card Testing",
+        "confidence": 0.5,
+        "supporting_evidence": [
+          "Transaction amount $1.50 is in micro-charge probing range (< $10.00)"
+        ],
+        "contradicting_evidence": [],
+        "entities": [
+          "ACCT_0005"
+        ],
+        "transactions": [
+          "TXN_BENCH_005"
+        ],
+        "graph_paths": [
+          "Account(ACCT_0005) -> High-Frequency Rapid Transactions (0 events in 300s)"
+        ]
+      },
+      "weight": 1.0,
+      "timestamp": 1790181017.0063941
+    },
+    {
+      "id": "EV_SUP_2",
+      "source": "GRAPH",
+      "direction": "SUPPORTING",
+      "title": "Elevated baseline transaction anomaly score (0.850)",
+      "details": {
+        "pattern_id": "ATO_ADDRESS_LAUNDER",
+        "name": "Account Takeover & Address Laundering",
+        "confidence": 0.72,
+        "supporting_evidence": [
+          "Elevated baseline transaction anomaly score (0.850)"
+        ],
+        "contradicting_evidence": [
+          "Shipping address matches historical registered billing location"
+        ],
+        "entities": [],
+        "transactions": [
+          "TXN_BENCH_005"
+        ],
+        "graph_paths": [
+          "Transaction(TXN_BENCH_005) -> Divergent Delivery Address (dist2: 0.0 mi)"
+        ]
+      },
+      "weight": 1.0,
+      "timestamp": 1790181017.006401
+    },
+    {
+      "id": "EV_STEPUP_3",
+      "source": "EXTERNAL_STEP_UP",
+      "direction": "SUPPORTING",
+      "title": "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)",
+      "details": {
+        "status": "FAILED_TIMEOUT",
+        "device_id": "UNKNOWN"
+      },
+      "weight": 1.0,
+      "timestamp": 1790181017.0204105
+    }
+  ],
+  "contradicting_evidence": [
+    {
+      "id": "EV_CON_1",
+      "source": "GRAPH",
+      "direction": "CONTRADICTING",
+      "title": "Shipping address matches historical registered billing location",
+      "details": {
+        "pattern_id": "ATO_ADDRESS_LAUNDER",
+        "name": "Account Takeover & Address Laundering",
+        "confidence": 0.72,
+        "supporting_evidence": [
+          "Elevated baseline transaction anomaly score (0.850)"
+        ],
+        "contradicting_evidence": [
+          "Shipping address matches historical registered billing location"
+        ],
+        "entities": [],
+        "transactions": [
+          "TXN_BENCH_005"
+        ],
+        "graph_paths": [
+          "Transaction(TXN_BENCH_005) -> Divergent Delivery Address (dist2: 0.0 mi)"
+        ]
+      },
+      "weight": 1.0,
+      "timestamp": 1790181017.0064046
+    }
+  ],
+  "missing_evidence": [
+    "Customer out-of-band biometric/OTP confirmation",
+    "Secondary device location match"
+  ],
+  "uncertainty_level": "RESOLVED",
+  "findings": [
+    "Investigation CASE-005 concluded with risk 0.85 and confidence 0.91. Patterns identified: Velocity Card Testing, Account Takeover & Address Laundering. Primary recommendation: BLOCK_TRANSACTION.",
+    "Transaction amount $1.50 is in micro-charge probing range (< $10.00)",
+    "Elevated baseline transaction anomaly score (0.850)"
+  ],
+  "recommended_actions": [
+    {
+      "action": "BLOCK_TRANSACTION",
+      "priority": "HIGH",
+      "confidence": 0.905,
+      "reason": "Transaction blocking requires Senior Analyst review.",
+      "supporting_evidence": [
+        "Transaction amount $1.50 is in micro-charge probing range (< $10.00)",
+        "Elevated baseline transaction anomaly score (0.850)",
+        "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
+      ],
+      "policy_basis": [
+        "POL-003: Payment Authorization Denial Standard"
+      ],
+      "approval_required": true,
+      "approval_route": "SENIOR_ANALYST",
+      "execution_status": "PENDING"
+    },
+    {
+      "action": "BLOCK_ACCOUNT",
+      "priority": "CRITICAL",
+      "confidence": 0.905,
+      "reason": "Account freeze requires Fraud Manager authorization.",
+      "supporting_evidence": [
+        "Transaction amount $1.50 is in micro-charge probing range (< $10.00)",
+        "Elevated baseline transaction anomaly score (0.850)",
+        "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
+      ],
+      "policy_basis": [
+        "POL-002: Executive Account Lockout Directive"
+      ],
+      "approval_required": true,
+      "approval_route": "FRAUD_MANAGER",
+      "execution_status": "PENDING"
+    }
+  ],
+  "executed_actions": [],
+  "approvals": [],
+  "investigator": "TigerGraph-Agent-v1",
+  "final_outcome": null,
+  "created_at": 1790181016.5674212,
+  "updated_at": 1790181017.040445
+}

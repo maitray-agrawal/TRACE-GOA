@@ -1,0 +1,40 @@
+{
+  "case_id": "CASE-020",
+  "recommended_actions": [
+    {
+      "action": "BLOCK_TRANSACTION",
+      "priority": "HIGH",
+      "confidence": 0.96,
+      "reason": "Transaction blocking requires Senior Analyst review.",
+      "supporting_evidence": [
+        "Device DEV_0001 exhibits headless/emulator signature",
+        "Device DEV_0001 linked to 4 distinct payment cards/accounts",
+        "Elevated baseline transaction anomaly score (0.980)"
+      ],
+      "policy_basis": [
+        "POL-003: Payment Authorization Denial Standard"
+      ],
+      "approval_required": true,
+      "approval_route": "SENIOR_ANALYST",
+      "execution_status": "PENDING"
+    },
+    {
+      "action": "BLOCK_ACCOUNT",
+      "priority": "CRITICAL",
+      "confidence": 0.96,
+      "reason": "Account freeze requires Fraud Manager authorization.",
+      "supporting_evidence": [
+        "Device DEV_0001 exhibits headless/emulator signature",
+        "Device DEV_0001 linked to 4 distinct payment cards/accounts",
+        "Elevated baseline transaction anomaly score (0.980)"
+      ],
+      "policy_basis": [
+        "POL-002: Executive Account Lockout Directive"
+      ],
+      "approval_required": true,
+      "approval_route": "FRAUD_MANAGER",
+      "execution_status": "PENDING"
+    }
+  ],
+  "executed_actions": []
+}
