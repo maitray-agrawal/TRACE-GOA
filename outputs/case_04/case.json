@@ -37,7 +37,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790183460.0315006
+      "timestamp": 1790184167.9845037
     },
     {
       "id": "EV_SUP_2",
@@ -63,7 +63,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790183460.0315135
+      "timestamp": 1790184167.9845114
     },
     {
       "id": "EV_SUP_3",
@@ -89,7 +89,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790183460.0315163
+      "timestamp": 1790184167.9845138
     },
     {
       "id": "EV_SUP_4",
@@ -115,7 +115,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790183460.0315197
+      "timestamp": 1790184167.9845166
     },
     {
       "id": "EV_STEPUP_5",
@@ -127,7 +127,7 @@
         "device_id": "UNKNOWN"
       },
       "weight": 1.0,
-      "timestamp": 1790183460.0469468
+      "timestamp": 1790184168.009247
     }
   ],
   "contradicting_evidence": [
@@ -157,7 +157,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790183460.0315092
+      "timestamp": 1790184167.9845088
     },
     {
       "id": "EV_CON_2",
@@ -183,7 +183,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790183460.0315228
+      "timestamp": 1790184167.9845188
     }
   ],
   "missing_evidence": [
@@ -238,6 +238,6 @@
   "approvals": [],
   "investigator": "TigerGraph-Agent-v1",
   "final_outcome": null,
-  "created_at": 1790183459.1730227,
-  "updated_at": 1790183460.0721903
+  "created_at": 1790184167.1282997,
+  "updated_at": 1790184168.033786
 }

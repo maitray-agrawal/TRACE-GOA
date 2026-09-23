@@ -12,8 +12,8 @@
       "status": "COMPLETED",
       "details": "Ingesting fraud signal trigger and initiating investigation pipeline",
       "state": "TRIGGERED",
-      "timestamp": 1790183461.512631,
-      "time_str": "22:41:01",
+      "timestamp": 1790184169.4145927,
+      "time_str": "22:52:49",
       "tool_call": null
     },
     {
@@ -21,8 +21,8 @@
       "status": "COMPLETED",
       "details": "Initializing and persisting case docket",
       "state": "CASE_CREATED",
-      "timestamp": 1790183461.5168984,
-      "time_str": "22:41:01",
+      "timestamp": 1790184169.4184637,
+      "time_str": "22:52:49",
       "tool_call": null
     },
     {
@@ -30,8 +30,8 @@
       "status": "COMPLETED",
       "details": "Formulated dynamic tool execution plan: query_neighborhood, find_shared_entities, detect_patterns (Amount=$1837.60, Risk=0.64)",
       "state": "PLANNING",
-      "timestamp": 1790183461.52498,
-      "time_str": "22:41:01",
+      "timestamp": 1790184169.426364,
+      "time_str": "22:52:49",
       "tool_call": null
     },
     {
@@ -39,8 +39,8 @@
       "status": "COMPLETED",
       "details": "Executed TigerGraph 2-hop neighborhood expansion (0 nodes, 0 edges)",
       "state": "INVESTIGATING",
-      "timestamp": 1790183461.5407324,
-      "time_str": "22:41:01",
+      "timestamp": 1790184169.4392223,
+      "time_str": "22:52:49",
       "tool_call": {
         "tool": "query_neighborhood",
         "node_count": 0,
@@ -52,8 +52,8 @@
       "status": "COMPLETED",
       "details": "Queried multi-hop shared device/IP linkage",
       "state": "INVESTIGATING",
-      "timestamp": 1790183461.5455797,
-      "time_str": "22:41:01",
+      "timestamp": 1790184169.4440205,
+      "time_str": "22:52:49",
       "tool_call": {
         "tool": "find_shared_entities",
         "status": "SUCCESS"
@@ -64,8 +64,8 @@
       "status": "COMPLETED",
       "details": "Synthesizing GraphRAG evidence pack from graph topologies and institutional policy",
       "state": "EVIDENCE_COLLECTION",
-      "timestamp": 1790183461.5456846,
-      "time_str": "22:41:01",
+      "timestamp": 1790184169.4441247,
+      "time_str": "22:52:49",
       "tool_call": null
     },
     {
@@ -73,8 +73,8 @@
       "status": "COMPLETED",
       "details": "Evaluating 5 canonical fraud typologies against deterministic pattern engine",
       "state": "PATTERN_ANALYSIS",
-      "timestamp": 1790183461.54612,
-      "time_str": "22:41:01",
+      "timestamp": 1790184169.4446075,
+      "time_str": "22:52:49",
       "tool_call": null
     },
     {
@@ -82,8 +82,8 @@
       "status": "COMPLETED",
       "details": "Calculating deterministic multi-factor risk and confidence scores",
       "state": "RISK_ASSESSMENT",
-      "timestamp": 1790183461.5466256,
-      "time_str": "22:41:01",
+      "timestamp": 1790184169.4450812,
+      "time_str": "22:52:49",
       "tool_call": null
     },
     {
@@ -91,8 +91,8 @@
       "status": "COMPLETED",
       "details": "Evaluated uncertainty gaps: Risk=0.64, Confidence=0.24, Gap=True",
       "state": "UNCERTAINTY_ANALYSIS",
-      "timestamp": 1790183461.546666,
-      "time_str": "22:41:01",
+      "timestamp": 1790184169.4451194,
+      "time_str": "22:52:49",
       "tool_call": null
     },
     {
@@ -100,8 +100,8 @@
       "status": "COMPLETED",
       "details": "Uncertainty detected: Insufficient evidence to justify unilateral freeze. Dispatching step-up challenge.",
       "state": "EVIDENCE_REQUIRED",
-      "timestamp": 1790183461.5466928,
-      "time_str": "22:41:01",
+      "timestamp": 1790184169.445141,
+      "time_str": "22:52:49",
       "tool_call": null
     },
     {
@@ -109,8 +109,8 @@
       "status": "COMPLETED",
       "details": "Customer response received: Step-up authentication failed / OTP expired (Hostile / ATO Signal)",
       "state": "REASSESSMENT",
-      "timestamp": 1790183461.561122,
-      "time_str": "22:41:01",
+      "timestamp": 1790184169.4599526,
+      "time_str": "22:52:49",
       "tool_call": null
     },
     {
@@ -118,8 +118,8 @@
       "status": "COMPLETED",
       "details": "Confidence upgraded after step-up failure to 0.52",
       "state": "REASSESSMENT",
-      "timestamp": 1790183461.5612466,
-      "time_str": "22:41:01",
+      "timestamp": 1790184169.46016,
+      "time_str": "22:52:49",
       "tool_call": null
     },
     {
@@ -127,8 +127,8 @@
       "status": "COMPLETED",
       "details": "Formulating prioritized Next-Best Action candidates against PolicyEngine",
       "state": "ACTION_PLANNING",
-      "timestamp": 1790183461.5612752,
-      "time_str": "22:41:01",
+      "timestamp": 1790184169.4602306,
+      "time_str": "22:52:49",
       "tool_call": null
     },
     {
@@ -136,8 +136,8 @@
       "status": "COMPLETED",
       "details": "Evaluating 2 candidate actions against PolicyEngine rules",
       "state": "POLICY_CHECK",
-      "timestamp": 1790183461.5612998,
-      "time_str": "22:41:01",
+      "timestamp": 1790184169.460292,
+      "time_str": "22:52:49",
       "tool_call": null
     },
     {
@@ -145,8 +145,8 @@
       "status": "COMPLETED",
       "details": "Executing authorized action MONITOR_TRANSACTION (No supervisor approval required)",
       "state": "ACTION_EXECUTION",
-      "timestamp": 1790183461.5613499,
-      "time_str": "22:41:01",
+      "timestamp": 1790184169.460417,
+      "time_str": "22:52:49",
       "tool_call": null
     },
     {
@@ -154,8 +154,8 @@
       "status": "COMPLETED",
       "details": "Wrote case docket and entity relationships back to TigerGraph: status=CASE_UPDATE",
       "state": "CASE_UPDATE",
-      "timestamp": 1790183461.5707219,
-      "time_str": "22:41:01",
+      "timestamp": 1790184169.4706748,
+      "time_str": "22:52:49",
       "tool_call": null
     },
     {
@@ -163,8 +163,8 @@
       "status": "COMPLETED",
       "details": "Indexing case findings and embedding into persistent case memory",
       "state": "MEMORY_UPDATE",
-      "timestamp": 1790183461.57075,
-      "time_str": "22:41:01",
+      "timestamp": 1790184169.4707046,
+      "time_str": "22:52:49",
       "tool_call": null
     },
     {
@@ -172,8 +172,8 @@
       "status": "COMPLETED",
       "details": "Investigation pipeline finished. Final status: RESOLVED",
       "state": "RESOLVED",
-      "timestamp": 1790183461.5846095,
-      "time_str": "22:41:01",
+      "timestamp": 1790184169.4836216,
+      "time_str": "22:52:49",
       "tool_call": null
     }
   ],

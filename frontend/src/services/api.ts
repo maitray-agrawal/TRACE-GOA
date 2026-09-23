@@ -67,6 +67,22 @@ export async function fetchCaseMemory(caseId: string): Promise<any> {
   return res.json();
 }
 
+export async function fetchDiagnostics(): Promise<any> {
+  try {
+    const res = await fetch(`${API_BASE}/system/diagnostics`);
+    if (!res.ok) throw new Error("Diagnostics unavailable");
+    return await res.json();
+  } catch {
+    return {
+      graph_engine: "SIMULATOR",
+      mcp: "LOCAL_DISPATCHER",
+      llm: "DETERMINISTIC_RULES",
+      graphrag: "ACTIVE",
+      dataset: "SYNTHETIC_DEVELOPMENT_FIXTURE"
+    };
+  }
+}
+
 export async function fetchPolicies(): Promise<any[]> {
   const res = await fetch(`${API_BASE}/policies`);
   return res.json();

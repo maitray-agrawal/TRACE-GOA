@@ -1,6 +1,8 @@
 import React from "react";
 import { Terminal, Network, ShieldCheck, Activity, SlidersHorizontal, Play } from "lucide-react";
 
+import { fetchDiagnostics } from "../services/api";
+
 interface HeaderProps {
   activeTab: string;
   setActiveTab: (tab: string) => void;
@@ -9,6 +11,18 @@ interface HeaderProps {
 }
 
 export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, activeRole, setActiveRole }) => {
+  const [diag, setDiag] = React.useState<any>({
+    graph_engine: "SIMULATOR",
+    mcp: "LOCAL_DISPATCHER",
+    llm: "DETERMINISTIC_RULES",
+    graphrag: "ACTIVE",
+    dataset: "SYNTHETIC_DEVELOPMENT_FIXTURE"
+  });
+
+  React.useEffect(() => {
+    fetchDiagnostics().then(setDiag).catch(console.error);
+  }, []);
+
   return (
     <header className="app-header">
       <div className="brand-section">
@@ -22,10 +36,21 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, activeR
         </div>
 
         <div className="tech-tags">
-          <span className="tech-tag">TIGERGRAPH</span>
-          <span className="tech-tag">GRAPHRAG</span>
-          <span className="tech-tag">MCP</span>
-          <span className="tech-tag">AGENTIC AI</span>
+          <span className="tech-tag" title="Graph Engine">
+            GRAPH: <strong style={{ color: diag.graph_engine === "TIGERGRAPH" ? "var(--accent-cyan)" : "#f59e0b" }}>{diag.graph_engine}</strong> ●
+          </span>
+          <span className="tech-tag" title="MCP Tool Layer">
+            MCP: <strong style={{ color: "var(--accent-emerald)" }}>{diag.mcp}</strong> ●
+          </span>
+          <span className="tech-tag" title="LLM Runtime Engine">
+            LLM: <strong style={{ color: diag.llm && diag.llm.includes("GEMINI") ? "var(--accent-cyan)" : "#a855f7" }}>{diag.llm}</strong> ●
+          </span>
+          <span className="tech-tag" title="GraphRAG Synthesis Layer">
+            GRAPHRAG: <strong style={{ color: "var(--accent-emerald)" }}>{diag.graphrag}</strong> ●
+          </span>
+          <span className="tech-tag" title="Dataset Ingestion Baseline">
+            DATA: <strong style={{ color: diag.dataset === "HHGOA_IEEE" ? "var(--accent-cyan)" : "#eab308" }}>{diag.dataset === "HHGOA_IEEE" ? "HHGOA" : "DEV_FIXTURE"}</strong> ●
+          </span>
         </div>
       </div>
 

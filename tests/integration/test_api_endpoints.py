@@ -65,3 +65,16 @@ def test_ledger_verification_endpoint():
     res = client.post("/api/ledger/verify?case_id=CASE-001")
     assert res.status_code == 200
     assert res.json()["is_valid"] is True
+
+
+def test_system_diagnostics_endpoint():
+    client = TestClient(app)
+    res = client.get("/api/system/diagnostics")
+    assert res.status_code == 200
+    d = res.json()
+    assert "graph_engine" in d
+    assert d["graph_engine"] in ("SIMULATOR", "TIGERGRAPH")
+    assert "mcp" in d
+    assert "llm" in d
+    assert "dataset" in d
+    assert d["dataset"] in ("SYNTHETIC_DEVELOPMENT_FIXTURE", "HHGOA_IEEE")

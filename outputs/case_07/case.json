@@ -31,13 +31,13 @@
   "executed_actions": [
     {
       "action": "ALLOW_TRANSACTION",
-      "executed_at": 1790183460.294539,
+      "executed_at": 1790184168.2516341,
       "status": "SUCCESS"
     }
   ],
   "approvals": [],
   "investigator": "TigerGraph-Agent-v1",
   "final_outcome": null,
-  "created_at": 1790183459.2137296,
-  "updated_at": 1790183460.3079505
+  "created_at": 1790184167.1663349,
+  "updated_at": 1790184168.2728593
 }

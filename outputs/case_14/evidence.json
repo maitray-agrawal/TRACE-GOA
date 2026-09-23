@@ -26,7 +26,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790183461.0386252
+      "timestamp": 1790184168.931822
     },
     {
       "id": "EV_SUP_2",
@@ -53,7 +53,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790183461.0386298
+      "timestamp": 1790184168.9318264
     },
     {
       "id": "EV_SUP_3",
@@ -79,7 +79,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790183461.038633
+      "timestamp": 1790184168.9318292
     },
     {
       "id": "EV_STEPUP_4",
@@ -91,7 +91,7 @@
         "device_id": "UNKNOWN"
       },
       "weight": 1.0,
-      "timestamp": 1790183461.0522482
+      "timestamp": 1790184168.9462297
     }
   ],
   "contradicting_evidence": [
@@ -119,7 +119,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790183461.0386362
+      "timestamp": 1790184168.9318323
     }
   ],
   "missing_evidence": [
@@ -132,26 +132,71 @@
     "investigation_question": "Assess transaction risk and determine next best action",
     "graph_evidence": [
       {
-        "evidence_id": "EV_GRAPH_001",
+        "evidence_id": "EV_GRAPH_016",
         "type": "GRAPH_RELATIONSHIP",
+        "category": "OBSERVED",
+        "source": "TigerGraph",
+        "source_reference": "Vertex:IP:198.51.0.11",
+        "claim": "Transaction TXN_BENCH_014 is linked to IP node 198.51.0.11",
+        "confidence": 0.98,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.9311182,
+        "attributes": {
+          "ip_type": "DATACENTER_PROXY",
+          "country_code": "US",
+          "isp": "CloudProxy LLC",
+          "reputation": 0.2
+        },
+        "timestamp": 1790184168.931121
+      },
+      {
+        "evidence_id": "EV_GRAPH_026",
+        "type": "GRAPH_RELATIONSHIP",
+        "category": "OBSERVED",
         "source": "TigerGraph",
         "source_reference": "Vertex:Merchant:MERCH_001",
         "claim": "Transaction TXN_BENCH_014 is linked to Merchant node MERCH_001",
         "confidence": 0.98,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.931148,
         "attributes": {
           "category": "crypto_gateway",
           "risk_level": "HIGH",
           "terminal_count": 2
         },
-        "timestamp": 1790183461.0379393
+        "timestamp": 1790184168.9311485
       },
       {
-        "evidence_id": "EV_GRAPH_009",
+        "evidence_id": "EV_GRAPH_028",
         "type": "GRAPH_RELATIONSHIP",
+        "category": "OBSERVED",
         "source": "TigerGraph",
         "source_reference": "Vertex:Device:DEV_0001",
         "claim": "Transaction TXN_BENCH_014 is linked to Device node DEV_0001",
         "confidence": 0.98,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.9311574,
         "attributes": {
           "device_type": "emulator",
           "os_name": "Linux/Android Emulator",
@@ -159,90 +204,125 @@
           "screen_resolution": "800x600",
           "is_emulator": true
         },
-        "timestamp": 1790183461.0379608
+        "timestamp": 1790184168.9311578
       },
       {
-        "evidence_id": "EV_GRAPH_020",
+        "evidence_id": "EV_GRAPH_033",
         "type": "GRAPH_RELATIONSHIP",
-        "source": "TigerGraph",
-        "source_reference": "Vertex:IP:198.51.0.11",
-        "claim": "Transaction TXN_BENCH_014 is linked to IP node 198.51.0.11",
-        "confidence": 0.98,
-        "attributes": {
-          "ip_type": "DATACENTER_PROXY",
-          "country_code": "US",
-          "isp": "CloudProxy LLC",
-          "reputation": 0.2
-        },
-        "timestamp": 1790183461.0379682
-      },
-      {
-        "evidence_id": "EV_GRAPH_022",
-        "type": "GRAPH_RELATIONSHIP",
+        "category": "OBSERVED",
         "source": "TigerGraph",
         "source_reference": "Vertex:Card:CARD_0014",
         "claim": "Transaction TXN_BENCH_014 is linked to Card node CARD_0014",
         "confidence": 0.98,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.9311635,
         "attributes": {
           "bin": "495426",
           "issuer": "Chase",
           "brand": "visa",
           "category": "credit"
         },
-        "timestamp": 1790183461.0379727
+        "timestamp": 1790184168.9311638
       },
       {
         "evidence_id": "EV_GRAPH_REUSE_DEV_0001",
         "type": "GRAPH_RELATIONSHIP",
+        "category": "OBSERVED",
         "source": "TigerGraph",
         "source_reference": "GSQL:device_reuse_detection(DEV_0001)",
         "claim": "Hardware device DEV_0001 was reused across 4 distinct payment cards",
         "confidence": 0.94,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.931197,
         "attributes": {
           "reused_cards": [
             "CARD_0020",
-            "CARD_0008",
             "CARD_0014",
+            "CARD_0008",
             "CARD_0001"
           ]
         },
-        "timestamp": 1790183461.0380049
+        "timestamp": 1790184168.9311974
       }
     ],
     "transaction_evidence": [
       {
         "evidence_id": "EV_TXN_AMOUNT",
         "type": "TRANSACTION_TELEMETRY",
+        "category": "OBSERVED",
         "source": "TigerGraph",
         "source_reference": "Vertex:Transaction:TXN_BENCH_014.amount",
         "claim": "Transaction requested amount is $2785.46 USD",
         "confidence": 1.0,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.93121,
         "attributes": {
           "amount": 2785.46
         },
-        "timestamp": 1790183461.0380151
+        "timestamp": 1790184168.9312103
       },
       {
         "evidence_id": "EV_TXN_RISK",
         "type": "TRANSACTION_TELEMETRY",
+        "category": "OBSERVED",
         "source": "TigerGraph",
         "source_reference": "Vertex:Transaction:TXN_BENCH_014.risk_score",
         "claim": "Baseline anomaly detector assigned initial risk score of 0.95",
         "confidence": 0.9,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.9312165,
         "attributes": {
           "risk_score": 0.95
         },
-        "timestamp": 1790183461.0380197
+        "timestamp": 1790184168.931217
       }
     ],
     "historical_cases": [
       {
         "evidence_id": "EV_MEM_CASE-020",
         "type": "HISTORICAL_CASE",
+        "category": "OBSERVED",
         "source": "CaseMemory",
         "source_reference": "Vertex:Case:CASE-020",
         "claim": "Prior investigation CASE-020 closed with outcome None (Risk: 0.98)",
         "confidence": 0.96,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.9312408,
         "attributes": {
           "case_id": "CASE-020",
           "trigger_txn_id": "TXN_BENCH_020",
@@ -255,15 +335,25 @@
           "expected_action": "BLOCK_ACCOUNT",
           "created_at": 1715072000
         },
-        "timestamp": 1790183461.0380583
+        "timestamp": 1790184168.9312418
       },
       {
         "evidence_id": "EV_MEM_CASE-014",
         "type": "HISTORICAL_CASE",
+        "category": "OBSERVED",
         "source": "CaseMemory",
         "source_reference": "Vertex:Case:CASE-014",
         "claim": "Prior investigation CASE-014 closed with outcome None (Risk: 0.95)",
         "confidence": 0.96,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.9312482,
         "attributes": {
           "case_id": "CASE-014",
           "trigger_txn_id": "TXN_BENCH_014",
@@ -276,15 +366,25 @@
           "expected_action": "BLOCK_TRANSACTION",
           "created_at": 1715050400
         },
-        "timestamp": 1790183461.0380657
+        "timestamp": 1790184168.9312487
       },
       {
         "evidence_id": "EV_MEM_None",
         "type": "HISTORICAL_CASE",
+        "category": "OBSERVED",
         "source": "CaseMemory",
         "source_reference": "Vertex:Case:None",
         "claim": "Prior investigation None closed with outcome CONFIRMED_FRAUD (Risk: 0.94)",
         "confidence": 0.675,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.9312549,
         "attributes": {
           "id": "CASE-001",
           "trigger_type": "ANOMALY_TRIGGER",
@@ -292,7 +392,7 @@
           "confidence": 0.675,
           "status": "CASE_UPDATE",
           "final_outcome": "CONFIRMED_FRAUD",
-          "created_at": 1790183459,
+          "created_at": 1790184167,
           "closed_at": 0,
           "findings": [
             "Investigation CASE-001 concluded with risk 0.94 and confidence 0.68. Patterns identified: Device Emulation Farm, Account Takeover & Address Laundering. Primary recommendation: BLOCK_TRANSACTION.",
@@ -302,7 +402,7 @@
           ],
           "actions": []
         },
-        "timestamp": 1790183461.0380726
+        "timestamp": 1790184168.931256
       }
     ],
     "fraud_patterns": [],
@@ -310,89 +410,564 @@
       {
         "evidence_id": "EV_POL_POL-001",
         "type": "POLICY_RULE",
+        "category": "OBSERVED",
         "source": "PolicyEngine",
         "source_reference": "PolicyKnowledgeBase:POL-001",
         "claim": "Bank Policy POL-001 (Uncertainty & Step-Up Authentication): When transaction risk is elevated (> 0.60) but graph evidence remains ambiguous or confidence is below 0.70, the system MUST NOT execute unilateral account freezing. An out-of-band Step-Up Authentication (SMS OTP, Biometric, or Call) must be triggered.",
         "confidence": 1.0,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.9312642,
         "attributes": {
           "id": "POL-001",
           "topic": "Uncertainty & Step-Up Authentication",
           "content": "When transaction risk is elevated (> 0.60) but graph evidence remains ambiguous or confidence is below 0.70, the system MUST NOT execute unilateral account freezing. An out-of-band Step-Up Authentication (SMS OTP, Biometric, or Call) must be triggered."
         },
-        "timestamp": 1790183461.0380793
+        "timestamp": 1790184168.9312649
       },
       {
         "evidence_id": "EV_POL_POL-002",
         "type": "POLICY_RULE",
+        "category": "OBSERVED",
         "source": "PolicyEngine",
         "source_reference": "PolicyKnowledgeBase:POL-002",
         "claim": "Bank Policy POL-002 (Account Freezing Directives): Account freezing (BLOCK_ACCOUNT) is a punitive action requiring conclusive evidence (> 0.75 confidence) of coordinated syndicate membership, device emulation farms, or confirmed synthetic identity. Sign-off by a Fraud Manager is mandatory.",
         "confidence": 1.0,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.9312718,
         "attributes": {
           "id": "POL-002",
           "topic": "Account Freezing Directives",
           "content": "Account freezing (BLOCK_ACCOUNT) is a punitive action requiring conclusive evidence (> 0.75 confidence) of coordinated syndicate membership, device emulation farms, or confirmed synthetic identity. Sign-off by a Fraud Manager is mandatory."
         },
-        "timestamp": 1790183461.0380838
+        "timestamp": 1790184168.931272
       },
       {
         "evidence_id": "EV_POL_POL-003",
         "type": "POLICY_RULE",
+        "category": "OBSERVED",
         "source": "PolicyEngine",
         "source_reference": "PolicyKnowledgeBase:POL-003",
         "claim": "Bank Policy POL-003 (Transaction Authorization Denial): Transactions exhibiting automated velocity card testing or high-velocity mule dispersal shall be blocked immediately upon Senior Analyst concurrence.",
         "confidence": 1.0,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.9312768,
         "attributes": {
           "id": "POL-003",
           "topic": "Transaction Authorization Denial",
           "content": "Transactions exhibiting automated velocity card testing or high-velocity mule dispersal shall be blocked immediately upon Senior Analyst concurrence."
         },
-        "timestamp": 1790183461.0380878
+        "timestamp": 1790184168.9312773
       }
     ],
     "regulatory_evidence": [
       {
         "evidence_id": "EV_REG_REG-BSA-001",
         "type": "REGULATORY_STATUTE",
+        "category": "OBSERVED",
         "source": "RegulatoryRegistry",
         "source_reference": "RegulatoryKnowledgeBase:REG-BSA-001",
         "claim": "Statutory Mandate REG-BSA-001 (FinCEN Suspicious Activity Reports (SAR)): Pursuant to 31 CFR \u00a7 1020.320, transactions aggregating $5,000 or more involving known or suspected illicit activity, money laundering, or structuring must be drafted as formal SAR filings.",
         "confidence": 1.0,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.931283,
         "attributes": {
           "id": "REG-BSA-001",
           "topic": "FinCEN Suspicious Activity Reports (SAR)",
           "content": "Pursuant to 31 CFR \u00a7 1020.320, transactions aggregating $5,000 or more involving known or suspected illicit activity, money laundering, or structuring must be drafted as formal SAR filings."
         },
-        "timestamp": 1790183461.0380926
+        "timestamp": 1790184168.9312832
       },
       {
         "evidence_id": "EV_REG_REG-E-001",
         "type": "REGULATORY_STATUTE",
+        "category": "OBSERVED",
         "source": "RegulatoryRegistry",
         "source_reference": "RegulatoryKnowledgeBase:REG-E-001",
         "claim": "Statutory Mandate REG-E-001 (CFPB Regulation E Consumer Liability): Under CFPB Regulation E (12 CFR Part 1005), consumers have limited liability for unauthorized electronic fund transfers if reported promptly. Accounts suspected of takeover (ATO) must be provisionally secured.",
         "confidence": 1.0,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.9312878,
         "attributes": {
           "id": "REG-E-001",
           "topic": "CFPB Regulation E Consumer Liability",
           "content": "Under CFPB Regulation E (12 CFR Part 1005), consumers have limited liability for unauthorized electronic fund transfers if reported promptly. Accounts suspected of takeover (ATO) must be provisionally secured."
         },
-        "timestamp": 1790183461.038097
+        "timestamp": 1790184168.931288
       }
     ],
     "supporting_evidence": [
       {
         "evidence_id": "EV_SUPP_RISK",
         "type": "TRANSACTION_TELEMETRY",
+        "category": "OBSERVED",
         "source": "TigerGraph",
         "source_reference": "Transaction:TXN_BENCH_014",
         "claim": "Elevated baseline transaction risk (0.95 >= 0.70)",
         "confidence": 0.95,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.9312937,
         "attributes": {},
-        "timestamp": 1790183461.0381014
+        "timestamp": 1790184168.931294
       }
     ],
     "contradicting_evidence": [],
-    "uncertainty_gaps": []
+    "uncertainty_gaps": [],
+    "observed_evidence": [
+      {
+        "evidence_id": "EV_GRAPH_016",
+        "type": "GRAPH_RELATIONSHIP",
+        "category": "OBSERVED",
+        "source": "TigerGraph",
+        "source_reference": "Vertex:IP:198.51.0.11",
+        "claim": "Transaction TXN_BENCH_014 is linked to IP node 198.51.0.11",
+        "confidence": 0.98,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.9311182,
+        "attributes": {
+          "ip_type": "DATACENTER_PROXY",
+          "country_code": "US",
+          "isp": "CloudProxy LLC",
+          "reputation": 0.2
+        },
+        "timestamp": 1790184168.931121
+      },
+      {
+        "evidence_id": "EV_GRAPH_026",
+        "type": "GRAPH_RELATIONSHIP",
+        "category": "OBSERVED",
+        "source": "TigerGraph",
+        "source_reference": "Vertex:Merchant:MERCH_001",
+        "claim": "Transaction TXN_BENCH_014 is linked to Merchant node MERCH_001",
+        "confidence": 0.98,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.931148,
+        "attributes": {
+          "category": "crypto_gateway",
+          "risk_level": "HIGH",
+          "terminal_count": 2
+        },
+        "timestamp": 1790184168.9311485
+      },
+      {
+        "evidence_id": "EV_GRAPH_028",
+        "type": "GRAPH_RELATIONSHIP",
+        "category": "OBSERVED",
+        "source": "TigerGraph",
+        "source_reference": "Vertex:Device:DEV_0001",
+        "claim": "Transaction TXN_BENCH_014 is linked to Device node DEV_0001",
+        "confidence": 0.98,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.9311574,
+        "attributes": {
+          "device_type": "emulator",
+          "os_name": "Linux/Android Emulator",
+          "browser_name": "HeadlessChrome",
+          "screen_resolution": "800x600",
+          "is_emulator": true
+        },
+        "timestamp": 1790184168.9311578
+      },
+      {
+        "evidence_id": "EV_GRAPH_033",
+        "type": "GRAPH_RELATIONSHIP",
+        "category": "OBSERVED",
+        "source": "TigerGraph",
+        "source_reference": "Vertex:Card:CARD_0014",
+        "claim": "Transaction TXN_BENCH_014 is linked to Card node CARD_0014",
+        "confidence": 0.98,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.9311635,
+        "attributes": {
+          "bin": "495426",
+          "issuer": "Chase",
+          "brand": "visa",
+          "category": "credit"
+        },
+        "timestamp": 1790184168.9311638
+      },
+      {
+        "evidence_id": "EV_GRAPH_REUSE_DEV_0001",
+        "type": "GRAPH_RELATIONSHIP",
+        "category": "OBSERVED",
+        "source": "TigerGraph",
+        "source_reference": "GSQL:device_reuse_detection(DEV_0001)",
+        "claim": "Hardware device DEV_0001 was reused across 4 distinct payment cards",
+        "confidence": 0.94,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.931197,
+        "attributes": {
+          "reused_cards": [
+            "CARD_0020",
+            "CARD_0014",
+            "CARD_0008",
+            "CARD_0001"
+          ]
+        },
+        "timestamp": 1790184168.9311974
+      },
+      {
+        "evidence_id": "EV_TXN_AMOUNT",
+        "type": "TRANSACTION_TELEMETRY",
+        "category": "OBSERVED",
+        "source": "TigerGraph",
+        "source_reference": "Vertex:Transaction:TXN_BENCH_014.amount",
+        "claim": "Transaction requested amount is $2785.46 USD",
+        "confidence": 1.0,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.93121,
+        "attributes": {
+          "amount": 2785.46
+        },
+        "timestamp": 1790184168.9312103
+      },
+      {
+        "evidence_id": "EV_TXN_RISK",
+        "type": "TRANSACTION_TELEMETRY",
+        "category": "OBSERVED",
+        "source": "TigerGraph",
+        "source_reference": "Vertex:Transaction:TXN_BENCH_014.risk_score",
+        "claim": "Baseline anomaly detector assigned initial risk score of 0.95",
+        "confidence": 0.9,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.9312165,
+        "attributes": {
+          "risk_score": 0.95
+        },
+        "timestamp": 1790184168.931217
+      }
+    ],
+    "inferred_evidence": [
+      {
+        "evidence_id": "EV_SUPP_RISK",
+        "type": "TRANSACTION_TELEMETRY",
+        "category": "OBSERVED",
+        "source": "TigerGraph",
+        "source_reference": "Transaction:TXN_BENCH_014",
+        "claim": "Elevated baseline transaction risk (0.95 >= 0.70)",
+        "confidence": 0.95,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.9312937,
+        "attributes": {},
+        "timestamp": 1790184168.931294
+      },
+      {
+        "evidence_id": "EV_MEM_CASE-020",
+        "type": "HISTORICAL_CASE",
+        "category": "OBSERVED",
+        "source": "CaseMemory",
+        "source_reference": "Vertex:Case:CASE-020",
+        "claim": "Prior investigation CASE-020 closed with outcome None (Risk: 0.98)",
+        "confidence": 0.96,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.9312408,
+        "attributes": {
+          "case_id": "CASE-020",
+          "trigger_txn_id": "TXN_BENCH_020",
+          "subject_customer_id": "CUST_0020",
+          "pattern": "MULTI_PATTERN_SYNDICATE",
+          "risk_score": 0.98,
+          "confidence": 0.96,
+          "status": "INVESTIGATING",
+          "scenario_description": "Full-Scale Coordinated Attack: Device Farm + Synthetic IDs + Mule Funnel Network",
+          "expected_action": "BLOCK_ACCOUNT",
+          "created_at": 1715072000
+        },
+        "timestamp": 1790184168.9312418
+      },
+      {
+        "evidence_id": "EV_MEM_CASE-014",
+        "type": "HISTORICAL_CASE",
+        "category": "OBSERVED",
+        "source": "CaseMemory",
+        "source_reference": "Vertex:Case:CASE-014",
+        "claim": "Prior investigation CASE-014 closed with outcome None (Risk: 0.95)",
+        "confidence": 0.96,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.9312482,
+        "attributes": {
+          "case_id": "CASE-014",
+          "trigger_txn_id": "TXN_BENCH_014",
+          "subject_customer_id": "CUST_0014",
+          "pattern": "DEVICE_FARM",
+          "risk_score": 0.95,
+          "confidence": 0.96,
+          "status": "INVESTIGATING",
+          "scenario_description": "Prepaid Card Exhaustion: Single mobile emulator laundering stolen gift cards",
+          "expected_action": "BLOCK_TRANSACTION",
+          "created_at": 1715050400
+        },
+        "timestamp": 1790184168.9312487
+      },
+      {
+        "evidence_id": "EV_MEM_None",
+        "type": "HISTORICAL_CASE",
+        "category": "OBSERVED",
+        "source": "CaseMemory",
+        "source_reference": "Vertex:Case:None",
+        "claim": "Prior investigation None closed with outcome CONFIRMED_FRAUD (Risk: 0.94)",
+        "confidence": 0.675,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.9312549,
+        "attributes": {
+          "id": "CASE-001",
+          "trigger_type": "ANOMALY_TRIGGER",
+          "risk_score": 0.94,
+          "confidence": 0.675,
+          "status": "CASE_UPDATE",
+          "final_outcome": "CONFIRMED_FRAUD",
+          "created_at": 1790184167,
+          "closed_at": 0,
+          "findings": [
+            "Investigation CASE-001 concluded with risk 0.94 and confidence 0.68. Patterns identified: Device Emulation Farm, Account Takeover & Address Laundering. Primary recommendation: BLOCK_TRANSACTION.",
+            "Device DEV_0001 exhibits headless/emulator signature",
+            "Device DEV_0001 linked to 4 distinct payment cards/accounts",
+            "Elevated baseline transaction anomaly score (0.940)"
+          ],
+          "actions": []
+        },
+        "timestamp": 1790184168.931256
+      }
+    ],
+    "recommended_evidence": [
+      {
+        "evidence_id": "EV_POL_POL-001",
+        "type": "POLICY_RULE",
+        "category": "OBSERVED",
+        "source": "PolicyEngine",
+        "source_reference": "PolicyKnowledgeBase:POL-001",
+        "claim": "Bank Policy POL-001 (Uncertainty & Step-Up Authentication): When transaction risk is elevated (> 0.60) but graph evidence remains ambiguous or confidence is below 0.70, the system MUST NOT execute unilateral account freezing. An out-of-band Step-Up Authentication (SMS OTP, Biometric, or Call) must be triggered.",
+        "confidence": 1.0,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.9312642,
+        "attributes": {
+          "id": "POL-001",
+          "topic": "Uncertainty & Step-Up Authentication",
+          "content": "When transaction risk is elevated (> 0.60) but graph evidence remains ambiguous or confidence is below 0.70, the system MUST NOT execute unilateral account freezing. An out-of-band Step-Up Authentication (SMS OTP, Biometric, or Call) must be triggered."
+        },
+        "timestamp": 1790184168.9312649
+      },
+      {
+        "evidence_id": "EV_POL_POL-002",
+        "type": "POLICY_RULE",
+        "category": "OBSERVED",
+        "source": "PolicyEngine",
+        "source_reference": "PolicyKnowledgeBase:POL-002",
+        "claim": "Bank Policy POL-002 (Account Freezing Directives): Account freezing (BLOCK_ACCOUNT) is a punitive action requiring conclusive evidence (> 0.75 confidence) of coordinated syndicate membership, device emulation farms, or confirmed synthetic identity. Sign-off by a Fraud Manager is mandatory.",
+        "confidence": 1.0,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.9312718,
+        "attributes": {
+          "id": "POL-002",
+          "topic": "Account Freezing Directives",
+          "content": "Account freezing (BLOCK_ACCOUNT) is a punitive action requiring conclusive evidence (> 0.75 confidence) of coordinated syndicate membership, device emulation farms, or confirmed synthetic identity. Sign-off by a Fraud Manager is mandatory."
+        },
+        "timestamp": 1790184168.931272
+      },
+      {
+        "evidence_id": "EV_POL_POL-003",
+        "type": "POLICY_RULE",
+        "category": "OBSERVED",
+        "source": "PolicyEngine",
+        "source_reference": "PolicyKnowledgeBase:POL-003",
+        "claim": "Bank Policy POL-003 (Transaction Authorization Denial): Transactions exhibiting automated velocity card testing or high-velocity mule dispersal shall be blocked immediately upon Senior Analyst concurrence.",
+        "confidence": 1.0,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.9312768,
+        "attributes": {
+          "id": "POL-003",
+          "topic": "Transaction Authorization Denial",
+          "content": "Transactions exhibiting automated velocity card testing or high-velocity mule dispersal shall be blocked immediately upon Senior Analyst concurrence."
+        },
+        "timestamp": 1790184168.9312773
+      },
+      {
+        "evidence_id": "EV_REG_REG-BSA-001",
+        "type": "REGULATORY_STATUTE",
+        "category": "OBSERVED",
+        "source": "RegulatoryRegistry",
+        "source_reference": "RegulatoryKnowledgeBase:REG-BSA-001",
+        "claim": "Statutory Mandate REG-BSA-001 (FinCEN Suspicious Activity Reports (SAR)): Pursuant to 31 CFR \u00a7 1020.320, transactions aggregating $5,000 or more involving known or suspected illicit activity, money laundering, or structuring must be drafted as formal SAR filings.",
+        "confidence": 1.0,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.931283,
+        "attributes": {
+          "id": "REG-BSA-001",
+          "topic": "FinCEN Suspicious Activity Reports (SAR)",
+          "content": "Pursuant to 31 CFR \u00a7 1020.320, transactions aggregating $5,000 or more involving known or suspected illicit activity, money laundering, or structuring must be drafted as formal SAR filings."
+        },
+        "timestamp": 1790184168.9312832
+      },
+      {
+        "evidence_id": "EV_REG_REG-E-001",
+        "type": "REGULATORY_STATUTE",
+        "category": "OBSERVED",
+        "source": "RegulatoryRegistry",
+        "source_reference": "RegulatoryKnowledgeBase:REG-E-001",
+        "claim": "Statutory Mandate REG-E-001 (CFPB Regulation E Consumer Liability): Under CFPB Regulation E (12 CFR Part 1005), consumers have limited liability for unauthorized electronic fund transfers if reported promptly. Accounts suspected of takeover (ATO) must be provisionally secured.",
+        "confidence": 1.0,
+        "graph": "FraudInvestigationGraph",
+        "query": null,
+        "query_parameters": null,
+        "returned_entities": null,
+        "returned_relationships": null,
+        "document": null,
+        "section": null,
+        "retrieval_score": null,
+        "retrieval_timestamp": 1790184168.9312878,
+        "attributes": {
+          "id": "REG-E-001",
+          "topic": "CFPB Regulation E Consumer Liability",
+          "content": "Under CFPB Regulation E (12 CFR Part 1005), consumers have limited liability for unauthorized electronic fund transfers if reported promptly. Accounts suspected of takeover (ATO) must be provisionally secured."
+        },
+        "timestamp": 1790184168.931288
+      }
+    ]
   }
 }

@@ -18,6 +18,10 @@ logger = logging.getLogger("TigerGraphClient")
 class BaseGraphClient:
     """Abstract interface defining required TigerGraph GSQL capabilities."""
 
+    @property
+    def engine_name(self) -> str:
+        return "UNKNOWN"
+
     def get_transaction(self, txn_id: str) -> Optional[Dict[str, Any]]:
         raise NotImplementedError
 
@@ -67,6 +71,10 @@ class BaseGraphClient:
 
 class InMemoryTigerGraphSimulator(BaseGraphClient):
     """High-fidelity in-memory graph simulator implementing TigerGraph GSQL queries."""
+
+    @property
+    def engine_name(self) -> str:
+        return "SIMULATOR"
 
     def __init__(self):
         self.graph = nx.MultiDiGraph()
@@ -415,6 +423,10 @@ class InMemoryTigerGraphSimulator(BaseGraphClient):
 
 class TigerGraphRESTClient(BaseGraphClient):
     """Client for live TigerGraph REST++ GSQL endpoints."""
+
+    @property
+    def engine_name(self) -> str:
+        return "TIGERGRAPH"
 
     def __init__(self, host: str, graph: str, token: Optional[str] = None):
         self.host = host.rstrip("/")

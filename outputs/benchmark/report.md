@@ -1,8 +1,12 @@
-# TRACE//GOA — 20-Case Benchmark Evaluation Report
+# TRACE//GOA — 20-Case Synthetic Development Benchmark Report
+
+> **Benchmark Classification**: `SYNTHETIC BENCHMARK` (High-Fidelity Development Fixture)
+> **Notice**: Synthetic development data is used locally because the competition dataset is not currently available in this environment.
 
 ## Executive Summary
 
 - **Total Benchmark Cases Processed**: 20
+- **Data Ground Truth**: `data/raw/cases.csv` (Seeded via `scripts/ingest/generate_seed_dataset.py`)
 - **SHA-256 Ledger Integrity**: 20/20 Chains Cryptographically Valid (100%)
 - **TigerGraph Case Write-Back**: 20/20 Persisted (100%)
 - **SAR Filings Generated (FinCEN BSA)**: 3 Cases

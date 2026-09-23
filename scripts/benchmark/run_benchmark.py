@@ -198,9 +198,12 @@ def run_benchmark(output_base: str = "outputs") -> Dict[str, Any]:
     # Generate outputs/benchmark/report.md
     report_md_path = os.path.join(benchmark_dir, "report.md")
     with open(report_md_path, "w", encoding="utf-8") as f:
-        f.write("# TRACE//GOA — 20-Case Benchmark Evaluation Report\n\n")
+        f.write("# TRACE//GOA — 20-Case Synthetic Development Benchmark Report\n\n")
+        f.write("> **Benchmark Classification**: `SYNTHETIC BENCHMARK` (High-Fidelity Development Fixture)\n")
+        f.write("> **Notice**: Synthetic development data is used locally because the competition dataset is not currently available in this environment.\n\n")
         f.write("## Executive Summary\n\n")
         f.write(f"- **Total Benchmark Cases Processed**: {len(benchmark_records)}\n")
+        f.write("- **Data Ground Truth**: `data/raw/cases.csv` (Seeded via `scripts/ingest/generate_seed_dataset.py`)\n")
         valid_ledgers = sum(1 for r in benchmark_records if r["ledger_status"] == "VALID")
         f.write(f"- **SHA-256 Ledger Integrity**: {valid_ledgers}/{len(benchmark_records)} Chains Cryptographically Valid (100%)\n")
         write_backs = sum(1 for r in benchmark_records if r["case_write_back_status"] == "SUCCESS")

@@ -52,13 +52,23 @@ POLICY_KNOWLEDGE_BASE = INTERNAL_POLICIES + REGULATORY_POLICIES
 
 
 class StructuredEvidenceItem(BaseModel):
-    """Immutable evidence item with strict provenance tracking."""
+    """Immutable evidence item with strict provenance tracking matching Sections 12 & 13."""
     evidence_id: str
     type: str = Field(..., description="GRAPH_RELATIONSHIP, TRANSACTION_TELEMETRY, HISTORICAL_CASE, FRAUD_PATTERN, POLICY_RULE, REGULATORY_STATUTE")
+    category: str = Field(default="OBSERVED", description="OBSERVED, INFERRED, RECOMMENDED")
     source: str = Field(..., description="TigerGraph, PolicyEngine, RegulatoryRegistry, CaseMemory, ExternalTelemetry")
     source_reference: str
     claim: str
     confidence: float = 1.0
+    graph: Optional[str] = "FraudInvestigationGraph"
+    query: Optional[str] = None
+    query_parameters: Optional[Dict[str, Any]] = None
+    returned_entities: Optional[List[str]] = None
+    returned_relationships: Optional[List[str]] = None
+    document: Optional[str] = None
+    section: Optional[str] = None
+    retrieval_score: Optional[float] = None
+    retrieval_timestamp: float = Field(default_factory=time.time)
     attributes: Dict[str, Any] = Field(default_factory=dict)
     timestamp: float = Field(default_factory=time.time)
 
@@ -67,7 +77,7 @@ class StructuredEvidenceItem(BaseModel):
 
 
 class EvidencePack(BaseModel):
-    """Standardized Evidence Pack matching Prompt Section 11 contract."""
+    """Standardized Evidence Pack matching Prompt Section 11 contract with Section 13 categorization."""
     case_id: str
     investigation_question: str
     graph_evidence: List[Dict[str, Any]]
@@ -79,6 +89,9 @@ class EvidencePack(BaseModel):
     supporting_evidence: List[Dict[str, Any]]
     contradicting_evidence: List[Dict[str, Any]]
     uncertainty_gaps: List[str]
+    observed_evidence: List[Dict[str, Any]] = Field(default_factory=list)
+    inferred_evidence: List[Dict[str, Any]] = Field(default_factory=list)
+    recommended_evidence: List[Dict[str, Any]] = Field(default_factory=list)
 
     def to_dict(self) -> Dict[str, Any]:
         return self.model_dump()
@@ -239,6 +252,10 @@ class GraphRAGSynthesizer:
         if dist1 < 0 and risk_score >= 0.60:
             uncertainty_gaps.append("Missing IP-to-billing distance telemetry")
 
+        observed_evidence = graph_evidence + transaction_evidence
+        inferred_evidence = supporting_evidence + contradicting_evidence + historical_cases
+        recommended_evidence = policy_evidence + regulatory_evidence
+
         return EvidencePack(
             case_id=case_id,
             investigation_question=question,
@@ -250,5 +267,8 @@ class GraphRAGSynthesizer:
             regulatory_evidence=regulatory_evidence,
             supporting_evidence=supporting_evidence,
             contradicting_evidence=contradicting_evidence,
-            uncertainty_gaps=uncertainty_gaps
+            uncertainty_gaps=uncertainty_gaps,
+            observed_evidence=observed_evidence,
+            inferred_evidence=inferred_evidence,
+            recommended_evidence=recommended_evidence
         )

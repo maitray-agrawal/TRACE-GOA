@@ -33,7 +33,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790183460.7841592
+      "timestamp": 1790184168.7578332
     },
     {
       "id": "EV_SUP_2",
@@ -59,7 +59,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790183460.7841663
+      "timestamp": 1790184168.7578378
     },
     {
       "id": "EV_SUP_3",
@@ -85,7 +85,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790183460.7841704
+      "timestamp": 1790184168.7578402
     },
     {
       "id": "EV_STEPUP_4",
@@ -97,7 +97,7 @@
         "device_id": "UNKNOWN"
       },
       "weight": 1.0,
-      "timestamp": 1790183460.7982678
+      "timestamp": 1790184168.77398
     }
   ],
   "contradicting_evidence": [],
@@ -152,6 +152,6 @@
   "approvals": [],
   "investigator": "TigerGraph-Agent-v1",
   "final_outcome": null,
-  "created_at": 1790183459.2724211,
-  "updated_at": 1790183460.8991015
+  "created_at": 1790184167.2300746,
+  "updated_at": 1790184168.7962177
 }
