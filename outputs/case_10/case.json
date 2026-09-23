@@ -2,9 +2,9 @@
   "case_id": "CASE-010",
   "trigger_txn_id": "TXN_BENCH_010",
   "subject_customer_id": "CUST_0010",
-  "status": "AWAITING_APPROVAL",
+  "status": "RESOLVED",
   "risk_score": 0.82,
-  "confidence": 0.897,
+  "confidence": 0.617,
   "fraud_patterns": [
     "CARD_TESTING",
     "ATO_ADDRESS_LAUNDER"
@@ -34,7 +34,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790181017.2834187
+      "timestamp": 1790183460.5852795
     },
     {
       "id": "EV_SUP_2",
@@ -60,7 +60,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790181017.2834256
+      "timestamp": 1790183460.585284
     },
     {
       "id": "EV_STEPUP_3",
@@ -72,7 +72,7 @@
         "device_id": "UNKNOWN"
       },
       "weight": 1.0,
-      "timestamp": 1790181017.29764
+      "timestamp": 1790183460.5979302
     }
   ],
   "contradicting_evidence": [
@@ -100,7 +100,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790181017.283429
+      "timestamp": 1790183460.5852869
     }
   ],
   "missing_evidence": [
@@ -109,50 +109,56 @@
   ],
   "uncertainty_level": "RESOLVED",
   "findings": [
-    "Investigation CASE-010 concluded with risk 0.82 and confidence 0.90. Patterns identified: Velocity Card Testing, Account Takeover & Address Laundering. Primary recommendation: BLOCK_TRANSACTION.",
+    "Investigation CASE-010 concluded with risk 0.82 and confidence 0.62. Patterns identified: Velocity Card Testing, Account Takeover & Address Laundering. Primary recommendation: MONITOR_TRANSACTION.",
     "Transaction amount $1.50 is in micro-charge probing range (< $10.00)",
     "Elevated baseline transaction anomaly score (0.820)"
   ],
   "recommended_actions": [
     {
-      "action": "BLOCK_TRANSACTION",
+      "action": "MONITOR_TRANSACTION",
       "priority": "HIGH",
-      "confidence": 0.897,
-      "reason": "Transaction blocking requires Senior Analyst review.",
+      "confidence": 0.617,
+      "reason": "Routine operational action permitted without escalation.",
       "supporting_evidence": [
         "Transaction amount $1.50 is in micro-charge probing range (< $10.00)",
         "Elevated baseline transaction anomaly score (0.820)",
         "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
       ],
       "policy_basis": [
-        "POL-003: Payment Authorization Denial Standard"
+        "POL-004: Low-Friction Customer Assurance Protocol"
       ],
-      "approval_required": true,
-      "approval_route": "SENIOR_ANALYST",
-      "execution_status": "PENDING"
+      "approval_required": false,
+      "approval_route": "NONE",
+      "execution_status": "EXECUTED"
     },
     {
-      "action": "BLOCK_ACCOUNT",
-      "priority": "CRITICAL",
-      "confidence": 0.897,
-      "reason": "Account freeze requires Fraud Manager authorization.",
+      "action": "WARN_CUSTOMER",
+      "priority": "HIGH",
+      "confidence": 0.617,
+      "reason": "Routine operational action permitted without escalation.",
       "supporting_evidence": [
         "Transaction amount $1.50 is in micro-charge probing range (< $10.00)",
         "Elevated baseline transaction anomaly score (0.820)",
         "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
       ],
       "policy_basis": [
-        "POL-002: Executive Account Lockout Directive"
+        "POL-004: Low-Friction Customer Assurance Protocol"
       ],
-      "approval_required": true,
-      "approval_route": "FRAUD_MANAGER",
+      "approval_required": false,
+      "approval_route": "NONE",
       "execution_status": "PENDING"
     }
   ],
-  "executed_actions": [],
+  "executed_actions": [
+    {
+      "action": "MONITOR_TRANSACTION",
+      "executed_at": 1790183460.5980895,
+      "status": "SUCCESS"
+    }
+  ],
   "approvals": [],
   "investigator": "TigerGraph-Agent-v1",
   "final_outcome": null,
-  "created_at": 1790181016.6311455,
-  "updated_at": 1790181017.3120658
+  "created_at": 1790183459.249779,
+  "updated_at": 1790183460.6119115
 }

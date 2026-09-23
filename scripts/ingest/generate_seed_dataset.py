@@ -302,6 +302,82 @@ def build_and_seed_dataset(export_dir: str = "data/processed") -> Dict[str, Any]
             if p_choice in client.patterns:
                 client.add_edge("Case", h_id, "FraudPattern", p_choice, "IDENTIFIED_PATTERN", {"confidence": 0.90})
 
+    # Export normalized CSV files to data/raw for TigerGraph GSQL loading job
+    raw_dir = "data/raw"
+    os.makedirs(raw_dir, exist_ok=True)
+    import csv
+
+    # 1. customers.csv
+    with open(os.path.join(raw_dir, "customers.csv"), "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(["customer_id", "first_name", "last_name", "phone", "risk_tier", "created_at", "account_id", "account_type", "status", "balance"])
+        for c, a in zip(customers, accounts):
+            writer.writerow([c["id"], c["first_name"], c["last_name"], c["phone"], c["risk_tier"], c["created_at"], a["id"], a["account_type"], a["status"], a["balance"]])
+
+    # 2. devices.csv
+    with open(os.path.join(raw_dir, "devices.csv"), "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(["device_id", "device_type", "os_name", "browser_name", "screen_resolution", "is_emulator"])
+        for d in devices:
+            writer.writerow([d["id"], d["device_type"], d["os_name"], d["browser_name"], d["screen_resolution"], str(d["is_emulator"]).lower()])
+
+    # 3. transactions.csv
+    with open(os.path.join(raw_dir, "transactions.csv"), "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow([
+            "txn_id", "amount", "timestamp", "product_code", "risk_score", "billing_region", "dist1", "dist2",
+            "card_id", "card_bin", "card_issuer", "card_brand", "card_category",
+            "ip_address", "ip_type", "ip_country", "ip_isp", "ip_reputation",
+            "email_id", "email_domain", "is_disposable_email",
+            "address_id", "addr_region", "addr_country", "addr_postal",
+            "merchant_id", "merch_category", "merch_risk", "merch_terminals",
+            "account_id", "device_id"
+        ])
+        for idx, t in enumerate(transactions):
+            c_idx = idx % len(cards)
+            ip_idx = idx % len(ips)
+            dev_idx = idx % len(devices)
+            m_idx = idx % len(merchants)
+            a_idx = idx % len(accounts)
+
+            c_obj = cards[c_idx]
+            ip_obj = ips[ip_idx]
+            dev_obj = devices[dev_idx]
+            m_obj = merchants[m_idx]
+            a_obj = accounts[a_idx]
+
+            email_id = f"EMAIL_{idx:05d}"
+            domain = "disposable-mail.net" if ip_obj["ip_type"] == "DATACENTER_PROXY" else "gmail.com"
+            is_disp = "true" if ip_obj["ip_type"] == "DATACENTER_PROXY" else "false"
+
+            addr_id = f"ADDR_{idx:05d}"
+            region = t.get("billing_region", "CA")
+
+            writer.writerow([
+                t["id"], t["amount"], t["timestamp"], t["product_code"], t["risk_score"], t["billing_region"], t["dist1"], t["dist2"],
+                c_obj["id"], c_obj["bin"], c_obj["issuer"], c_obj["brand"], c_obj["category"],
+                ip_obj["id"], ip_obj["ip_type"], ip_obj["country_code"], ip_obj["isp"], ip_obj["reputation"],
+                email_id, domain, is_disp,
+                addr_id, region, "US", f"902{idx % 90 + 10}",
+                m_obj["id"], m_obj["category"], m_obj["risk_level"], m_obj["terminal_count"],
+                a_obj["id"], dev_obj["id"]
+            ])
+
+    # 4. cases.csv
+    with open(os.path.join(raw_dir, "cases.csv"), "w", newline="", encoding="utf-8") as f:
+        writer = csv.writer(f)
+        writer.writerow(["case_id", "trigger_type", "risk_score", "confidence", "status", "final_outcome", "created_at", "closed_at", "trigger_txn_id", "subject_customer_id", "pattern_id", "pattern_confidence"])
+        for h in historical_cases:
+            writer.writerow([
+                h["case_id"], "HISTORICAL_AUDIT", h["risk_score"], h["confidence"], h["status"], h["final_outcome"],
+                h["created_at"], h["closed_at"], h["trigger_txn_id"], h["subject_customer_id"], h["pattern"], 0.90
+            ])
+        for b in benchmark_cases:
+            writer.writerow([
+                b["case_id"], "ANOMALY_TRIGGER", b["risk_score"], b["confidence"], b["status"], "PENDING_INVESTIGATION",
+                b["created_at"], 0, b["trigger_txn_id"], b["subject_customer_id"], b["pattern"], b["risk_score"]
+            ])
+
     # Export to data/processed for inspection
     with open(os.path.join(export_dir, "benchmark_cases.json"), "w") as f:
         json.dump(benchmark_cases, f, indent=2)
@@ -309,14 +385,15 @@ def build_and_seed_dataset(export_dir: str = "data/processed") -> Dict[str, Any]
     with open(os.path.join(export_dir, "historical_cases.json"), "w") as f:
         json.dump(historical_cases, f, indent=2)
 
-    logger.info(f"Dataset Seeding Complete! {len(benchmark_cases)} benchmark cases and {len(historical_cases)} historical memory cases seeded.")
+    logger.info(f"Dataset Seeding Complete! Exported CSVs to {raw_dir}/ and JSONs to {export_dir}/.")
     return {
         "benchmark_cases_count": len(benchmark_cases),
         "historical_cases_count": len(historical_cases),
         "customers_count": len(customers),
         "devices_count": len(devices),
         "merchants_count": len(merchants),
-        "transactions_count": len(transactions)
+        "transactions_count": len(transactions),
+        "csv_exported_dir": raw_dir
     }
 
 

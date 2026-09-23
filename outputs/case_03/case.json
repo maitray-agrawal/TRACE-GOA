@@ -2,9 +2,9 @@
   "case_id": "CASE-003",
   "trigger_txn_id": "TXN_BENCH_003",
   "subject_customer_id": "CUST_0003",
-  "status": "AWAITING_APPROVAL",
+  "status": "APPROVAL_PENDING",
   "risk_score": 0.73,
-  "confidence": 0.84,
+  "confidence": 0.8400000000000001,
   "fraud_patterns": [
     "ATO_ADDRESS_LAUNDER"
   ],
@@ -33,7 +33,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790181016.9056242
+      "timestamp": 1790183459.8968399
     },
     {
       "id": "EV_SUP_2",
@@ -59,7 +59,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790181016.9056304
+      "timestamp": 1790183459.8968453
     },
     {
       "id": "EV_SUP_3",
@@ -85,12 +85,27 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790181016.905633
+      "timestamp": 1790183459.896848
+    },
+    {
+      "id": "EV_STEPUP_4",
+      "source": "EXTERNAL_STEP_UP",
+      "direction": "SUPPORTING",
+      "title": "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)",
+      "details": {
+        "status": "FAILED_TIMEOUT",
+        "device_id": "UNKNOWN"
+      },
+      "weight": 1.0,
+      "timestamp": 1790183459.9096324
     }
   ],
   "contradicting_evidence": [],
-  "missing_evidence": [],
-  "uncertainty_level": "LOW",
+  "missing_evidence": [
+    "Customer out-of-band biometric/OTP confirmation",
+    "Secondary device location match"
+  ],
+  "uncertainty_level": "RESOLVED",
   "findings": [
     "Investigation CASE-003 concluded with risk 0.73 and confidence 0.84. Patterns identified: Account Takeover & Address Laundering. Primary recommendation: BLOCK_TRANSACTION.",
     "Shipping address distance divergence: dist2 = 350.0 miles from historical billing address",
@@ -101,7 +116,7 @@
     {
       "action": "BLOCK_TRANSACTION",
       "priority": "HIGH",
-      "confidence": 0.84,
+      "confidence": 0.8400000000000001,
       "reason": "Transaction blocking requires Senior Analyst review.",
       "supporting_evidence": [
         "Shipping address distance divergence: dist2 = 350.0 miles from historical billing address",
@@ -118,7 +133,7 @@
     {
       "action": "ESCALATE_TO_ANALYST",
       "priority": "HIGH",
-      "confidence": 0.84,
+      "confidence": 0.8400000000000001,
       "reason": "Action permitted subject to supervisory concurrence.",
       "supporting_evidence": [
         "Shipping address distance divergence: dist2 = 350.0 miles from historical billing address",
@@ -137,6 +152,6 @@
   "approvals": [],
   "investigator": "TigerGraph-Agent-v1",
   "final_outcome": null,
-  "created_at": 1790181016.5408902,
-  "updated_at": 1790181016.920156
+  "created_at": 1790183459.159931,
+  "updated_at": 1790183459.9327388
 }

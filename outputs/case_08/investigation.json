@@ -1,10 +1,10 @@
 {
   "case_id": "CASE-008",
-  "status": "AWAITING_APPROVAL",
+  "status": "APPROVAL_PENDING",
   "risk_score": 0.91,
-  "confidence": 0.9470000000000001,
+  "confidence": 0.667,
   "findings": [
-    "Investigation CASE-008 concluded with risk 0.91 and confidence 0.95. Patterns identified: Device Emulation Farm, Account Takeover & Address Laundering. Primary recommendation: BLOCK_TRANSACTION.",
+    "Investigation CASE-008 concluded with risk 0.91 and confidence 0.67. Patterns identified: Device Emulation Farm, Account Takeover & Address Laundering. Primary recommendation: BLOCK_TRANSACTION.",
     "Device DEV_0001 exhibits headless/emulator signature",
     "Device DEV_0001 linked to 4 distinct payment cards/accounts",
     "Elevated baseline transaction anomaly score (0.910)"
@@ -13,79 +13,183 @@
     {
       "step_name": "TRIGGER_INGEST",
       "status": "COMPLETED",
-      "details": "Ingesting fraud signal trigger and initializing investigation docket",
-      "timestamp": 1790181017.1243775,
-      "time_str": "22:00:17"
+      "details": "Ingesting fraud signal trigger and initiating investigation pipeline",
+      "state": "TRIGGERED",
+      "timestamp": 1790183460.323737,
+      "time_str": "22:41:00",
+      "tool_call": null
+    },
+    {
+      "step_name": "CASE_CREATION",
+      "status": "COMPLETED",
+      "details": "Initializing and persisting case docket",
+      "state": "CASE_CREATED",
+      "timestamp": 1790183460.3276727,
+      "time_str": "22:41:00",
+      "tool_call": null
+    },
+    {
+      "step_name": "INVESTIGATION_PLANNING",
+      "status": "COMPLETED",
+      "details": "Formulated dynamic tool execution plan: query_neighborhood, query_centrality, find_shared_entities, detect_patterns (Amount=$1126.71, Risk=0.91)",
+      "state": "PLANNING",
+      "timestamp": 1790183460.335301,
+      "time_str": "22:41:00",
+      "tool_call": null
     },
     {
       "step_name": "GRAPH_INVESTIGATION",
       "status": "COMPLETED",
-      "details": "Querying TigerGraph 2-hop neighborhood for transaction TXN_BENCH_008",
-      "timestamp": 1790181017.1323469,
-      "time_str": "22:00:17"
+      "details": "Executed TigerGraph 2-hop neighborhood expansion (0 nodes, 0 edges)",
+      "state": "INVESTIGATING",
+      "timestamp": 1790183460.3497293,
+      "time_str": "22:41:00",
+      "tool_call": {
+        "tool": "query_neighborhood",
+        "node_count": 0,
+        "edge_count": 0
+      }
+    },
+    {
+      "step_name": "CENTRALITY_ANALYSIS",
+      "status": "COMPLETED",
+      "details": "Calculated graph centrality metrics for systemic fraud hub identification",
+      "state": "INVESTIGATING",
+      "timestamp": 1790183460.3652024,
+      "time_str": "22:41:00",
+      "tool_call": {
+        "tool": "query_centrality",
+        "status": "SUCCESS"
+      }
+    },
+    {
+      "step_name": "SHARED_ENTITY_ANALYSIS",
+      "status": "COMPLETED",
+      "details": "Queried multi-hop shared device/IP linkage",
+      "state": "INVESTIGATING",
+      "timestamp": 1790183460.3748348,
+      "time_str": "22:41:00",
+      "tool_call": {
+        "tool": "find_shared_entities",
+        "status": "SUCCESS"
+      }
     },
     {
       "step_name": "EVIDENCE_COLLECTION",
       "status": "COMPLETED",
       "details": "Synthesizing GraphRAG evidence pack from graph topologies and institutional policy",
-      "timestamp": 1790181017.142121,
-      "time_str": "22:00:17"
+      "state": "EVIDENCE_COLLECTION",
+      "timestamp": 1790183460.3749328,
+      "time_str": "22:41:00",
+      "tool_call": null
     },
     {
       "step_name": "FRAUD_PATTERN_DETECTION",
       "status": "COMPLETED",
       "details": "Evaluating 5 canonical fraud typologies against deterministic pattern engine",
-      "timestamp": 1790181017.142654,
-      "time_str": "22:00:17"
+      "state": "PATTERN_ANALYSIS",
+      "timestamp": 1790183460.3753557,
+      "time_str": "22:41:00",
+      "tool_call": null
     },
     {
       "step_name": "RISK_ASSESSMENT",
       "status": "COMPLETED",
       "details": "Calculating deterministic multi-factor risk and confidence scores",
-      "timestamp": 1790181017.1433692,
-      "time_str": "22:00:17"
+      "state": "RISK_ASSESSMENT",
+      "timestamp": 1790183460.375812,
+      "time_str": "22:41:00",
+      "tool_call": null
     },
     {
       "step_name": "UNCERTAINTY_CHECK",
       "status": "COMPLETED",
-      "details": "Uncertainty detected: Risk=0.91, Confidence=0.67. Insufficient evidence to justify unilateral freeze. Entering Additional Evidence Loop.",
-      "timestamp": 1790181017.1434343,
-      "time_str": "22:00:17"
+      "details": "Evaluated uncertainty gaps: Risk=0.91, Confidence=0.39, Gap=True",
+      "state": "UNCERTAINTY_ANALYSIS",
+      "timestamp": 1790183460.375844,
+      "time_str": "22:41:00",
+      "tool_call": null
     },
     {
-      "step_name": "EVIDENCE_PROCESSOR",
+      "step_name": "EVIDENCE_REQUIRED",
       "status": "COMPLETED",
-      "details": "Simulated customer response received: Step-up authentication failed / OTP expired (Hostile / ATO Signal)",
-      "timestamp": 1790181017.1729558,
-      "time_str": "22:00:17"
+      "details": "Uncertainty detected: Insufficient evidence to justify unilateral freeze. Dispatching step-up challenge.",
+      "state": "EVIDENCE_REQUIRED",
+      "timestamp": 1790183460.3758628,
+      "time_str": "22:41:00",
+      "tool_call": null
     },
     {
       "step_name": "REASSESSMENT",
       "status": "COMPLETED",
-      "details": "Confidence upgraded after step-up failure to 0.95",
-      "timestamp": 1790181017.1731803,
-      "time_str": "22:00:17"
+      "details": "Customer response received: Step-up authentication failed / OTP expired (Hostile / ATO Signal)",
+      "state": "REASSESSMENT",
+      "timestamp": 1790183460.3923678,
+      "time_str": "22:41:00",
+      "tool_call": null
+    },
+    {
+      "step_name": "REASSESSMENT_UPGRADE",
+      "status": "COMPLETED",
+      "details": "Confidence upgraded after step-up failure to 0.67",
+      "state": "REASSESSMENT",
+      "timestamp": 1790183460.392491,
+      "time_str": "22:41:00",
+      "tool_call": null
     },
     {
       "step_name": "ACTION_PLANNER",
       "status": "COMPLETED",
       "details": "Formulating prioritized Next-Best Action candidates against PolicyEngine",
-      "timestamp": 1790181017.1732414,
-      "time_str": "22:00:17"
+      "state": "ACTION_PLANNING",
+      "timestamp": 1790183460.3925154,
+      "time_str": "22:41:00",
+      "tool_call": null
+    },
+    {
+      "step_name": "POLICY_CHECK",
+      "status": "COMPLETED",
+      "details": "Evaluating 2 candidate actions against PolicyEngine rules",
+      "state": "POLICY_CHECK",
+      "timestamp": 1790183460.3925347,
+      "time_str": "22:41:00",
+      "tool_call": null
     },
     {
       "step_name": "APPROVAL_CHECK",
       "status": "COMPLETED",
-      "details": "Primary action BLOCK_TRANSACTION requires electronic approval from SENIOR_ANALYST",
-      "timestamp": 1790181017.1733425,
-      "time_str": "22:00:17"
+      "details": "Primary action BLOCK_TRANSACTION requires clearance from SENIOR_ANALYST",
+      "state": "APPROVAL_PENDING",
+      "timestamp": 1790183460.392579,
+      "time_str": "22:41:00",
+      "tool_call": null
+    },
+    {
+      "step_name": "TIGERGRAPH_WRITE_BACK",
+      "status": "COMPLETED",
+      "details": "Wrote case docket and entity relationships back to TigerGraph: status=CASE_UPDATE",
+      "state": "CASE_UPDATE",
+      "timestamp": 1790183460.4111896,
+      "time_str": "22:41:00",
+      "tool_call": null
+    },
+    {
+      "step_name": "MEMORY_UPDATE",
+      "status": "COMPLETED",
+      "details": "Indexing case findings and embedding into persistent case memory",
+      "state": "MEMORY_UPDATE",
+      "timestamp": 1790183460.4112177,
+      "time_str": "22:41:00",
+      "tool_call": null
     },
     {
       "step_name": "INVESTIGATION_COMPLETE",
       "status": "COMPLETED",
-      "details": "Investigation complete. Current status: AWAITING_APPROVAL",
-      "timestamp": 1790181017.2012863,
-      "time_str": "22:00:17"
+      "details": "Investigation pipeline finished. Final status: APPROVAL_PENDING",
+      "state": "APPROVAL_PENDING",
+      "timestamp": 1790183460.4243114,
+      "time_str": "22:41:00",
+      "tool_call": null
     }
   ],
   "detected_patterns": [

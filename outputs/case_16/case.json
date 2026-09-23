@@ -2,7 +2,7 @@
   "case_id": "CASE-016",
   "trigger_txn_id": "TXN_BENCH_016",
   "subject_customer_id": "CUST_0016",
-  "status": "AWAITING_APPROVAL",
+  "status": "APPROVAL_PENDING",
   "risk_score": 0.93,
   "confidence": 0.89,
   "fraud_patterns": [
@@ -33,7 +33,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790181017.6039803
+      "timestamp": 1790183461.2411134
     },
     {
       "id": "EV_SUP_2",
@@ -59,7 +59,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790181017.603987
+      "timestamp": 1790183461.2411184
     },
     {
       "id": "EV_SUP_3",
@@ -85,12 +85,27 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790181017.60399
+      "timestamp": 1790183461.2411215
+    },
+    {
+      "id": "EV_STEPUP_4",
+      "source": "EXTERNAL_STEP_UP",
+      "direction": "SUPPORTING",
+      "title": "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)",
+      "details": {
+        "status": "FAILED_TIMEOUT",
+        "device_id": "UNKNOWN"
+      },
+      "weight": 1.0,
+      "timestamp": 1790183461.2557547
     }
   ],
   "contradicting_evidence": [],
-  "missing_evidence": [],
-  "uncertainty_level": "LOW",
+  "missing_evidence": [
+    "Customer out-of-band biometric/OTP confirmation",
+    "Secondary device location match"
+  ],
+  "uncertainty_level": "RESOLVED",
   "findings": [
     "Investigation CASE-016 concluded with risk 0.93 and confidence 0.89. Patterns identified: Account Takeover & Address Laundering. Primary recommendation: BLOCK_TRANSACTION.",
     "Shipping address distance divergence: dist2 = 350.0 miles from historical billing address",
@@ -137,6 +152,6 @@
   "approvals": [],
   "investigator": "TigerGraph-Agent-v1",
   "final_outcome": null,
-  "created_at": 1790181016.7065628,
-  "updated_at": 1790181017.6177313
+  "created_at": 1790183459.3211322,
+  "updated_at": 1790183461.2789423
 }

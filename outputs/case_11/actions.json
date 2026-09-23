@@ -4,11 +4,12 @@
     {
       "action": "FILE_REPORT",
       "priority": "CRITICAL",
-      "confidence": 0.915,
+      "confidence": 0.6910000000000001,
       "reason": "SAR filing strictly requires Fraud Manager approval and legal compliance review.",
       "supporting_evidence": [
-        "Elevated baseline transaction anomaly score (0.890)",
-        "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
+        "Account ACCT_0011 experienced 3 rapid-fire transactions within 5-minute window",
+        "High-velocity volume turnover: $21000.00 transacted across 6 rapid events",
+        "Dispersal pattern characteristic of intermediary mule funneling"
       ],
       "policy_basis": [
         "REG-BSA-31CFR: FinCEN Suspicious Activity Reporting"
@@ -20,11 +21,12 @@
     {
       "action": "BLOCK_ACCOUNT",
       "priority": "CRITICAL",
-      "confidence": 0.915,
+      "confidence": 0.6910000000000001,
       "reason": "Account freeze requires Fraud Manager authorization.",
       "supporting_evidence": [
-        "Elevated baseline transaction anomaly score (0.890)",
-        "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
+        "Account ACCT_0011 experienced 3 rapid-fire transactions within 5-minute window",
+        "High-velocity volume turnover: $21000.00 transacted across 6 rapid events",
+        "Dispersal pattern characteristic of intermediary mule funneling"
       ],
       "policy_basis": [
         "POL-002: Executive Account Lockout Directive"

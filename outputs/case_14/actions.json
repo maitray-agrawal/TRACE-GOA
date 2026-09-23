@@ -4,7 +4,7 @@
     {
       "action": "BLOCK_TRANSACTION",
       "priority": "HIGH",
-      "confidence": 0.9570000000000001,
+      "confidence": 0.677,
       "reason": "Transaction blocking requires Senior Analyst review.",
       "supporting_evidence": [
         "Device DEV_0001 exhibits headless/emulator signature",
@@ -21,7 +21,7 @@
     {
       "action": "BLOCK_ACCOUNT",
       "priority": "CRITICAL",
-      "confidence": 0.9570000000000001,
+      "confidence": 0.677,
       "reason": "Account freeze requires Fraud Manager authorization.",
       "supporting_evidence": [
         "Device DEV_0001 exhibits headless/emulator signature",

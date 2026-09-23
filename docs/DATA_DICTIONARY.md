@@ -129,7 +129,21 @@ CREATE DIRECTED EDGE IDENTIFIED_PATTERN(FROM Case, TO FraudPattern, confidence D
 
 ---
 
-## 3. Data Integrity & Masking Policies
+## 3. Raw Disk File Manifest (`data/raw/`)
+
+The ingestion pipeline produces normalized CSV files that directly map to TigerGraph's GSQL loading job `load_fraud_data` in `tigergraph/loading/load_data.gsql`:
+
+| File Name | Row Count | Column Count | Disk Size | Null Rate | Target Vertices / Edges Loaded |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| `customers.csv` | 100 rows | 10 columns | ~9.3 KB | 0.0% | `Customer`, `Account`, `OWNS` |
+| `devices.csv` | 150 rows | 6 columns | ~8.7 KB | 0.0% | `Device` |
+| `transactions.csv` | 243 rows | 31 columns | ~56.2 KB | 0.0% | `Transaction`, `Card`, `IP`, `Email`, `Address`, `Merchant`, `PERFORMS_TRANSACTION`, `USES_CARD`, `USES_DEVICE`, `ORIGINATES_FROM_IP`, `ASSOCIATED_EMAIL`, `SHIPPED_TO_ADDRESS`, `INVOLVES_MERCHANT` |
+| `cases.csv` | 30 rows | 12 columns | ~4.1 KB | 0.0% | `Case`, `FLAGGED_IN_CASE`, `INVOLVES_ENTITY`, `IDENTIFIED_PATTERN` |
+
+---
+
+## 4. Data Integrity & Masking Policies
 - All raw credit card primary account numbers (PAN) are tokenized before entering the graph.
 - Emails and phone numbers are normalized, hashed for entity resolution, and masked for analyst display (e.g., `j****@domain.com`, `+1 (555) ***-9281`).
 - Missing numerical fields in IEEE-CIS (e.g. `dist1`, `dist2`) are populated with sentinel `-1.0` or null and explicitly recognized by GraphRAG as missing evidence.
+

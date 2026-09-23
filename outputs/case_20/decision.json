@@ -1,9 +1,9 @@
 {
   "case_id": "CASE-020",
   "risk_score": 0.98,
-  "confidence": 0.96,
+  "confidence": 0.685,
   "primary_fraud_pattern": "DEVICE_FARM",
-  "decision_summary": "Investigation CASE-020 concluded with risk 0.98 and confidence 0.96. Patterns identified: Device Emulation Farm, Account Takeover & Address Laundering. Primary recommendation: BLOCK_TRANSACTION.",
+  "decision_summary": "Investigation CASE-020 concluded with risk 0.98 and confidence 0.69. Patterns identified: Device Emulation Farm, Account Takeover & Address Laundering. Primary recommendation: BLOCK_TRANSACTION.",
   "requires_approval": true,
   "approval_route": "SENIOR_ANALYST"
 }

@@ -2,39 +2,45 @@
   "case_id": "CASE-018",
   "recommended_actions": [
     {
-      "action": "BLOCK_TRANSACTION",
+      "action": "MONITOR_TRANSACTION",
       "priority": "HIGH",
-      "confidence": 0.902,
-      "reason": "Transaction blocking requires Senior Analyst review.",
+      "confidence": 0.6220000000000001,
+      "reason": "Routine operational action permitted without escalation.",
       "supporting_evidence": [
         "Transaction amount $1.50 is in micro-charge probing range (< $10.00)",
         "Elevated baseline transaction anomaly score (0.840)",
         "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
       ],
       "policy_basis": [
-        "POL-003: Payment Authorization Denial Standard"
+        "POL-004: Low-Friction Customer Assurance Protocol"
       ],
-      "approval_required": true,
-      "approval_route": "SENIOR_ANALYST",
-      "execution_status": "PENDING"
+      "approval_required": false,
+      "approval_route": "NONE",
+      "execution_status": "EXECUTED"
     },
     {
-      "action": "BLOCK_ACCOUNT",
-      "priority": "CRITICAL",
-      "confidence": 0.902,
-      "reason": "Account freeze requires Fraud Manager authorization.",
+      "action": "WARN_CUSTOMER",
+      "priority": "HIGH",
+      "confidence": 0.6220000000000001,
+      "reason": "Routine operational action permitted without escalation.",
       "supporting_evidence": [
         "Transaction amount $1.50 is in micro-charge probing range (< $10.00)",
         "Elevated baseline transaction anomaly score (0.840)",
         "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
       ],
       "policy_basis": [
-        "POL-002: Executive Account Lockout Directive"
+        "POL-004: Low-Friction Customer Assurance Protocol"
       ],
-      "approval_required": true,
-      "approval_route": "FRAUD_MANAGER",
+      "approval_required": false,
+      "approval_route": "NONE",
       "execution_status": "PENDING"
     }
   ],
-  "executed_actions": []
+  "executed_actions": [
+    {
+      "action": "MONITOR_TRANSACTION",
+      "executed_at": 1790183461.4771888,
+      "status": "SUCCESS"
+    }
+  ]
 }

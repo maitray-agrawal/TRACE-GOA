@@ -4,20 +4,20 @@
   "subject_customer_id": "CUST_0006",
   "status": "RESOLVED",
   "risk_score": 0.22,
-  "confidence": 0.415,
+  "confidence": 0.135,
   "fraud_patterns": [],
   "supporting_evidence": [],
   "contradicting_evidence": [],
   "missing_evidence": [],
   "uncertainty_level": "LOW",
   "findings": [
-    "Investigation CASE-006 concluded with risk 0.22 and confidence 0.41. Patterns identified: None. Primary recommendation: ALLOW_TRANSACTION."
+    "Investigation CASE-006 concluded with risk 0.22 and confidence 0.14. Patterns identified: None. Primary recommendation: ALLOW_TRANSACTION."
   ],
   "recommended_actions": [
     {
       "action": "ALLOW_TRANSACTION",
       "priority": "HIGH",
-      "confidence": 0.415,
+      "confidence": 0.135,
       "reason": "Routine operational action permitted without escalation.",
       "supporting_evidence": [],
       "policy_basis": [
@@ -31,13 +31,13 @@
   "executed_actions": [
     {
       "action": "ALLOW_TRANSACTION",
-      "executed_at": 1790181017.0698895,
+      "executed_at": 1790183460.2286854,
       "status": "SUCCESS"
     }
   ],
   "approvals": [],
   "investigator": "TigerGraph-Agent-v1",
   "final_outcome": null,
-  "created_at": 1790181016.5800064,
-  "updated_at": 1790181017.0757418
+  "created_at": 1790183459.199913,
+  "updated_at": 1790183460.2443666
 }

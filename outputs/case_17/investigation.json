@@ -1,97 +1,206 @@
 {
   "case_id": "CASE-017",
-  "status": "AWAITING_APPROVAL",
+  "status": "APPROVAL_PENDING",
   "risk_score": 0.9,
-  "confidence": 0.917,
+  "confidence": 0.6930000000000001,
   "findings": [
-    "Investigation CASE-017 concluded with risk 0.90 and confidence 0.92. Patterns identified: Device Emulation Farm, Account Takeover & Address Laundering. Primary recommendation: FILE_REPORT.",
+    "Investigation CASE-017 concluded with risk 0.90 and confidence 0.69. Patterns identified: Device Emulation Farm, Velocity Card Testing, Rapid Mule Dispersal, Account Takeover & Address Laundering. Primary recommendation: FILE_REPORT.",
     "Device DEV_0028 linked to 5 distinct payment cards/accounts",
+    "Account ACCT_0017 experienced 3 rapid-fire transactions within 5-minute window",
+    "High-velocity volume turnover: $21000.00 transacted across 9 rapid events",
+    "Dispersal pattern characteristic of intermediary mule funneling",
     "Elevated baseline transaction anomaly score (0.900)"
   ],
   "timeline": [
     {
       "step_name": "TRIGGER_INGEST",
       "status": "COMPLETED",
-      "details": "Ingesting fraud signal trigger and initializing investigation docket",
-      "timestamp": 1790181017.6340563,
-      "time_str": "22:00:17"
+      "details": "Ingesting fraud signal trigger and initiating investigation pipeline",
+      "state": "TRIGGERED",
+      "timestamp": 1790183461.29596,
+      "time_str": "22:41:01",
+      "tool_call": null
+    },
+    {
+      "step_name": "CASE_CREATION",
+      "status": "COMPLETED",
+      "details": "Initializing and persisting case docket",
+      "state": "CASE_CREATED",
+      "timestamp": 1790183461.3029299,
+      "time_str": "22:41:01",
+      "tool_call": null
+    },
+    {
+      "step_name": "INVESTIGATION_PLANNING",
+      "status": "COMPLETED",
+      "details": "Formulated dynamic tool execution plan: query_neighborhood, query_centrality, find_shared_entities, detect_patterns (Amount=$12500.00, Risk=0.90)",
+      "state": "PLANNING",
+      "timestamp": 1790183461.3115811,
+      "time_str": "22:41:01",
+      "tool_call": null
     },
     {
       "step_name": "GRAPH_INVESTIGATION",
       "status": "COMPLETED",
-      "details": "Querying TigerGraph 2-hop neighborhood for transaction TXN_BENCH_017",
-      "timestamp": 1790181017.6412299,
-      "time_str": "22:00:17"
+      "details": "Executed TigerGraph 2-hop neighborhood expansion (0 nodes, 0 edges)",
+      "state": "INVESTIGATING",
+      "timestamp": 1790183461.3248808,
+      "time_str": "22:41:01",
+      "tool_call": {
+        "tool": "query_neighborhood",
+        "node_count": 0,
+        "edge_count": 0
+      }
+    },
+    {
+      "step_name": "CENTRALITY_ANALYSIS",
+      "status": "COMPLETED",
+      "details": "Calculated graph centrality metrics for systemic fraud hub identification",
+      "state": "INVESTIGATING",
+      "timestamp": 1790183461.340437,
+      "time_str": "22:41:01",
+      "tool_call": {
+        "tool": "query_centrality",
+        "status": "SUCCESS"
+      }
+    },
+    {
+      "step_name": "SHARED_ENTITY_ANALYSIS",
+      "status": "COMPLETED",
+      "details": "Queried multi-hop shared device/IP linkage",
+      "state": "INVESTIGATING",
+      "timestamp": 1790183461.345028,
+      "time_str": "22:41:01",
+      "tool_call": {
+        "tool": "find_shared_entities",
+        "status": "SUCCESS"
+      }
     },
     {
       "step_name": "EVIDENCE_COLLECTION",
       "status": "COMPLETED",
       "details": "Synthesizing GraphRAG evidence pack from graph topologies and institutional policy",
-      "timestamp": 1790181017.6469853,
-      "time_str": "22:00:17"
+      "state": "EVIDENCE_COLLECTION",
+      "timestamp": 1790183461.3451152,
+      "time_str": "22:41:01",
+      "tool_call": null
     },
     {
       "step_name": "FRAUD_PATTERN_DETECTION",
       "status": "COMPLETED",
       "details": "Evaluating 5 canonical fraud typologies against deterministic pattern engine",
-      "timestamp": 1790181017.6473646,
-      "time_str": "22:00:17"
+      "state": "PATTERN_ANALYSIS",
+      "timestamp": 1790183461.3455796,
+      "time_str": "22:41:01",
+      "tool_call": null
     },
     {
       "step_name": "RISK_ASSESSMENT",
       "status": "COMPLETED",
       "details": "Calculating deterministic multi-factor risk and confidence scores",
-      "timestamp": 1790181017.647912,
-      "time_str": "22:00:17"
+      "state": "RISK_ASSESSMENT",
+      "timestamp": 1790183461.3461542,
+      "time_str": "22:41:01",
+      "tool_call": null
     },
     {
       "step_name": "UNCERTAINTY_CHECK",
       "status": "COMPLETED",
-      "details": "Uncertainty detected: Risk=0.90, Confidence=0.64. Insufficient evidence to justify unilateral freeze. Entering Additional Evidence Loop.",
-      "timestamp": 1790181017.647952,
-      "time_str": "22:00:17"
+      "details": "Evaluated uncertainty gaps: Risk=0.90, Confidence=0.41, Gap=True",
+      "state": "UNCERTAINTY_ANALYSIS",
+      "timestamp": 1790183461.3461943,
+      "time_str": "22:41:01",
+      "tool_call": null
     },
     {
-      "step_name": "EVIDENCE_PROCESSOR",
+      "step_name": "EVIDENCE_REQUIRED",
       "status": "COMPLETED",
-      "details": "Simulated customer response received: Step-up authentication failed / OTP expired (Hostile / ATO Signal)",
-      "timestamp": 1790181017.6607783,
-      "time_str": "22:00:17"
+      "details": "Uncertainty detected: Insufficient evidence to justify unilateral freeze. Dispatching step-up challenge.",
+      "state": "EVIDENCE_REQUIRED",
+      "timestamp": 1790183461.3462155,
+      "time_str": "22:41:01",
+      "tool_call": null
     },
     {
       "step_name": "REASSESSMENT",
       "status": "COMPLETED",
-      "details": "Confidence upgraded after step-up failure to 0.92",
-      "timestamp": 1790181017.6609232,
-      "time_str": "22:00:17"
+      "details": "Customer response received: Step-up authentication failed / OTP expired (Hostile / ATO Signal)",
+      "state": "REASSESSMENT",
+      "timestamp": 1790183461.3599653,
+      "time_str": "22:41:01",
+      "tool_call": null
+    },
+    {
+      "step_name": "REASSESSMENT_UPGRADE",
+      "status": "COMPLETED",
+      "details": "Confidence upgraded after step-up failure to 0.69",
+      "state": "REASSESSMENT",
+      "timestamp": 1790183461.3600872,
+      "time_str": "22:41:01",
+      "tool_call": null
     },
     {
       "step_name": "ACTION_PLANNER",
       "status": "COMPLETED",
       "details": "Formulating prioritized Next-Best Action candidates against PolicyEngine",
-      "timestamp": 1790181017.660948,
-      "time_str": "22:00:17"
+      "state": "ACTION_PLANNING",
+      "timestamp": 1790183461.3601117,
+      "time_str": "22:41:01",
+      "tool_call": null
+    },
+    {
+      "step_name": "POLICY_CHECK",
+      "status": "COMPLETED",
+      "details": "Evaluating 2 candidate actions against PolicyEngine rules",
+      "state": "POLICY_CHECK",
+      "timestamp": 1790183461.3601317,
+      "time_str": "22:41:01",
+      "tool_call": null
     },
     {
       "step_name": "APPROVAL_CHECK",
       "status": "COMPLETED",
-      "details": "Primary action FILE_REPORT requires electronic approval from FRAUD_MANAGER",
-      "timestamp": 1790181017.660999,
-      "time_str": "22:00:17"
+      "details": "Primary action FILE_REPORT requires clearance from FRAUD_MANAGER",
+      "state": "APPROVAL_PENDING",
+      "timestamp": 1790183461.360176,
+      "time_str": "22:41:01",
+      "tool_call": null
     },
     {
       "step_name": "SAR_GENERATION",
       "status": "COMPLETED",
       "details": "FinCEN BSA threshold ($5,000) triggered. Assembling Suspicious Activity Report (SAR) draft.",
-      "timestamp": 1790181017.6699855,
-      "time_str": "22:00:17"
+      "state": "SAR_GENERATION",
+      "timestamp": 1790183461.3694882,
+      "time_str": "22:41:01",
+      "tool_call": null
+    },
+    {
+      "step_name": "TIGERGRAPH_WRITE_BACK",
+      "status": "COMPLETED",
+      "details": "Wrote case docket and entity relationships back to TigerGraph: status=CASE_UPDATE",
+      "state": "CASE_UPDATE",
+      "timestamp": 1790183461.3814418,
+      "time_str": "22:41:01",
+      "tool_call": null
+    },
+    {
+      "step_name": "MEMORY_UPDATE",
+      "status": "COMPLETED",
+      "details": "Indexing case findings and embedding into persistent case memory",
+      "state": "MEMORY_UPDATE",
+      "timestamp": 1790183461.381482,
+      "time_str": "22:41:01",
+      "tool_call": null
     },
     {
       "step_name": "INVESTIGATION_COMPLETE",
       "status": "COMPLETED",
-      "details": "Investigation complete. Current status: AWAITING_APPROVAL",
-      "timestamp": 1790181017.6842077,
-      "time_str": "22:00:17"
+      "details": "Investigation pipeline finished. Final status: APPROVAL_PENDING",
+      "state": "APPROVAL_PENDING",
+      "timestamp": 1790183461.3970397,
+      "time_str": "22:41:01",
+      "tool_call": null
     }
   ],
   "detected_patterns": [
@@ -113,6 +222,44 @@
       ],
       "graph_paths": [
         "Transaction(TXN_BENCH_017) -> Device(DEV_0028) <- Multiple Cards/Accounts"
+      ]
+    },
+    {
+      "pattern_id": "CARD_TESTING",
+      "name": "Velocity Card Testing",
+      "confidence": 0.76,
+      "supporting_evidence": [
+        "Account ACCT_0017 experienced 3 rapid-fire transactions within 5-minute window"
+      ],
+      "contradicting_evidence": [
+        "Transaction amount $12500.00 is atypical for automated card testing"
+      ],
+      "entities": [
+        "ACCT_0017"
+      ],
+      "transactions": [
+        "TXN_BENCH_017"
+      ],
+      "graph_paths": [
+        "Account(ACCT_0017) -> High-Frequency Rapid Transactions (3 events in 300s)"
+      ]
+    },
+    {
+      "pattern_id": "MULE_DISPERSAL",
+      "name": "Rapid Mule Dispersal",
+      "confidence": 0.88,
+      "supporting_evidence": [
+        "High-velocity volume turnover: $21000.00 transacted across 9 rapid events",
+        "Dispersal pattern characteristic of intermediary mule funneling"
+      ],
+      "contradicting_evidence": [],
+      "entities": [
+        "CUST_0017",
+        "ACCT_0017"
+      ],
+      "transactions": [],
+      "graph_paths": [
+        "Account(ACCT_0017) -> High Turnover Inflows -> Rapid Outflows ($21000.00)"
       ]
     },
     {

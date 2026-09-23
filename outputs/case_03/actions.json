@@ -4,7 +4,7 @@
     {
       "action": "BLOCK_TRANSACTION",
       "priority": "HIGH",
-      "confidence": 0.84,
+      "confidence": 0.8400000000000001,
       "reason": "Transaction blocking requires Senior Analyst review.",
       "supporting_evidence": [
         "Shipping address distance divergence: dist2 = 350.0 miles from historical billing address",
@@ -21,7 +21,7 @@
     {
       "action": "ESCALATE_TO_ANALYST",
       "priority": "HIGH",
-      "confidence": 0.84,
+      "confidence": 0.8400000000000001,
       "reason": "Action permitted subject to supervisory concurrence.",
       "supporting_evidence": [
         "Shipping address distance divergence: dist2 = 350.0 miles from historical billing address",

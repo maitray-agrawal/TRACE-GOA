@@ -2,15 +2,97 @@
   "case_id": "CASE-011",
   "trigger_txn_id": "TXN_BENCH_011",
   "subject_customer_id": "CUST_0011",
-  "status": "AWAITING_APPROVAL",
+  "status": "APPROVAL_PENDING",
   "risk_score": 0.89,
-  "confidence": 0.915,
+  "confidence": 0.6910000000000001,
   "fraud_patterns": [
+    "CARD_TESTING",
+    "MULE_DISPERSAL",
     "ATO_ADDRESS_LAUNDER"
   ],
   "supporting_evidence": [
     {
       "id": "EV_SUP_1",
+      "source": "GRAPH",
+      "direction": "SUPPORTING",
+      "title": "Account ACCT_0011 experienced 3 rapid-fire transactions within 5-minute window",
+      "details": {
+        "pattern_id": "CARD_TESTING",
+        "name": "Velocity Card Testing",
+        "confidence": 0.76,
+        "supporting_evidence": [
+          "Account ACCT_0011 experienced 3 rapid-fire transactions within 5-minute window"
+        ],
+        "contradicting_evidence": [
+          "Transaction amount $12500.00 is atypical for automated card testing"
+        ],
+        "entities": [
+          "ACCT_0011"
+        ],
+        "transactions": [
+          "TXN_BENCH_011"
+        ],
+        "graph_paths": [
+          "Account(ACCT_0011) -> High-Frequency Rapid Transactions (3 events in 300s)"
+        ]
+      },
+      "weight": 1.0,
+      "timestamp": 1790183460.6814382
+    },
+    {
+      "id": "EV_SUP_2",
+      "source": "GRAPH",
+      "direction": "SUPPORTING",
+      "title": "High-velocity volume turnover: $21000.00 transacted across 6 rapid events",
+      "details": {
+        "pattern_id": "MULE_DISPERSAL",
+        "name": "Rapid Mule Dispersal",
+        "confidence": 0.88,
+        "supporting_evidence": [
+          "High-velocity volume turnover: $21000.00 transacted across 6 rapid events",
+          "Dispersal pattern characteristic of intermediary mule funneling"
+        ],
+        "contradicting_evidence": [],
+        "entities": [
+          "CUST_0011",
+          "ACCT_0011"
+        ],
+        "transactions": [],
+        "graph_paths": [
+          "Account(ACCT_0011) -> High Turnover Inflows -> Rapid Outflows ($21000.00)"
+        ]
+      },
+      "weight": 1.0,
+      "timestamp": 1790183460.6814458
+    },
+    {
+      "id": "EV_SUP_3",
+      "source": "GRAPH",
+      "direction": "SUPPORTING",
+      "title": "Dispersal pattern characteristic of intermediary mule funneling",
+      "details": {
+        "pattern_id": "MULE_DISPERSAL",
+        "name": "Rapid Mule Dispersal",
+        "confidence": 0.88,
+        "supporting_evidence": [
+          "High-velocity volume turnover: $21000.00 transacted across 6 rapid events",
+          "Dispersal pattern characteristic of intermediary mule funneling"
+        ],
+        "contradicting_evidence": [],
+        "entities": [
+          "CUST_0011",
+          "ACCT_0011"
+        ],
+        "transactions": [],
+        "graph_paths": [
+          "Account(ACCT_0011) -> High Turnover Inflows -> Rapid Outflows ($21000.00)"
+        ]
+      },
+      "weight": 1.0,
+      "timestamp": 1790183460.6814485
+    },
+    {
+      "id": "EV_SUP_4",
       "source": "GRAPH",
       "direction": "SUPPORTING",
       "title": "Elevated baseline transaction anomaly score (0.890)",
@@ -33,10 +115,10 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790181017.3408597
+      "timestamp": 1790183460.6814513
     },
     {
-      "id": "EV_STEPUP_2",
+      "id": "EV_STEPUP_5",
       "source": "EXTERNAL_STEP_UP",
       "direction": "SUPPORTING",
       "title": "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)",
@@ -45,12 +127,40 @@
         "device_id": "UNKNOWN"
       },
       "weight": 1.0,
-      "timestamp": 1790181017.3565347
+      "timestamp": 1790183460.6941373
     }
   ],
   "contradicting_evidence": [
     {
       "id": "EV_CON_1",
+      "source": "GRAPH",
+      "direction": "CONTRADICTING",
+      "title": "Transaction amount $12500.00 is atypical for automated card testing",
+      "details": {
+        "pattern_id": "CARD_TESTING",
+        "name": "Velocity Card Testing",
+        "confidence": 0.76,
+        "supporting_evidence": [
+          "Account ACCT_0011 experienced 3 rapid-fire transactions within 5-minute window"
+        ],
+        "contradicting_evidence": [
+          "Transaction amount $12500.00 is atypical for automated card testing"
+        ],
+        "entities": [
+          "ACCT_0011"
+        ],
+        "transactions": [
+          "TXN_BENCH_011"
+        ],
+        "graph_paths": [
+          "Account(ACCT_0011) -> High-Frequency Rapid Transactions (3 events in 300s)"
+        ]
+      },
+      "weight": 1.0,
+      "timestamp": 1790183460.681443
+    },
+    {
+      "id": "EV_CON_2",
       "source": "GRAPH",
       "direction": "CONTRADICTING",
       "title": "Shipping address matches historical registered billing location",
@@ -73,7 +183,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790181017.3408668
+      "timestamp": 1790183460.6814537
     }
   ],
   "missing_evidence": [
@@ -82,18 +192,22 @@
   ],
   "uncertainty_level": "RESOLVED",
   "findings": [
-    "Investigation CASE-011 concluded with risk 0.89 and confidence 0.92. Patterns identified: Account Takeover & Address Laundering. Primary recommendation: FILE_REPORT.",
+    "Investigation CASE-011 concluded with risk 0.89 and confidence 0.69. Patterns identified: Velocity Card Testing, Rapid Mule Dispersal, Account Takeover & Address Laundering. Primary recommendation: FILE_REPORT.",
+    "Account ACCT_0011 experienced 3 rapid-fire transactions within 5-minute window",
+    "High-velocity volume turnover: $21000.00 transacted across 6 rapid events",
+    "Dispersal pattern characteristic of intermediary mule funneling",
     "Elevated baseline transaction anomaly score (0.890)"
   ],
   "recommended_actions": [
     {
       "action": "FILE_REPORT",
       "priority": "CRITICAL",
-      "confidence": 0.915,
+      "confidence": 0.6910000000000001,
       "reason": "SAR filing strictly requires Fraud Manager approval and legal compliance review.",
       "supporting_evidence": [
-        "Elevated baseline transaction anomaly score (0.890)",
-        "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
+        "Account ACCT_0011 experienced 3 rapid-fire transactions within 5-minute window",
+        "High-velocity volume turnover: $21000.00 transacted across 6 rapid events",
+        "Dispersal pattern characteristic of intermediary mule funneling"
       ],
       "policy_basis": [
         "REG-BSA-31CFR: FinCEN Suspicious Activity Reporting"
@@ -105,11 +219,12 @@
     {
       "action": "BLOCK_ACCOUNT",
       "priority": "CRITICAL",
-      "confidence": 0.915,
+      "confidence": 0.6910000000000001,
       "reason": "Account freeze requires Fraud Manager authorization.",
       "supporting_evidence": [
-        "Elevated baseline transaction anomaly score (0.890)",
-        "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
+        "Account ACCT_0011 experienced 3 rapid-fire transactions within 5-minute window",
+        "High-velocity volume turnover: $21000.00 transacted across 6 rapid events",
+        "Dispersal pattern characteristic of intermediary mule funneling"
       ],
       "policy_basis": [
         "POL-002: Executive Account Lockout Directive"
@@ -123,6 +238,6 @@
   "approvals": [],
   "investigator": "TigerGraph-Agent-v1",
   "final_outcome": null,
-  "created_at": 1790181016.6437478,
-  "updated_at": 1790181017.3712063
+  "created_at": 1790183459.2612813,
+  "updated_at": 1790183460.7180004
 }

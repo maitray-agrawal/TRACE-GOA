@@ -2,9 +2,9 @@
   "case_id": "CASE-008",
   "trigger_txn_id": "TXN_BENCH_008",
   "subject_customer_id": "CUST_0008",
-  "status": "AWAITING_APPROVAL",
+  "status": "APPROVAL_PENDING",
   "risk_score": 0.91,
-  "confidence": 0.9470000000000001,
+  "confidence": 0.667,
   "fraud_patterns": [
     "DEVICE_FARM",
     "ATO_ADDRESS_LAUNDER"
@@ -35,7 +35,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790181017.1433494
+      "timestamp": 1790183460.3757985
     },
     {
       "id": "EV_SUP_2",
@@ -62,7 +62,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790181017.1433582
+      "timestamp": 1790183460.375803
     },
     {
       "id": "EV_SUP_3",
@@ -88,7 +88,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790181017.1433625
+      "timestamp": 1790183460.3758059
     },
     {
       "id": "EV_STEPUP_4",
@@ -100,7 +100,7 @@
         "device_id": "UNKNOWN"
       },
       "weight": 1.0,
-      "timestamp": 1790181017.173151
+      "timestamp": 1790183460.3924794
     }
   ],
   "contradicting_evidence": [
@@ -128,7 +128,7 @@
         ]
       },
       "weight": 1.0,
-      "timestamp": 1790181017.1433666
+      "timestamp": 1790183460.3758085
     }
   ],
   "missing_evidence": [
@@ -137,7 +137,7 @@
   ],
   "uncertainty_level": "RESOLVED",
   "findings": [
-    "Investigation CASE-008 concluded with risk 0.91 and confidence 0.95. Patterns identified: Device Emulation Farm, Account Takeover & Address Laundering. Primary recommendation: BLOCK_TRANSACTION.",
+    "Investigation CASE-008 concluded with risk 0.91 and confidence 0.67. Patterns identified: Device Emulation Farm, Account Takeover & Address Laundering. Primary recommendation: BLOCK_TRANSACTION.",
     "Device DEV_0001 exhibits headless/emulator signature",
     "Device DEV_0001 linked to 4 distinct payment cards/accounts",
     "Elevated baseline transaction anomaly score (0.910)"
@@ -146,7 +146,7 @@
     {
       "action": "BLOCK_TRANSACTION",
       "priority": "HIGH",
-      "confidence": 0.9470000000000001,
+      "confidence": 0.667,
       "reason": "Transaction blocking requires Senior Analyst review.",
       "supporting_evidence": [
         "Device DEV_0001 exhibits headless/emulator signature",
@@ -163,7 +163,7 @@
     {
       "action": "BLOCK_ACCOUNT",
       "priority": "CRITICAL",
-      "confidence": 0.9470000000000001,
+      "confidence": 0.667,
       "reason": "Account freeze requires Fraud Manager authorization.",
       "supporting_evidence": [
         "Device DEV_0001 exhibits headless/emulator signature",
@@ -182,6 +182,6 @@
   "approvals": [],
   "investigator": "TigerGraph-Agent-v1",
   "final_outcome": null,
-  "created_at": 1790181016.604767,
-  "updated_at": 1790181017.1910453
+  "created_at": 1790183459.226356,
+  "updated_at": 1790183460.4158762
 }

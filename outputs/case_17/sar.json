@@ -3,7 +3,7 @@
     "filing_type": "SUSPICIOUS_ACTIVITY_REPORT",
     "status": "DRAFT / SIMULATED FOR HACKATHON",
     "statutory_authority": "Bank Secrecy Act, 31 U.S.C. 5318(g); 31 CFR Chapter X",
-    "generated_at": "2026-09-23T16:30:17Z",
+    "generated_at": "2026-09-23T17:11:01Z",
     "filing_institution": "HHGOA Federal Financial Reserve Bank",
     "case_reference_id": "CASE-017"
   },
@@ -18,7 +18,7 @@
     "primary_typology": "DEVICE_FARM",
     "aggregate_amount_usd": 12500.0,
     "risk_score": 0.9,
-    "confidence_score": 0.917,
+    "confidence_score": 0.6930000000000001,
     "activity_start_time": 1715061200,
     "activity_end_time": 1715061200,
     "transaction_count": 1,
@@ -28,6 +28,9 @@
   },
   "fraud_indicators_and_graph_evidence": [
     "Device DEV_0028 linked to 5 distinct payment cards/accounts",
+    "Account ACCT_0017 experienced 3 rapid-fire transactions within 5-minute window",
+    "High-velocity volume turnover: $21000.00 transacted across 9 rapid events",
+    "Dispersal pattern characteristic of intermediary mule funneling",
     "Elevated baseline transaction anomaly score (0.900)",
     "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
   ],

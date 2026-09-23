@@ -4,7 +4,7 @@
     {
       "action": "MONITOR_TRANSACTION",
       "priority": "HIGH",
-      "confidence": 0.8,
+      "confidence": 0.52,
       "reason": "Routine operational action permitted without escalation.",
       "supporting_evidence": [
         "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
@@ -19,7 +19,7 @@
     {
       "action": "WARN_CUSTOMER",
       "priority": "HIGH",
-      "confidence": 0.8,
+      "confidence": 0.52,
       "reason": "Routine operational action permitted without escalation.",
       "supporting_evidence": [
         "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
@@ -35,7 +35,7 @@
   "executed_actions": [
     {
       "action": "MONITOR_TRANSACTION",
-      "executed_at": 1790181017.7733693,
+      "executed_at": 1790183461.5613701,
       "status": "SUCCESS"
     }
   ]

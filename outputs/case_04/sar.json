@@ -3,7 +3,7 @@
     "filing_type": "SUSPICIOUS_ACTIVITY_REPORT",
     "status": "DRAFT / SIMULATED FOR HACKATHON",
     "statutory_authority": "Bank Secrecy Act, 31 U.S.C. 5318(g); 31 CFR Chapter X",
-    "generated_at": "2026-09-23T16:30:16Z",
+    "generated_at": "2026-09-23T17:11:00Z",
     "filing_institution": "HHGOA Federal Financial Reserve Bank",
     "case_reference_id": "CASE-004"
   },
@@ -15,10 +15,10 @@
     }
   ],
   "suspicious_activity_summary": {
-    "primary_typology": "ATO_ADDRESS_LAUNDER",
+    "primary_typology": "CARD_TESTING",
     "aggregate_amount_usd": 12500.0,
     "risk_score": 0.92,
-    "confidence_score": 0.922,
+    "confidence_score": 0.698,
     "activity_start_time": 1715014400,
     "activity_end_time": 1715014400,
     "transaction_count": 1,
@@ -27,11 +27,14 @@
     ]
   },
   "fraud_indicators_and_graph_evidence": [
+    "Account ACCT_0004 experienced 3 rapid-fire transactions within 5-minute window",
+    "High-velocity volume turnover: $21000.00 transacted across 7 rapid events",
+    "Dispersal pattern characteristic of intermediary mule funneling",
     "Elevated baseline transaction anomaly score (0.920)",
     "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
   ],
   "investigation_findings": [],
-  "narrative_rationale": "Investigation docket CASE-004 revealed structured anomalies consistent with ATO_ADDRESS_LAUNDER. Graph analysis through TigerGraph uncovered cross-entity linkages involving subject CUST_0004. Cumulative aggregate activity of $12500.00 satisfies the $5,000 BSA threshold for mandatory suspicious activity reporting. Internal controls and policy constraints require immediate account freeze and supervisory escalation.",
+  "narrative_rationale": "Investigation docket CASE-004 revealed structured anomalies consistent with CARD_TESTING. Graph analysis through TigerGraph uncovered cross-entity linkages involving subject CUST_0004. Cumulative aggregate activity of $12500.00 satisfies the $5,000 BSA threshold for mandatory suspicious activity reporting. Internal controls and policy constraints require immediate account freeze and supervisory escalation.",
   "regulatory_policy_basis": [
     "FinCEN 31 CFR \u00a7 1020.320: Reports by banks of suspicious transactions",
     "FFIEC Bank Secrecy Act / Anti-Money Laundering Examination Manual",

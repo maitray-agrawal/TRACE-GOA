@@ -4,7 +4,7 @@
     {
       "action": "ALLOW_TRANSACTION",
       "priority": "HIGH",
-      "confidence": 0.448,
+      "confidence": 0.168,
       "reason": "Routine operational action permitted without escalation.",
       "supporting_evidence": [],
       "policy_basis": [
@@ -18,7 +18,7 @@
   "executed_actions": [
     {
       "action": "ALLOW_TRANSACTION",
-      "executed_at": 1790181017.1046479,
+      "executed_at": 1790183460.294539,
       "status": "SUCCESS"
     }
   ]

@@ -2,66 +2,152 @@
   "case_id": "CASE-007",
   "status": "RESOLVED",
   "risk_score": 0.35,
-  "confidence": 0.448,
+  "confidence": 0.168,
   "findings": [
-    "Investigation CASE-007 concluded with risk 0.35 and confidence 0.45. Patterns identified: None. Primary recommendation: ALLOW_TRANSACTION."
+    "Investigation CASE-007 concluded with risk 0.35 and confidence 0.17. Patterns identified: None. Primary recommendation: ALLOW_TRANSACTION."
   ],
   "timeline": [
     {
       "step_name": "TRIGGER_INGEST",
       "status": "COMPLETED",
-      "details": "Ingesting fraud signal trigger and initializing investigation docket",
-      "timestamp": 1790181017.0908759,
-      "time_str": "22:00:17"
+      "details": "Ingesting fraud signal trigger and initiating investigation pipeline",
+      "state": "TRIGGERED",
+      "timestamp": 1790183460.2609937,
+      "time_str": "22:41:00",
+      "tool_call": null
+    },
+    {
+      "step_name": "CASE_CREATION",
+      "status": "COMPLETED",
+      "details": "Initializing and persisting case docket",
+      "state": "CASE_CREATED",
+      "timestamp": 1790183460.2649515,
+      "time_str": "22:41:00",
+      "tool_call": null
+    },
+    {
+      "step_name": "INVESTIGATION_PLANNING",
+      "status": "COMPLETED",
+      "details": "Formulated dynamic tool execution plan: query_neighborhood, find_shared_entities, detect_patterns (Amount=$2472.97, Risk=0.35)",
+      "state": "PLANNING",
+      "timestamp": 1790183460.2738004,
+      "time_str": "22:41:00",
+      "tool_call": null
     },
     {
       "step_name": "GRAPH_INVESTIGATION",
       "status": "COMPLETED",
-      "details": "Querying TigerGraph 2-hop neighborhood for transaction TXN_BENCH_007",
-      "timestamp": 1790181017.0992343,
-      "time_str": "22:00:17"
+      "details": "Executed TigerGraph 2-hop neighborhood expansion (0 nodes, 0 edges)",
+      "state": "INVESTIGATING",
+      "timestamp": 1790183460.288365,
+      "time_str": "22:41:00",
+      "tool_call": {
+        "tool": "query_neighborhood",
+        "node_count": 0,
+        "edge_count": 0
+      }
+    },
+    {
+      "step_name": "SHARED_ENTITY_ANALYSIS",
+      "status": "COMPLETED",
+      "details": "Queried multi-hop shared device/IP linkage",
+      "state": "INVESTIGATING",
+      "timestamp": 1790183460.2934127,
+      "time_str": "22:41:00",
+      "tool_call": {
+        "tool": "find_shared_entities",
+        "status": "SUCCESS"
+      }
     },
     {
       "step_name": "EVIDENCE_COLLECTION",
       "status": "COMPLETED",
       "details": "Synthesizing GraphRAG evidence pack from graph topologies and institutional policy",
-      "timestamp": 1790181017.103766,
-      "time_str": "22:00:17"
+      "state": "EVIDENCE_COLLECTION",
+      "timestamp": 1790183460.2935116,
+      "time_str": "22:41:00",
+      "tool_call": null
     },
     {
       "step_name": "FRAUD_PATTERN_DETECTION",
       "status": "COMPLETED",
       "details": "Evaluating 5 canonical fraud typologies against deterministic pattern engine",
-      "timestamp": 1790181017.104111,
-      "time_str": "22:00:17"
+      "state": "PATTERN_ANALYSIS",
+      "timestamp": 1790183460.2939734,
+      "time_str": "22:41:00",
+      "tool_call": null
     },
     {
       "step_name": "RISK_ASSESSMENT",
       "status": "COMPLETED",
       "details": "Calculating deterministic multi-factor risk and confidence scores",
-      "timestamp": 1790181017.1045325,
-      "time_str": "22:00:17"
+      "state": "RISK_ASSESSMENT",
+      "timestamp": 1790183460.2944098,
+      "time_str": "22:41:00",
+      "tool_call": null
+    },
+    {
+      "step_name": "UNCERTAINTY_CHECK",
+      "status": "COMPLETED",
+      "details": "Evaluated uncertainty gaps: Risk=0.35, Confidence=0.17, Gap=False",
+      "state": "UNCERTAINTY_ANALYSIS",
+      "timestamp": 1790183460.2944508,
+      "time_str": "22:41:00",
+      "tool_call": null
     },
     {
       "step_name": "ACTION_PLANNER",
       "status": "COMPLETED",
       "details": "Formulating prioritized Next-Best Action candidates against PolicyEngine",
-      "timestamp": 1790181017.1045666,
-      "time_str": "22:00:17"
+      "state": "ACTION_PLANNING",
+      "timestamp": 1790183460.294471,
+      "time_str": "22:41:00",
+      "tool_call": null
+    },
+    {
+      "step_name": "POLICY_CHECK",
+      "status": "COMPLETED",
+      "details": "Evaluating 1 candidate actions against PolicyEngine rules",
+      "state": "POLICY_CHECK",
+      "timestamp": 1790183460.2944872,
+      "time_str": "22:41:00",
+      "tool_call": null
     },
     {
       "step_name": "ACTION_EXECUTION",
       "status": "COMPLETED",
-      "details": "Executing mock action ALLOW_TRANSACTION (No supervisor approval required)",
-      "timestamp": 1790181017.10463,
-      "time_str": "22:00:17"
+      "details": "Executing authorized action ALLOW_TRANSACTION (No supervisor approval required)",
+      "state": "ACTION_EXECUTION",
+      "timestamp": 1790183460.2945228,
+      "time_str": "22:41:00",
+      "tool_call": null
+    },
+    {
+      "step_name": "TIGERGRAPH_WRITE_BACK",
+      "status": "COMPLETED",
+      "details": "Wrote case docket and entity relationships back to TigerGraph: status=CASE_UPDATE",
+      "state": "CASE_UPDATE",
+      "timestamp": 1790183460.302989,
+      "time_str": "22:41:00",
+      "tool_call": null
+    },
+    {
+      "step_name": "MEMORY_UPDATE",
+      "status": "COMPLETED",
+      "details": "Indexing case findings and embedding into persistent case memory",
+      "state": "MEMORY_UPDATE",
+      "timestamp": 1790183460.303015,
+      "time_str": "22:41:00",
+      "tool_call": null
     },
     {
       "step_name": "INVESTIGATION_COMPLETE",
       "status": "COMPLETED",
-      "details": "Investigation complete. Current status: RESOLVED",
-      "timestamp": 1790181017.1189468,
-      "time_str": "22:00:17"
+      "details": "Investigation pipeline finished. Final status: RESOLVED",
+      "state": "RESOLVED",
+      "timestamp": 1790183460.3162532,
+      "time_str": "22:41:00",
+      "tool_call": null
     }
   ],
   "detected_patterns": []

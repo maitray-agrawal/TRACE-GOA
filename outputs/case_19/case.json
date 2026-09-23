@@ -4,7 +4,7 @@
   "subject_customer_id": "CUST_0019",
   "status": "RESOLVED",
   "risk_score": 0.64,
-  "confidence": 0.8,
+  "confidence": 0.52,
   "fraud_patterns": [],
   "supporting_evidence": [
     {
@@ -17,7 +17,7 @@
         "device_id": "UNKNOWN"
       },
       "weight": 1.0,
-      "timestamp": 1790181017.7732654
+      "timestamp": 1790183461.5612361
     }
   ],
   "contradicting_evidence": [],
@@ -27,13 +27,13 @@
   ],
   "uncertainty_level": "RESOLVED",
   "findings": [
-    "Investigation CASE-019 concluded with risk 0.64 and confidence 0.80. Patterns identified: None. Primary recommendation: MONITOR_TRANSACTION."
+    "Investigation CASE-019 concluded with risk 0.64 and confidence 0.52. Patterns identified: None. Primary recommendation: MONITOR_TRANSACTION."
   ],
   "recommended_actions": [
     {
       "action": "MONITOR_TRANSACTION",
       "priority": "HIGH",
-      "confidence": 0.8,
+      "confidence": 0.52,
       "reason": "Routine operational action permitted without escalation.",
       "supporting_evidence": [
         "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
@@ -48,7 +48,7 @@
     {
       "action": "WARN_CUSTOMER",
       "priority": "HIGH",
-      "confidence": 0.8,
+      "confidence": 0.52,
       "reason": "Routine operational action permitted without escalation.",
       "supporting_evidence": [
         "Step-up OTP failed/unresponsive (Hostile Takeover Indicator)"
@@ -64,13 +64,13 @@
   "executed_actions": [
     {
       "action": "MONITOR_TRANSACTION",
-      "executed_at": 1790181017.7733693,
+      "executed_at": 1790183461.5613701,
       "status": "SUCCESS"
     }
   ],
   "approvals": [],
   "investigator": "TigerGraph-Agent-v1",
   "final_outcome": null,
-  "created_at": 1790181016.747829,
-  "updated_at": 1790181017.7782483
+  "created_at": 1790183459.3560362,
+  "updated_at": 1790183461.5758908
 }

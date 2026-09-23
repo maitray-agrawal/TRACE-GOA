@@ -1,9 +1,9 @@
 {
   "case_id": "CASE-017",
   "risk_score": 0.9,
-  "confidence": 0.917,
+  "confidence": 0.6930000000000001,
   "primary_fraud_pattern": "DEVICE_FARM",
-  "decision_summary": "Investigation CASE-017 concluded with risk 0.90 and confidence 0.92. Patterns identified: Device Emulation Farm, Account Takeover & Address Laundering. Primary recommendation: FILE_REPORT.",
+  "decision_summary": "Investigation CASE-017 concluded with risk 0.90 and confidence 0.69. Patterns identified: Device Emulation Farm, Velocity Card Testing, Rapid Mule Dispersal, Account Takeover & Address Laundering. Primary recommendation: FILE_REPORT.",
   "requires_approval": true,
   "approval_route": "FRAUD_MANAGER"
 }

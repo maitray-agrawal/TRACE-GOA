@@ -102,6 +102,16 @@ class CaseMemoryService:
                 results.append(d)
             return results
 
+    def search_similar_cases(
+        self,
+        query_text: str = "",
+        pattern_filter: Optional[str] = None,
+        min_risk: float = 0.50,
+        top_k: int = 5
+    ) -> List[Dict[str, Any]]:
+        """Searches similar historical cases by pattern or risk profile."""
+        return self.find_similar_memories(pattern=pattern_filter, min_risk=min_risk, limit=top_k)
+
 
 # Global singleton
 _MEMORY_SERVICE: Optional[CaseMemoryService] = None

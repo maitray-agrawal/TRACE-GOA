@@ -118,6 +118,49 @@ def run_community_detection(max_iterations: int = 10) -> Dict[str, Any]:
     return client.run_community_detection(max_iterations=max_iterations)
 
 
+@mcp.tool(
+    name="query_centrality",
+    description="Calculate PageRank and Degree Centrality to identify high-volume money mule laundering hubs and account hubs."
+)
+def query_centrality(top_k: int = 10) -> Dict[str, Any]:
+    """Executes centrality GSQL algorithm."""
+    client = get_graph_client()
+    return client.query_centrality(top_k=top_k)
+
+
+@mcp.tool(
+    name="write_back_case",
+    description="Persist completed investigation findings, risk assessments, and identified typologies back to TigerGraph Case vertices and edges."
+)
+def write_back_case(
+    case_id: str,
+    trigger_txn_id: str,
+    subject_customer_id: str,
+    risk_score: float,
+    confidence: float,
+    status: str,
+    final_outcome: Optional[str] = None,
+    fraud_patterns: Optional[List[str]] = None,
+    findings: Optional[List[str]] = None,
+    actions: Optional[List[str]] = None
+) -> Dict[str, Any]:
+    """Writes back case record to TigerGraph."""
+    client = get_graph_client()
+    return client.write_back_case(
+        case_id=case_id,
+        trigger_txn_id=trigger_txn_id,
+        subject_customer_id=subject_customer_id,
+        risk_score=risk_score,
+        confidence=confidence,
+        status=status,
+        final_outcome=final_outcome,
+        fraud_patterns=fraud_patterns,
+        findings=findings,
+        actions=actions
+    )
+
+
 if __name__ == "__main__":
     logger.info("Starting TigerGraph MCP Server over stdio...")
     mcp.run()
+

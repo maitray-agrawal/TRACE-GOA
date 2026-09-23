@@ -1,0 +1,30 @@
+// ============================================================================
+// TigerGraph Graph Algorithm: PageRank & Degree Centrality
+// Description: Identifies high-degree money mule dispersal hubs and
+// card testing syndicates across Account and Device topologies.
+// ============================================================================
+
+CREATE OR REPLACE QUERY centrality(INT top_k = 10, DOUBLE damping = 0.85, INT max_iter = 25) FOR GRAPH FraudInvestigationGraph {
+    TYPEDEF TUPLE<STRING entity_id, STRING entity_type, DOUBLE score, INT degree> CentralityResult;
+    SumAccum<DOUBLE> @received_score = 0;
+    SumAccum<DOUBLE> @pagerank = 1.0;
+    HeapAccum<CentralityResult>(top_k, score DESC) @@top_entities;
+
+    AllEntities = { Account.*, Device.*, Customer.* };
+
+    // Iterative PageRank score propagation
+    WHILE True LIMIT max_iter DO
+        AllEntities = SELECT s FROM AllEntities:s
+                      POST-ACCUM s.@received_score = 0;
+
+        Active = SELECT t FROM AllEntities:s -(:e)-> :t
+                 ACCUM t.@received_score += s.@pagerank / s.outdegree()
+                 POST-ACCUM t.@pagerank = (1.0 - damping) + damping * t.@received_score;
+    END;
+
+    // Collect top-k highest centrality nodes
+    Res = SELECT s FROM AllEntities:s
+          POST-ACCUM @@top_entities += CentralityResult(s.id, s.type, s.@pagerank, s.degree());
+
+    PRINT @@top_entities;
+}

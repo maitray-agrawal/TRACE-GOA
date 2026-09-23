@@ -45,6 +45,25 @@ class BaseGraphClient:
     def run_community_detection(self, max_iterations: int = 10) -> Dict[str, Any]:
         raise NotImplementedError
 
+    def write_back_case(
+        self,
+        case_id: Optional[str] = None,
+        trigger_txn_id: str = "",
+        subject_customer_id: str = "",
+        risk_score: float = 0.0,
+        confidence: float = 0.0,
+        status: str = "RESOLVED",
+        final_outcome: Optional[str] = None,
+        fraud_patterns: Optional[List[str]] = None,
+        findings: Optional[List[str]] = None,
+        actions: Optional[List[Any]] = None,
+        **kwargs
+    ) -> Dict[str, Any]:
+        raise NotImplementedError
+
+    def query_centrality(self, top_k: int = 10) -> Dict[str, Any]:
+        raise NotImplementedError
+
 
 class InMemoryTigerGraphSimulator(BaseGraphClient):
     """High-fidelity in-memory graph simulator implementing TigerGraph GSQL queries."""
@@ -91,7 +110,7 @@ class InMemoryTigerGraphSimulator(BaseGraphClient):
         self._ensure_seeded()
         start_node = f"Transaction_{txn_id}"
         if start_node not in self.graph:
-            return {"nodes": [], "edges": [], "summary": f"Transaction {txn_id} not in graph"}
+            return {"nodes": [], "edges": [], "node_count": 0, "edge_count": 0, "summary": f"Transaction {txn_id} not in graph"}
 
         # BFS neighborhood expansion up to depth
         sub_nodes: Set[str] = {start_node}
@@ -303,6 +322,96 @@ class InMemoryTigerGraphSimulator(BaseGraphClient):
             "suspicious_clusters": clusters[:10]
         }
 
+    def write_back_case(
+        self,
+        case_id: Optional[str] = None,
+        trigger_txn_id: str = "",
+        subject_customer_id: str = "",
+        risk_score: float = 0.0,
+        confidence: float = 0.0,
+        status: str = "RESOLVED",
+        final_outcome: Optional[str] = None,
+        fraud_patterns: Optional[List[str]] = None,
+        findings: Optional[List[str]] = None,
+        actions: Optional[List[Any]] = None,
+        **kwargs
+    ) -> Dict[str, Any]:
+        """Persists completed case docket back to TigerGraph vertices and edges."""
+        if isinstance(case_id, dict):
+            kwargs = {**case_id, **kwargs}
+            case_id = kwargs.get("case_id", "CASE_UNKNOWN")
+
+        case_id = str(case_id or kwargs.get("case_id", "CASE_UNKNOWN"))
+        trigger_txn_id = trigger_txn_id or kwargs.get("trigger_txn_id", "")
+        subject_customer_id = subject_customer_id or kwargs.get("subject_customer_id", "")
+        risk_score = float(risk_score if risk_score != 0.0 else kwargs.get("risk_score", 0.0))
+        confidence = float(confidence if confidence != 0.0 else kwargs.get("confidence", 0.0))
+        status = status if status != "RESOLVED" else kwargs.get("status", "RESOLVED")
+        final_outcome = final_outcome or kwargs.get("final_outcome")
+        fraud_patterns = fraud_patterns or kwargs.get("fraud_patterns", [])
+        findings = findings or kwargs.get("findings", [])
+        actions = actions or kwargs.get("actions", kwargs.get("executed_actions", []))
+
+        self._ensure_seeded()
+        now = int(time.time())
+        case_data = {
+            "id": case_id,
+            "trigger_type": "ANOMALY_TRIGGER",
+            "risk_score": float(risk_score),
+            "confidence": float(confidence),
+            "status": status,
+            "final_outcome": final_outcome or ("CONFIRMED_FRAUD" if risk_score >= 0.70 else "CLEARED"),
+            "created_at": now,
+            "closed_at": now if status in ("RESOLVED", "CLOSED") else 0,
+            "findings": findings or [],
+            "actions": actions or []
+        }
+        self.cases[case_id] = case_data
+        self.add_vertex("Case", case_id, case_data)
+
+        edges_created = 0
+        if trigger_txn_id:
+            self.add_edge("Transaction", trigger_txn_id, "Case", case_id, "FLAGGED_IN_CASE")
+            edges_created += 1
+        if subject_customer_id:
+            self.add_edge("Case", case_id, "Customer", subject_customer_id, "INVOLVES_ENTITY")
+            edges_created += 1
+
+        patterns = fraud_patterns or []
+        for p in patterns:
+            if p in self.patterns:
+                self.add_edge("Case", case_id, "FraudPattern", p, "IDENTIFIED_PATTERN", {"confidence": confidence})
+                edges_created += 1
+
+        logger.info(f"Written case {case_id} back to graph: 1 vertex, {edges_created} edges.")
+        return {
+            "success": True,
+            "case_id": case_id,
+            "vertex_type": "Case",
+            "edges_created": edges_created,
+            "status": status
+        }
+
+    def query_centrality(self, top_k: int = 10) -> Dict[str, Any]:
+        """Calculates PageRank / Degree centrality across all entity nodes in graph."""
+        self._ensure_seeded()
+        try:
+            pagerank = nx.pagerank(self.graph.to_undirected(), max_iter=50)
+            sorted_nodes = sorted(pagerank.items(), key=lambda x: x[1], reverse=True)[:top_k]
+            results = []
+            for n_id, score in sorted_nodes:
+                v_info = self.vertices.get(n_id, {})
+                results.append({
+                    "entity_id": n_id,
+                    "entity_type": v_info.get("type", "Unknown"),
+                    "centrality_score": round(score, 4),
+                    "degree": self.graph.degree(n_id)
+                })
+            return {"algorithm": "PageRankCentrality", "top_entities": results}
+        except Exception as e:
+            logger.warning(f"Centrality calculation fallback: {e}")
+            return {"algorithm": "DegreeCentrality", "top_entities": []}
+
 
 class TigerGraphRESTClient(BaseGraphClient):
     """Client for live TigerGraph REST++ GSQL endpoints."""
@@ -365,6 +474,80 @@ class TigerGraphRESTClient(BaseGraphClient):
 
     def run_community_detection(self, max_iterations: int = 10) -> Dict[str, Any]:
         return self._post_query("community_detection", {"max_iter": max_iterations})
+
+    def write_back_case(
+        self,
+        case_id: Optional[str] = None,
+        trigger_txn_id: str = "",
+        subject_customer_id: str = "",
+        risk_score: float = 0.0,
+        confidence: float = 0.0,
+        status: str = "RESOLVED",
+        final_outcome: Optional[str] = None,
+        fraud_patterns: Optional[List[str]] = None,
+        findings: Optional[List[str]] = None,
+        actions: Optional[List[Any]] = None,
+        **kwargs
+    ) -> Dict[str, Any]:
+        if isinstance(case_id, dict):
+            kwargs = {**case_id, **kwargs}
+            case_id = kwargs.get("case_id", "CASE_UNKNOWN")
+
+        case_id = str(case_id or kwargs.get("case_id", "CASE_UNKNOWN"))
+        trigger_txn_id = trigger_txn_id or kwargs.get("trigger_txn_id", "")
+        subject_customer_id = subject_customer_id or kwargs.get("subject_customer_id", "")
+        risk_score = float(risk_score if risk_score != 0.0 else kwargs.get("risk_score", 0.0))
+        confidence = float(confidence if confidence != 0.0 else kwargs.get("confidence", 0.0))
+        status = status if status != "RESOLVED" else kwargs.get("status", "RESOLVED")
+        final_outcome = final_outcome or kwargs.get("final_outcome")
+        fraud_patterns = fraud_patterns or kwargs.get("fraud_patterns", [])
+        findings = findings or kwargs.get("findings", [])
+        actions = actions or kwargs.get("actions", kwargs.get("executed_actions", []))
+
+        now = int(time.time())
+        case_payload = {
+            "vertices": {
+                "Case": {
+                    case_id: {
+                        "trigger_type": {"value": "ANOMALY_TRIGGER"},
+                        "risk_score": {"value": float(risk_score)},
+                        "confidence": {"value": float(confidence)},
+                        "status": {"value": status},
+                        "final_outcome": {"value": final_outcome or ("CONFIRMED_FRAUD" if risk_score >= 0.70 else "CLEARED")},
+                        "created_at": {"value": now},
+                        "closed_at": {"value": now if status in ("RESOLVED", "CLOSED") else 0}
+                    }
+                }
+            },
+            "edges": {
+                "Transaction": {
+                    trigger_txn_id: {
+                        "FLAGGED_IN_CASE": {
+                            "Case": {case_id: {}}
+                        }
+                    }
+                } if trigger_txn_id else {},
+                "Case": {
+                    case_id: {
+                        "INVOLVES_ENTITY": {
+                            "Customer": {subject_customer_id: {}}
+                        }
+                    }
+                } if subject_customer_id else {}
+            }
+        }
+        url = f"{self.host}/graph/{self.graph}"
+        try:
+            with httpx.Client(timeout=10.0) as client:
+                res = client.post(url, json=case_payload, headers=self.headers)
+                res.raise_for_status()
+                return {"success": True, "case_id": case_id, "server_response": res.json()}
+        except Exception as e:
+            logger.error(f"Failed to write case {case_id} to TigerGraph: {e}")
+            return {"success": False, "error": str(e), "case_id": case_id}
+
+    def query_centrality(self, top_k: int = 10) -> Dict[str, Any]:
+        return self._post_query("centrality", {"top_k": top_k})
 
 
 # Global singleton instance
