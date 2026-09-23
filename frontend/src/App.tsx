@@ -47,12 +47,6 @@ export const App: React.FC = () => {
   const [isInvestigating, setIsInvestigating] = useState(false);
   const [activeSar, setActiveSar] = useState<any>(null);
 
-  // Load initial data
-  useEffect(() => {
-    loadDashboardData();
-    fetchPolicies().then(setPolicies).catch(console.error);
-  }, []);
-
   const loadDashboardData = async () => {
     try {
       const [m, cList] = await Promise.all([fetchMetrics(), fetchCases()]);
@@ -65,6 +59,13 @@ export const App: React.FC = () => {
       console.error("Dashboard data load error:", e);
     }
   };
+
+  // Load initial data
+  useEffect(() => {
+    loadDashboardData();
+    fetchPolicies().then(setPolicies).catch(console.error);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const loadCaseData = async (caseId: string) => {
     setSelectedCaseId(caseId);

@@ -1,0 +1,27 @@
+// ============================================================================
+// Query: shared_device_clusters
+// Graph: FraudInvestigationGraph
+// Description: Identifies multi-card device clusters for undocumented fraud rings
+// ============================================================================
+
+CREATE OR REPLACE QUERY shared_device_clusters(VERTEX<DeviceProfile> target_device) FOR GRAPH FraudInvestigationGraph {
+    SetAccum<VERTEX> @@cards;
+    SetAccum<VERTEX> @@customers;
+    ListAccum<EDGE> @@edges;
+
+    Start = { target_device };
+
+    // Find all transactions using this device
+    Txns = SELECT t FROM Start:s -(DEVICE_USED_IN:e)- Transaction:t
+           ACCUM @@edges += e;
+
+    // Find cards associated with these transactions
+    Cards = SELECT c FROM Txns:t -(MADE_BY:e)- Card:c
+            ACCUM @@cards += c, @@edges += e;
+
+    // Find card owners
+    Custs = SELECT cust FROM Cards:c -(OWNED_BY:e)- Customer:cust
+            ACCUM @@customers += cust, @@edges += e;
+
+    PRINT @@cards.size() AS card_count, @@customers.size() AS customer_count, @@cards, @@customers;
+}

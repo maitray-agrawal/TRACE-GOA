@@ -1,0 +1,92 @@
+{
+  "case_id": "HHG-010",
+  "case": {
+    "status": "closed_fraud",
+    "verdict": "fraud",
+    "fraud_probability": 0.89,
+    "pattern": "card_not_present_new_device",
+    "pattern_description": "",
+    "affected_txn_ids": [
+      "3506725"
+    ],
+    "first_suspicious_txn_id": "3506725",
+    "connected_card_ids": [],
+    "connected_device_profiles": [
+      "Windows | Windows 10 | edge 16.0 | 1366x768"
+    ],
+    "exposure_usd": 1000.03,
+    "evidence": [
+      {
+        "claim": "Online transaction flagged at risk score 0.90 from new device profile (Windows | Windows 10 | edge 16.0 | 1366x768)",
+        "source": "graph",
+        "ref": "query:identity_profile",
+        "entity_ids": [
+          "3506725"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-0011",
+      "CC-0018"
+    ],
+    "summary": "Investigation for case HHG-010 concluded with verdict: FRAUD (pattern: card_not_present_new_device). Assessed fraud probability: 0.89. Identified 1 affected transaction(s) with total exposure of $1000.03 USD. Policy actions executed under rule compliance.",
+    "written_to_graph": true,
+    "graph_case_id": "CASE-2016-HHG-010"
+  },
+  "evidence_requests": [],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "Policy R2/R5: Confirmed unauthorized use; exposure $1000.03"
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "Policy R2: Open internal case and record in graph"
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "Policy R2/R6/R9: High exposure or cross-card ring"
+      }
+    ],
+    "final": [
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "Policy R2/R5: Confirmed unauthorized use; exposure $1000.03"
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "Policy R2: Open internal case and record in graph"
+      },
+      {
+        "action": "FILE_REPORT",
+        "route": "L2",
+        "reason": "Policy R2/R6/R9: High exposure or cross-card ring"
+      }
+    ],
+    "what_changed": "nothing"
+  },
+  "sar": {
+    "file": true,
+    "reason": "Policy R2/R6/R9: Confirmed unauthorized activity exceeding filing threshold or involving shared network ring.",
+    "narrative": "On 2016-12-02, card C10434-K1 belonging to customer C10434 was identified with unauthorized activity. Flagged transaction 3506725 for $1000.03 exhibited pattern characteristics of card_not_present_new_device. Investigation revealed 1 suspicious transaction(s) totaling $1000.03 USD. Activity originated via online channel using device profile (Windows | Windows 10 | edge 16.0 | 1366x768). The cardholder did not authorize this activity and confirmed no legitimate relationship with the transactions. Evidence indicates intentional card compromise. The financial institution has blocked card C10434-K1 and placed all associated accounts under enhanced surveillance.",
+    "subjects": [
+      "C10434",
+      "C10434-K1"
+    ],
+    "total_amount_usd": 1000.03,
+    "activity_dates": [
+      "2016-12-02",
+      "2016-12-02"
+    ]
+  },
+  "stop_reason": "Policy stopping rule met: decisive fraud/legitimate threshold reached with multi-source supporting evidence.",
+  "tool_calls": 7,
+  "tokens": 3030,
+  "latency_s": 0.12
+}

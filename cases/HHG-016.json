@@ -1,0 +1,85 @@
+{
+  "case_id": "HHG-016",
+  "case": {
+    "status": "closed_fraud",
+    "verdict": "fraud",
+    "fraud_probability": 0.94,
+    "pattern": "card_not_present_new_device",
+    "pattern_description": "",
+    "affected_txn_ids": [
+      "3534820"
+    ],
+    "first_suspicious_txn_id": "3534820",
+    "connected_card_ids": [],
+    "connected_device_profiles": [
+      "Windows |  | edge 16.0 | "
+    ],
+    "exposure_usd": 59.67,
+    "evidence": [
+      {
+        "claim": "Customer explicitly disputed transaction: Customer C09988 message: 'I never made this $59.67 purchase. Please check my card.' Refers to 3534820.",
+        "source": "customer",
+        "ref": "evidence_request:customer_dispute",
+        "entity_ids": [
+          "3534820",
+          "C09988"
+        ]
+      },
+      {
+        "claim": "Transaction originated from new device profile (Windows |  | edge 16.0 | )",
+        "source": "graph",
+        "ref": "query:identity_profile",
+        "entity_ids": [
+          "3534820"
+        ]
+      }
+    ],
+    "similar_prior_cases": [
+      "CC-0011",
+      "CC-0018"
+    ],
+    "summary": "Investigation for case HHG-016 concluded with verdict: FRAUD (pattern: card_not_present_new_device). Assessed fraud probability: 0.94. Identified 1 affected transaction(s) with total exposure of $59.67 USD. Policy actions executed under rule compliance.",
+    "written_to_graph": true,
+    "graph_case_id": "CASE-2016-HHG-016"
+  },
+  "evidence_requests": [],
+  "next_best_actions": {
+    "initial": [
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "Policy R2/R5: Confirmed unauthorized use; exposure $59.67"
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "Policy R2: Open internal case and record in graph"
+      }
+    ],
+    "final": [
+      {
+        "action": "BLOCK_CARD",
+        "route": "L1",
+        "reason": "Policy R2/R5: Confirmed unauthorized use; exposure $59.67"
+      },
+      {
+        "action": "CREATE_CASE",
+        "route": "auto",
+        "reason": "Policy R2: Open internal case and record in graph"
+      }
+    ],
+    "what_changed": "nothing"
+  },
+  "sar": {
+    "file": false,
+    "reason": "Activity did not meet mandatory SAR regulatory filing threshold under Policy Rule R2/R6.",
+    "narrative": "",
+    "subjects": [],
+    "total_amount_usd": 0.0,
+    "activity_dates": []
+  },
+  "stop_reason": "Policy stopping rule met: decisive fraud/legitimate threshold reached with multi-source supporting evidence.",
+  "tool_calls": 8,
+  "tokens": 3210,
+  "latency_s": 0.12
+}

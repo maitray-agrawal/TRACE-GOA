@@ -19,3 +19,10 @@ frontend/node_modules/
 *.db
 *.log
 .DS_Store
+
+# Competition dataset - too large for git, download manually
+data/competition/*.csv
+data/competition/transactions.csv
+data/competition/identity.csv
+data/competition/closed_cases_history.csv
+

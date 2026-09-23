@@ -1,0 +1,28 @@
+{
+  "model_type": "LogisticRegression + IsotonicCalibration",
+  "n_samples": 5565,
+  "train_samples": 4452,
+  "val_samples": 1113,
+  "val_roc_auc": 1.0,
+  "val_brier_score": 0.0,
+  "val_log_loss": 0.0,
+  "feature_names": [
+    "log_exposure",
+    "n_txns",
+    "n_connected_cards",
+    "has_pattern",
+    "is_device_pattern",
+    "is_takeover",
+    "is_region"
+  ],
+  "base_coefficients": [
+    3.8153989469909746,
+    0.3995485189233576,
+    -0.006154806691131431,
+    2.24884168488894,
+    0.3420619580199268,
+    0.006767778085106716,
+    0.34406695141231536
+  ],
+  "base_intercept": -7.265327432811136
+}

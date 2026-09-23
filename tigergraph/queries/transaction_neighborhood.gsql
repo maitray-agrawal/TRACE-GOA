@@ -1,33 +1,36 @@
 // ============================================================================
 // Query: transaction_neighborhood
-// Description: Retrieves the 2-hop entity neighborhood around a transaction,
-// including customer, card, device, IP, address, merchant, and co-occurring cases.
+// Graph: FraudInvestigationGraph
+// Description: Retrieves 2-hop entity neighborhood around an IEEE-CIS transaction,
+// connecting Card, Customer, DeviceProfile, BillingRegion, and EmailDomain.
 // ============================================================================
 
-CREATE OR REPLACE QUERY transaction_neighborhood(VERTEX<Transaction> target_txn, INT depth = 2) FOR GRAPH FraudInvestigationGraph {
+CREATE OR REPLACE QUERY transaction_neighborhood(VERTEX<Transaction> target_txn) FOR GRAPH FraudInvestigationGraph {
     ListAccum<EDGE> @@edges;
     SetAccum<VERTEX> @@vertices;
 
     Start = { target_txn };
     @@vertices += target_txn;
 
-    // Hop 1: Direct connections (Card, Device, IP, Merchant, Address, Email, Account)
-    Hop1 = SELECT tgt FROM Start:s -(:e)-> :tgt
-           ACCUM @@edges += e, @@vertices += tgt;
+    // Hop 1: Direct links (Card, DeviceProfile, BillingRegion, EmailDomain)
+    Hop1_Card = SELECT c FROM Start:s -(MADE_BY:e)- Card:c
+                ACCUM @@edges += e, @@vertices += c;
 
-    // Reverse hop to account/customer
-    Hop1_Rev = SELECT src FROM Start:s -(<PERFORMS_TRANSACTION:e)- Account:src
-               ACCUM @@edges += e, @@vertices += src;
+    Hop1_Dev = SELECT d FROM Start:s -(FROM_DEVICE:e)- DeviceProfile:d
+               ACCUM @@edges += e, @@vertices += d;
 
-    // Hop 2: From Account to Customer, and from Device/IP to other Transactions
-    Hop2 = SELECT tgt FROM Hop1:h -(:e)-> :tgt
-           WHERE tgt != target_txn
-           ACCUM @@edges += e, @@vertices += tgt;
+    Hop1_Region = SELECT r FROM Start:s -(BILLED_IN:e)- BillingRegion:r
+                  ACCUM @@edges += e, @@vertices += r;
 
-    Hop2_Rev = SELECT src FROM Hop1:h -(<USES_DEVICE|<ORIGINATES_FROM_IP:e)- Transaction:src
-               WHERE src != target_txn
-               LIMIT 50
-               ACCUM @@edges += e, @@vertices += src;
+    // Hop 2: Card -> Customer (OWNS)
+    Hop2_Cust = SELECT cust FROM Hop1_Card:c -(OWNED_BY:e)- Customer:cust
+                ACCUM @@edges += e, @@vertices += cust;
+
+    // Hop 2: Device -> other Transactions sharing device (online fraud ring)
+    Hop2_OtherTxns = SELECT t FROM Hop1_Dev:d -(DEVICE_USED_IN:e)- Transaction:t
+                     WHERE t != target_txn
+                     LIMIT 30
+                     ACCUM @@edges += e, @@vertices += t;
 
     PRINT @@vertices, @@edges;
 }

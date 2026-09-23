@@ -1,0 +1,117 @@
+{
+  "version": "1.0",
+  "name": "TigerGraph HHGOA IEEE-CIS Fraud Policy",
+  "approval_routes": {
+    "auto": [
+      "ALLOW_TRANSACTION",
+      "MONITOR_CARD",
+      "MONITOR_CONNECTED_CARDS",
+      "WARN_CUSTOMER",
+      "VERIFY_WITH_CUSTOMER",
+      "STEP_UP_AUTH",
+      "GENERATE_REPORT",
+      "CREATE_CASE",
+      "ESCALATE_TO_ANALYST",
+      "CLOSE_NO_FRAUD"
+    ],
+    "L1": [
+      "DECLINE_TRANSACTION"
+    ],
+    "L2": [
+      "BLOCK_ALL_CARDS",
+      "FILE_REPORT"
+    ],
+    "conditional": {
+      "BLOCK_CARD": {
+        "threshold_usd": 2500.0,
+        "under_threshold": "L1",
+        "above_threshold": "L2"
+      }
+    }
+  },
+  "rules": {
+    "R1": {
+      "id": "R1",
+      "title": "Verify before blocking on weak signal",
+      "description": "If the case rests on a single signal (including risk score alone) and assessed fraud probability < 0.70, recommend VERIFY_WITH_CUSTOMER or STEP_UP_AUTH before any block.",
+      "max_probability": 0.70,
+      "recommended_actions": ["VERIFY_WITH_CUSTOMER", "STEP_UP_AUTH"]
+    },
+    "R2": {
+      "id": "R2",
+      "title": "Customer denies transaction",
+      "description": "Recommend BLOCK_CARD and CREATE_CASE. Add FILE_REPORT if exposure exceeds $1,000 or case connects to a shared device profile or another card's fraud.",
+      "sar_threshold_usd": 1000.0,
+      "mandatory_actions": ["BLOCK_CARD", "CREATE_CASE"],
+      "conditional_actions": ["FILE_REPORT"]
+    },
+    "R3": {
+      "id": "R3",
+      "title": "Customer confirms transaction",
+      "description": "Recommend CLOSE_NO_FRAUD. Note confirmation in case file.",
+      "mandatory_actions": ["CLOSE_NO_FRAUD"]
+    },
+    "R4": {
+      "id": "R4",
+      "title": "No reply within 24 hours",
+      "description": "Recommend MONITOR_CARD and DECLINE_TRANSACTION for pending authorizations. Escalate if exposure exceeds $500.",
+      "escalation_threshold_usd": 500.0,
+      "mandatory_actions": ["MONITOR_CARD", "DECLINE_TRANSACTION"],
+      "conditional_actions": ["ESCALATE_TO_ANALYST"]
+    },
+    "R5": {
+      "id": "R5",
+      "title": "Card testing sequence",
+      "description": "Three or more small online authorizations on one card within an hour, followed by a larger purchase: recommend DECLINE_TRANSACTION and STEP_UP_AUTH. If purchase over $100 has already cleared, recommend BLOCK_CARD.",
+      "cleared_threshold_usd": 100.0,
+      "mandatory_actions": ["DECLINE_TRANSACTION", "STEP_UP_AUTH"],
+      "conditional_actions": ["BLOCK_CARD"]
+    },
+    "R6": {
+      "id": "R6",
+      "title": "Shared origin",
+      "description": "When several cards show fraud from the same device profile, same billing region, or same recipient email in one window, recommend CREATE_CASE, FILE_REPORT, and MONITOR_CONNECTED_CARDS for every card sharing it.",
+      "mandatory_actions": ["CREATE_CASE", "FILE_REPORT", "MONITOR_CONNECTED_CARDS"]
+    },
+    "R7": {
+      "id": "R7",
+      "title": "Disputed but legitimate",
+      "description": "When customer disputes a charge that matches their recurring pattern (same merchant, same amount, monthly), recommend CREATE_CASE, VERIFY_WITH_CUSTOMER, and WARN_CUSTOMER. Do not block.",
+      "mandatory_actions": ["CREATE_CASE", "VERIFY_WITH_CUSTOMER", "WARN_CUSTOMER"]
+    },
+    "R8": {
+      "id": "R8",
+      "title": "Escalate when uncertain and exposed",
+      "description": "If verdict is uncertain and exposure exceeds $500, or evidence conflicts, recommend ESCALATE_TO_ANALYST.",
+      "uncertain_threshold_usd": 500.0,
+      "mandatory_actions": ["ESCALATE_TO_ANALYST"]
+    },
+    "R9": {
+      "id": "R9",
+      "title": "Undocumented patterns",
+      "description": "When activity fits none of the known patterns but evidence shows coordinated or repeated abuse across customers, recommend CREATE_CASE, FILE_REPORT, and ESCALATE_TO_ANALYST, and describe in own words.",
+      "mandatory_actions": ["CREATE_CASE", "FILE_REPORT", "ESCALATE_TO_ANALYST"]
+    },
+    "R10": {
+      "id": "R10",
+      "title": "Strict multi-card block constraint",
+      "description": "Never BLOCK_ALL_CARDS unless at least two of the customer's cards show confirmed fraud or customer credentials confirmed compromised."
+    }
+  },
+  "sar_policy": {
+    "mandatory_when": [
+      "confirmed_fraud_exposure_over_1000",
+      "shared_device_or_region_or_ring",
+      "undocumented_coordinated_pattern"
+    ],
+    "approval_role": "L2"
+  },
+  "case_creation_policy": {
+    "open_when": [
+      "fraud_probability_gte_0_30",
+      "evidence_requested",
+      "customer_dispute"
+    ],
+    "approval_role": "auto"
+  }
+}
