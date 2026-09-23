@@ -9,15 +9,15 @@ interface GraphViewerProps {
 }
 
 const NODE_COLORS: Record<string, string> = {
-  Transaction: "#f43f5e", // Rose
-  Customer: "#06b6d4",    // Cyan
-  Account: "#3b82f6",     // Blue
-  Device: "#f59e0b",      // Amber
-  IP: "#8b5cf6",          // Purple
-  Card: "#10b981",        // Emerald
-  Merchant: "#ec4899",    // Pink
-  Case: "#e11d48",        // Crimson
-  FraudPattern: "#ef4444" // Red
+  Transaction: "var(--accent-rose)", // #f43f5e
+  Customer: "var(--accent-cyan)",     // #00f2fe
+  Account: "#3b82f6",                 // Blue
+  Device: "var(--accent-amber)",      // #f59e0b
+  IP: "#a855f7",                      // Purple
+  Card: "var(--accent-emerald)",      // #10b981
+  Merchant: "#ec4899",                // Pink
+  Case: "#e11d48",                    // Crimson
+  FraudPattern: "#ff0055"             // Neon Red
 };
 
 export const GraphViewer: React.FC<GraphViewerProps> = ({ data, onNodeClick, height = "100%" }) => {
@@ -224,19 +224,18 @@ export const GraphViewer: React.FC<GraphViewerProps> = ({ data, onNodeClick, hei
             position: "absolute",
             bottom: 12,
             left: 12,
-            background: "rgba(17, 24, 39, 0.95)",
-            backdropFilter: "blur(8px)",
-            border: "1px solid var(--border-color)",
-            borderRadius: 6,
+            background: "rgba(10, 14, 23, 0.95)",
+            border: "1px solid var(--accent-cyan)",
+            borderRadius: 0,
             padding: "10px 14px",
-            fontSize: "0.8rem",
-            maxWidth: 320,
+            fontSize: "0.78rem",
+            maxWidth: 340,
             zIndex: 10
           }}
         >
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-            <span style={{ fontWeight: 700, color: NODE_COLORS[selectedNode.type] || "#fff" }}>
-              {selectedNode.type}: {selectedNode.id}
+            <span className="font-mono" style={{ fontWeight: 700, color: NODE_COLORS[selectedNode.type] || "#fff", letterSpacing: "0.04em" }}>
+              [{selectedNode.type.toUpperCase()}] {selectedNode.id}
             </span>
             <button
               onClick={() => setSelectedNode(null)}

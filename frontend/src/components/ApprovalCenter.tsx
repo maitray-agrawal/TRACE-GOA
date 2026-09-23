@@ -39,27 +39,28 @@ export const ApprovalCenter: React.FC<ApprovalCenterProps> = ({ cases, activeRol
     <div className="glass-panel" style={{ padding: 20 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
         <div>
-          <h2 style={{ fontSize: "1.1rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
+          <h2 className="font-mono" style={{ fontSize: "1.05rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 8, letterSpacing: "0.04em" }}>
             <AlertCircle size={18} color="var(--accent-amber)" />
-            Institutional Governance & Approval Center
+            CLEARANCE CENTER // SUPERVISORY SIGN-OFF
           </h2>
-          <span style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
-            High-Impact Enforcement Actions Requiring Supervisory Electronic Sign-Off
+          <span className="font-mono" style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
+            High-Impact Enforcement Actions Requiring Supervisory Electronic Clearance
           </span>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>Signing as:</span>
+          <span className="font-mono" style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>SIGNING AS:</span>
           <input
             type="text"
             value={approverName}
             onChange={(e) => setApproverName(e.target.value)}
+            className="font-mono"
             style={{
               background: "var(--bg-tertiary)",
               color: "#fff",
               border: "1px solid var(--border-color)",
               padding: "4px 8px",
-              borderRadius: 4,
-              fontSize: "0.8rem"
+              borderRadius: 0,
+              fontSize: "0.78rem"
             }}
           />
         </div>
@@ -68,7 +69,7 @@ export const ApprovalCenter: React.FC<ApprovalCenterProps> = ({ cases, activeRol
       {pendingCases.length === 0 ? (
         <div style={{ padding: 40, textAlign: "center", color: "var(--text-muted)" }}>
           <CheckCircle size={32} color="var(--accent-emerald)" style={{ margin: "0 auto 10px", opacity: 0.8 }} />
-          <p>No actions currently awaiting approval. System operational.</p>
+          <p className="font-mono" style={{ fontSize: "0.85rem" }}>No actions currently awaiting clearance. Queue clear.</p>
         </div>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
@@ -76,38 +77,38 @@ export const ApprovalCenter: React.FC<ApprovalCenterProps> = ({ cases, activeRol
             const pending = c.approvals.find((a) => a.status === "PENDING") || {
               action: c.recommended_actions[0]?.action || "ACTION",
               required_role: c.recommended_actions[0]?.approval_route || "FRAUD_MANAGER",
-              reason: c.recommended_actions[0]?.reason || "Supervisory sign-off required"
+              reason: c.recommended_actions[0]?.reason || "Supervisory clearance required"
             };
 
             return (
               <div
                 key={c.case_id}
                 style={{
-                  background: "rgba(0, 0, 0, 0.3)",
-                  border: "1px solid rgba(245, 158, 11, 0.4)",
-                  borderRadius: 8,
+                  background: "var(--bg-tertiary)",
+                  border: "1px solid var(--accent-amber)",
+                  borderRadius: 0,
                   padding: "16px"
                 }}
               >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
                   <div>
-                    <span style={{ fontWeight: 700, fontSize: "0.95rem", color: "#fff" }}>{c.case_id}</span>
-                    <span style={{ marginLeft: 10, fontSize: "0.75rem", color: "var(--text-muted)" }}>
-                      Subject: {c.subject_customer_id} | Trigger: {c.trigger_txn_id}
+                    <span className="font-mono" style={{ fontWeight: 700, fontSize: "0.95rem", color: "var(--accent-cyan)" }}>{c.case_id}</span>
+                    <span className="font-mono" style={{ marginLeft: 10, fontSize: "0.75rem", color: "var(--text-muted)" }}>
+                      SUBJECT: {c.subject_customer_id} | TRIGGER: {c.trigger_txn_id}
                     </span>
                   </div>
-                  <span className="status-badge warning">
-                    Requires: {pending.required_role}
+                  <span className="status-badge warning font-mono">
+                    REQUIRES: {pending.required_role}
                   </span>
                 </div>
 
-                <div style={{ background: "rgba(0,0,0,0.4)", padding: "10px", borderRadius: 6, marginBottom: 12, fontSize: "0.82rem" }}>
-                  <div style={{ fontWeight: 600, color: "var(--accent-amber)", marginBottom: 4 }}>
-                    Proposed Action: {pending.action}
+                <div style={{ background: "rgba(0,0,0,0.4)", padding: "10px", borderRadius: 0, marginBottom: 12, fontSize: "0.82rem", border: "1px solid var(--border-color)" }}>
+                  <div className="font-mono" style={{ fontWeight: 700, color: "var(--accent-amber)", marginBottom: 4 }}>
+                    PROPOSED MOVE: {pending.action}
                   </div>
                   <div style={{ color: "var(--text-secondary)" }}>{pending.reason}</div>
-                  <div style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginTop: 4 }}>
-                    Risk Score: {c.risk_score} | Confidence: {c.confidence} | Patterns: {c.fraud_patterns.join(", ") || "None"}
+                  <div className="font-mono" style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginTop: 6 }}>
+                    RISK: {c.risk_score} | CONFIDENCE: {c.confidence} | TYPOLOGY: {c.fraud_patterns.join(", ") || "None"}
                   </div>
                 </div>
 
@@ -117,30 +118,32 @@ export const ApprovalCenter: React.FC<ApprovalCenterProps> = ({ cases, activeRol
                     placeholder="Optional justification or policy citation note..."
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
+                    className="font-mono"
                     style={{
                       flex: 1,
-                      background: "var(--bg-tertiary)",
+                      background: "var(--bg-primary)",
                       color: "#fff",
                       border: "1px solid var(--border-color)",
                       padding: "8px 12px",
-                      borderRadius: 6,
-                      fontSize: "0.8rem"
+                      borderRadius: 0,
+                      fontSize: "0.78rem"
                     }}
                   />
                   <button
                     className="btn-primary"
-                    style={{ background: "linear-gradient(135deg, #10b981 0%, #059669 100%)" }}
+                    style={{ background: "var(--accent-emerald)", color: "#000", fontWeight: 700, borderRadius: 0 }}
                     onClick={() => handleDecision(c.case_id, pending.action, true)}
                     disabled={processingCaseId === c.case_id}
                   >
-                    <CheckCircle size={14} /> Authorize & Execute
+                    <CheckCircle size={14} /> AUTHORIZE MOVE
                   </button>
                   <button
                     className="btn-danger"
+                    style={{ borderRadius: 0 }}
                     onClick={() => handleDecision(c.case_id, pending.action, false)}
                     disabled={processingCaseId === c.case_id}
                   >
-                    <XCircle size={14} /> Reject Action
+                    <XCircle size={14} /> DENY MOVE
                   </button>
                 </div>
               </div>

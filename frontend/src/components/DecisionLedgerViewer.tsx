@@ -29,35 +29,35 @@ export const DecisionLedgerViewer: React.FC<DecisionLedgerViewerProps> = ({ case
     <div className="glass-panel" style={{ padding: 20 }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
         <div>
-          <h2 style={{ fontSize: "1.1rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 8 }}>
-            <Hash size={18} color="var(--accent-indigo)" />
-            Cryptographic Decision Ledger — Case {caseId}
+          <h2 className="font-mono" style={{ fontSize: "1.05rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 8, letterSpacing: "0.04em" }}>
+            <Hash size={18} color="var(--accent-cyan)" />
+            LEDGER // FORENSIC AUDIT TRAIL — CASE {caseId}
           </h2>
-          <span style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
-            SHA-256 Merkle-Chained Tamper-Evident Forensic Audit Trail
+          <span className="font-mono" style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
+            SHA-256 Merkle-Chained Tamper-Evident Forensic Decision Ledger
           </span>
         </div>
 
         <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
           {verificationResult && (
             <span
-              className={`status-badge ${verificationResult.is_valid ? "active" : "critical"}`}
-              style={{ fontSize: "0.8rem", padding: "6px 12px" }}
+              className={`status-badge ${verificationResult.is_valid ? "active" : "critical"} font-mono`}
+              style={{ fontSize: "0.75rem", padding: "6px 12px" }}
             >
               {verificationResult.is_valid ? <ShieldCheck size={14} /> : <ShieldAlert size={14} />}
-              {verificationResult.is_valid ? "Chain Verified (Untampered)" : "TAMPERING DETECTED"}
+              {verificationResult.is_valid ? "LEDGER SEALED & VERIFIED" : "CHAIN TAMPERING DETECTED"}
             </span>
           )}
 
-          <button className="btn-primary" onClick={handleVerify} disabled={isVerifying}>
+          <button className="btn-primary" style={{ borderRadius: 0 }} onClick={handleVerify} disabled={isVerifying}>
             <RefreshCw size={14} className={isVerifying ? "animate-spin" : ""} />
-            {isVerifying ? "Verifying Hashes..." : "Verify Cryptographic Integrity"}
+            {isVerifying ? "VERIFYING HASHES..." : "VERIFY INTEGRITY"}
           </button>
         </div>
       </div>
 
       {entries.length === 0 ? (
-        <div style={{ padding: 30, textAlign: "center", color: "var(--text-muted)" }}>
+        <div className="font-mono" style={{ padding: 30, textAlign: "center", color: "var(--text-muted)", fontSize: "0.8rem" }}>
           No ledger events found for this case docket.
         </div>
       ) : (
@@ -66,18 +66,18 @@ export const DecisionLedgerViewer: React.FC<DecisionLedgerViewerProps> = ({ case
             <div
               key={entry.entry_id}
               style={{
-                background: "rgba(0, 0, 0, 0.35)",
+                background: "var(--bg-tertiary)",
                 border: "1px solid var(--border-color)",
-                borderRadius: 8,
+                borderRadius: 0,
                 padding: "12px 16px",
                 position: "relative"
               }}
             >
               <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                <span style={{ fontWeight: 700, color: "var(--accent-cyan)", fontSize: "0.85rem" }}>
-                  Block #{entry.entry_id} — {entry.event_type}
+                <span className="font-mono" style={{ fontWeight: 700, color: "var(--accent-cyan)", fontSize: "0.82rem" }}>
+                  BLOCK #{entry.entry_id} — {entry.event_type}
                 </span>
-                <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
+                <span className="font-mono" style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
                   {new Date(entry.timestamp * 1000).toLocaleString()}
                 </span>
               </div>

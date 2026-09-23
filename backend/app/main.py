@@ -13,23 +13,23 @@ from backend.app.api.routes import router as api_router
 from scripts.ingest.generate_seed_dataset import build_and_seed_dataset
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(name)s: %(message)s")
-logger = logging.getLogger("HHGOA-Server")
+logger = logging.getLogger("TRACE//GOA")
 
 from contextlib import asynccontextmanager
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    logger.info("Initializing HHGOA Fraud Platform...")
+    logger.info("Initializing TRACE//GOA Engine...")
     try:
         build_and_seed_dataset()
-        logger.info("HHGOA Graph Engine & Benchmark Dataset Seeded.")
+        logger.info("TRACE//GOA Graph Engine & Benchmark Dataset Seeded.")
     except Exception as e:
         logger.warning(f"Startup seed notice: {e}")
     yield
 
 app = FastAPI(
-    title="TigerGraph Agentic Fraud Investigation & Next-Best Action API — HHGOA",
-    description="Enterprise API powering autonomous fraud investigation agents with TigerGraph, GraphRAG, and decision ledgers.",
+    title="TRACE//GOA — Agentic Fraud Investigation & Next-Best Action Engine",
+    description="Graph-native agentic fraud investigation engine with TigerGraph GSQL/MCP, GraphRAG, uncertainty loops, and SHA-256 Decision Ledgers. Trace the signal. Find the network. Make the move.",
     version="1.0.0",
     lifespan=lifespan
 )

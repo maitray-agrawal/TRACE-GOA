@@ -1,5 +1,5 @@
 import React from "react";
-import { ShieldAlert, Network, Terminal, FileCheck, PlayCircle, BarChart3 } from "lucide-react";
+import { Terminal, Network, ShieldCheck, Activity, SlidersHorizontal, Play } from "lucide-react";
 
 interface HeaderProps {
   activeTab: string;
@@ -12,18 +12,20 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, activeR
   return (
     <header className="app-header">
       <div className="brand-section">
-        <ShieldAlert size={26} color="#06b6d4" />
         <div>
-          <h1 className="brand-title">TIGERGRAPH FRAUD INVESTIGATION COMMAND CENTER</h1>
-          <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
-            Autonomous GraphRAG & Next-Best Action Engine — HHGOA
-          </span>
+          <div className="brand-logo">
+            TRACE<span className="cyan">//</span>GOA
+          </div>
+          <div className="brand-tagline">
+            Trace the signal. Find the network. Make the move.
+          </div>
         </div>
-        <div style={{ marginLeft: "16px" }}>
-          <span className="status-badge active">
-            <span style={{ width: 6, height: 6, borderRadius: "50%", background: "#10b981", display: "inline-block" }}></span>
-            TigerGraph Dual-Engine Active
-          </span>
+
+        <div className="tech-tags">
+          <span className="tech-tag">TIGERGRAPH</span>
+          <span className="tech-tag">GRAPHRAG</span>
+          <span className="tech-tag">MCP</span>
+          <span className="tech-tag">AGENTIC AI</span>
         </div>
       </div>
 
@@ -32,54 +34,68 @@ export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, activeR
           className={`nav-tab-btn ${activeTab === "dashboard" ? "active" : ""}`}
           onClick={() => setActiveTab("dashboard")}
         >
-          <BarChart3 size={15} /> Dashboard & Queue
+          <Activity size={13} /> COMMAND
         </button>
         <button
           className={`nav-tab-btn ${activeTab === "investigation" ? "active" : ""}`}
           onClick={() => setActiveTab("investigation")}
         >
-          <Terminal size={15} /> Active Investigation
+          <Terminal size={13} /> TRACE
         </button>
         <button
           className={`nav-tab-btn ${activeTab === "graph" ? "active" : ""}`}
           onClick={() => setActiveTab("graph")}
         >
-          <Network size={15} /> Graph Explorer
+          <Network size={13} /> NETWORK
         </button>
         <button
           className={`nav-tab-btn ${activeTab === "ledger" ? "active" : ""}`}
           onClick={() => setActiveTab("ledger")}
         >
-          <FileCheck size={15} /> Decision Ledger
+          <ShieldCheck size={13} /> LEDGER
+        </button>
+        <button
+          className={`nav-tab-btn ${activeTab === "clearance" ? "active" : ""}`}
+          onClick={() => setActiveTab("clearance")}
+        >
+          <SlidersHorizontal size={13} /> CLEARANCE
         </button>
         <button
           className={`nav-tab-btn ${activeTab === "demo" ? "active" : ""}`}
           onClick={() => setActiveTab("demo")}
-          style={{ borderColor: activeTab === "demo" ? "var(--accent-cyan)" : "rgba(6, 182, 212, 0.4)" }}
+          style={{ borderColor: activeTab === "demo" ? "var(--accent-cyan)" : "rgba(0, 242, 254, 0.4)" }}
         >
-          <PlayCircle size={15} color="#06b6d4" /> Live Demo Mode
+          <Play size={13} color="var(--accent-cyan)" /> TRIALS // DEMO
         </button>
       </nav>
 
-      <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
-        <span style={{ fontSize: "0.78rem", color: "var(--text-secondary)" }}>Analyst Role:</span>
+      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+        <span className="tech-tag" style={{ border: "none", color: "var(--text-muted)" }}>
+          ROLE:
+        </span>
         <select
           value={activeRole}
           onChange={(e) => setActiveRole(e.target.value)}
+          className="font-mono"
           style={{
             background: "var(--bg-tertiary)",
-            color: "var(--text-primary)",
+            color: "var(--accent-cyan)",
             border: "1px solid var(--border-color)",
-            padding: "5px 10px",
-            borderRadius: "6px",
-            fontSize: "0.82rem",
-            fontWeight: 600
+            padding: "4px 8px",
+            borderRadius: 0,
+            fontSize: "0.75rem",
+            fontWeight: 700
           }}
         >
-          <option value="ANALYST">Analyst (Tier 1)</option>
-          <option value="SENIOR_ANALYST">Senior Analyst (Tier 2)</option>
-          <option value="FRAUD_MANAGER">Fraud Manager (Tier 3)</option>
+          <option value="ANALYST">ANALYST [L1]</option>
+          <option value="SENIOR_ANALYST">SENIOR ANALYST [L2]</option>
+          <option value="FRAUD_MANAGER">FRAUD MANAGER [L3]</option>
         </select>
+
+        <span className="status-indicator active">
+          <span style={{ width: 6, height: 6, background: "var(--accent-emerald)", display: "inline-block" }}></span>
+          ONLINE
+        </span>
       </div>
     </header>
   );

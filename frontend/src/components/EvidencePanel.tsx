@@ -25,24 +25,24 @@ export const EvidencePanel: React.FC<EvidencePanelProps> = ({ caseData, policies
       <div style={{ display: "flex", gap: 6, marginBottom: 14, borderBottom: "1px solid var(--border-color)", paddingBottom: 8 }}>
         <button
           className={`nav-tab-btn ${activeTab === "evidence" ? "active" : ""}`}
-          style={{ padding: "4px 8px", fontSize: "0.78rem" }}
+          style={{ padding: "4px 8px", fontSize: "0.75rem", fontFamily: "var(--font-mono)", letterSpacing: "0.04em" }}
           onClick={() => setActiveTab("evidence")}
         >
-          Evidence ({caseData.supporting_evidence.length + caseData.contradicting_evidence.length})
+          SIGNALS ({caseData.supporting_evidence.length + caseData.contradicting_evidence.length})
         </button>
         <button
           className={`nav-tab-btn ${activeTab === "policy" ? "active" : ""}`}
-          style={{ padding: "4px 8px", fontSize: "0.78rem" }}
+          style={{ padding: "4px 8px", fontSize: "0.75rem", fontFamily: "var(--font-mono)", letterSpacing: "0.04em" }}
           onClick={() => setActiveTab("policy")}
         >
-          <BookOpen size={12} /> GraphRAG Policy
+          <BookOpen size={12} /> GUARDRAILS
         </button>
         <button
           className={`nav-tab-btn ${activeTab === "memory" ? "active" : ""}`}
-          style={{ padding: "4px 8px", fontSize: "0.78rem" }}
+          style={{ padding: "4px 8px", fontSize: "0.75rem", fontFamily: "var(--font-mono)", letterSpacing: "0.04em" }}
           onClick={() => setActiveTab("memory")}
         >
-          <History size={12} /> Case Memory
+          <History size={12} /> MEMORY
         </button>
       </div>
 
@@ -52,18 +52,18 @@ export const EvidencePanel: React.FC<EvidencePanelProps> = ({ caseData, policies
             {/* Supporting Evidence */}
             <div style={{ marginBottom: 14 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
-                <CheckCircle2 size={14} color="#f43f5e" />
-                <span style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--accent-rose)", textTransform: "uppercase" }}>
-                  Supporting Fraud Hypothesis ({caseData.supporting_evidence.length})
+                <CheckCircle2 size={13} color="var(--accent-rose)" />
+                <span className="font-mono" style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--accent-rose)", letterSpacing: "0.05em" }}>
+                  [+] INCRIMINATING SIGNALS ({caseData.supporting_evidence.length})
                 </span>
               </div>
               {caseData.supporting_evidence.length === 0 ? (
-                <p style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>None observed.</p>
+                <p className="font-mono" style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>None observed.</p>
               ) : (
                 caseData.supporting_evidence.map((ev) => (
                   <div key={ev.id} className="evidence-card supporting">
                     <div style={{ fontWeight: 600, color: "#fff", marginBottom: 3 }}>{ev.title}</div>
-                    <div style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>Source: {ev.source}</div>
+                    <div className="font-mono" style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>SRC: {ev.source}</div>
                   </div>
                 ))
               )}
@@ -72,18 +72,18 @@ export const EvidencePanel: React.FC<EvidencePanelProps> = ({ caseData, policies
             {/* Contradicting Evidence */}
             <div style={{ marginBottom: 14 }}>
               <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
-                <XCircle size={14} color="#10b981" />
-                <span style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--accent-emerald)", textTransform: "uppercase" }}>
-                  Contradicting / Benign Signals ({caseData.contradicting_evidence.length})
+                <XCircle size={13} color="var(--accent-emerald)" />
+                <span className="font-mono" style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--accent-emerald)", letterSpacing: "0.05em" }}>
+                  [-] BENIGN / MITIGATING SIGNALS ({caseData.contradicting_evidence.length})
                 </span>
               </div>
               {caseData.contradicting_evidence.length === 0 ? (
-                <p style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>None observed.</p>
+                <p className="font-mono" style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>None observed.</p>
               ) : (
                 caseData.contradicting_evidence.map((ev) => (
                   <div key={ev.id} className="evidence-card contradicting">
                     <div style={{ fontWeight: 600, color: "#fff", marginBottom: 3 }}>{ev.title}</div>
-                    <div style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>Source: {ev.source}</div>
+                    <div className="font-mono" style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>SRC: {ev.source}</div>
                   </div>
                 ))
               )}
@@ -92,18 +92,18 @@ export const EvidencePanel: React.FC<EvidencePanelProps> = ({ caseData, policies
             {/* Missing Evidence / Uncertainty */}
             <div>
               <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
-                <AlertTriangle size={14} color="#f59e0b" />
-                <span style={{ fontSize: "0.78rem", fontWeight: 700, color: "var(--accent-amber)", textTransform: "uppercase" }}>
-                  Missing Evidence / Uncertainty Gap ({caseData.missing_evidence.length})
+                <AlertTriangle size={13} color="var(--accent-amber)" />
+                <span className="font-mono" style={{ fontSize: "0.75rem", fontWeight: 700, color: "var(--accent-amber)", letterSpacing: "0.05em" }}>
+                  [?] UNCERTAINTY GAP / STEP-UP REQ ({caseData.missing_evidence.length})
                 </span>
               </div>
               {caseData.missing_evidence.length === 0 ? (
-                <p style={{ fontSize: "0.78rem", color: "var(--accent-emerald)" }}>Evidence completeness sufficient.</p>
+                <p className="font-mono" style={{ fontSize: "0.75rem", color: "var(--accent-emerald)" }}>Evidence completeness sufficient.</p>
               ) : (
                 caseData.missing_evidence.map((item, idx) => (
                   <div key={idx} className="evidence-card missing">
                     <div style={{ fontWeight: 500, color: "#fef3c7" }}>{item}</div>
-                    <div style={{ fontSize: "0.7rem", color: "var(--accent-amber)", marginTop: 2 }}>
+                    <div className="font-mono" style={{ fontSize: "0.68rem", color: "var(--accent-amber)", marginTop: 2 }}>
                       Requires Out-of-band Step-up challenge
                     </div>
                   </div>
@@ -115,22 +115,22 @@ export const EvidencePanel: React.FC<EvidencePanelProps> = ({ caseData, policies
 
         {activeTab === "policy" && (
           <div>
-            <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", display: "block", marginBottom: 10 }}>
-              Retrieved from GraphRAG Institutional Knowledge Base:
+            <span className="font-mono" style={{ fontSize: "0.72rem", color: "var(--text-muted)", display: "block", marginBottom: 10, letterSpacing: "0.04em" }}>
+              // INSTITUTIONAL GUARDRAILS & POLICIES (GRAPHRAG):
             </span>
             {policies.map((p) => (
               <div
                 key={p.id}
                 style={{
-                  background: "rgba(0,0,0,0.25)",
+                  background: "var(--bg-tertiary)",
                   border: "1px solid var(--border-color)",
-                  borderRadius: 6,
+                  borderRadius: 0,
                   padding: "10px",
                   marginBottom: 8,
                   fontSize: "0.78rem"
                 }}
               >
-                <div style={{ fontWeight: 700, color: "var(--accent-cyan)", marginBottom: 4 }}>
+                <div className="font-mono" style={{ fontWeight: 700, color: "var(--accent-cyan)", marginBottom: 4, letterSpacing: "0.04em" }}>
                   {p.id}: {p.topic}
                 </div>
                 <div style={{ color: "var(--text-secondary)", lineHeight: 1.4 }}>{p.content}</div>
@@ -141,30 +141,31 @@ export const EvidencePanel: React.FC<EvidencePanelProps> = ({ caseData, policies
 
         {activeTab === "memory" && (
           <div>
-            <span style={{ fontSize: "0.75rem", color: "var(--text-muted)", display: "block", marginBottom: 10 }}>
-              Similar Historical Investigations from Case Memory:
+            <span className="font-mono" style={{ fontSize: "0.72rem", color: "var(--text-muted)", display: "block", marginBottom: 10, letterSpacing: "0.04em" }}>
+              // HISTORICAL CASE MEMORY MATCHES:
             </span>
             {similarCases.length === 0 ? (
-              <p style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>No past cases matching current topology.</p>
+              <p className="font-mono" style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>No past cases matching current topology.</p>
             ) : (
               similarCases.map((mem) => (
                 <div
                   key={mem.case_id}
                   style={{
-                    background: "rgba(0,0,0,0.25)",
+                    background: "var(--bg-tertiary)",
                     border: "1px solid var(--border-color)",
-                    borderRadius: 6,
+                    borderRadius: 0,
                     padding: "10px",
                     marginBottom: 8,
                     fontSize: "0.78rem"
                   }}
                 >
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                    <span style={{ fontWeight: 700, color: "#fff" }}>{mem.case_id}</span>
+                    <span className="font-mono" style={{ fontWeight: 700, color: "var(--accent-cyan)" }}>{mem.case_id}</span>
                     <span
+                      className="font-mono"
                       style={{
                         color: mem.final_outcome === "CONFIRMED_FRAUD" ? "var(--accent-rose)" : "var(--accent-emerald)",
-                        fontWeight: 600,
+                        fontWeight: 700,
                         fontSize: "0.7rem"
                       }}
                     >
@@ -172,8 +173,8 @@ export const EvidencePanel: React.FC<EvidencePanelProps> = ({ caseData, policies
                     </span>
                   </div>
                   <div style={{ color: "var(--text-secondary)", marginBottom: 4 }}>{mem.summary}</div>
-                  <div style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>
-                    Risk: {mem.risk_score} | Conf: {mem.confidence}
+                  <div className="font-mono" style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>
+                    RISK: {mem.risk_score} | CONF: {mem.confidence}
                   </div>
                 </div>
               ))

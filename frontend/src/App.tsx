@@ -126,36 +126,36 @@ export const App: React.FC = () => {
         {/* KPI Metrics Row */}
         <div className="metrics-row">
           <div className="metric-card">
-            <div className="metric-label">Active Dockets</div>
-            <div className="metric-value">{metrics.total_active_cases}</div>
+            <div className="metric-label font-mono">ACTIVE DOCKETS</div>
+            <div className="metric-value font-mono">{metrics.total_active_cases}</div>
           </div>
           <div className="metric-card critical">
-            <div className="metric-label">High-Risk Cases</div>
-            <div className="metric-value" style={{ color: "var(--accent-rose)" }}>
+            <div className="metric-label font-mono">HIGH-RISK SIGNALS</div>
+            <div className="metric-value font-mono" style={{ color: "var(--accent-rose)" }}>
               {metrics.high_risk_cases}
             </div>
           </div>
           <div className="metric-card warning">
-            <div className="metric-label">Awaiting Approval</div>
-            <div className="metric-value" style={{ color: "var(--accent-amber)" }}>
+            <div className="metric-label font-mono">PENDING CLEARANCE</div>
+            <div className="metric-value font-mono" style={{ color: "var(--accent-amber)" }}>
               {metrics.awaiting_approval}
             </div>
           </div>
           <div className="metric-card warning">
-            <div className="metric-label">Awaiting Evidence</div>
-            <div className="metric-value" style={{ color: "var(--accent-amber)" }}>
+            <div className="metric-label font-mono">UNCERTAINTY GAPS</div>
+            <div className="metric-value font-mono" style={{ color: "var(--accent-amber)" }}>
               {metrics.awaiting_evidence}
             </div>
           </div>
           <div className="metric-card success">
-            <div className="metric-label">Resolved / Executed</div>
-            <div className="metric-value" style={{ color: "var(--accent-emerald)" }}>
+            <div className="metric-label font-mono">MOVES EXECUTED</div>
+            <div className="metric-value font-mono" style={{ color: "var(--accent-emerald)" }}>
               {metrics.resolved_cases}
             </div>
           </div>
           <div className="metric-card">
-            <div className="metric-label">Avg Agent Confidence</div>
-            <div className="metric-value" style={{ color: "var(--accent-cyan)" }}>
+            <div className="metric-label font-mono">AVG CONFIDENCE</div>
+            <div className="metric-value font-mono" style={{ color: "var(--accent-cyan)" }}>
               {Math.round(metrics.average_confidence * 100)}%
             </div>
           </div>
@@ -166,9 +166,11 @@ export const App: React.FC = () => {
           <div className="glass-panel" style={{ padding: 20 }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
               <div>
-                <h2 style={{ fontSize: "1.1rem", fontWeight: 700 }}>Investigation Case Docket Queue</h2>
-                <span style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
-                  20 Benchmark Investigations with Graph-Grounded Entity Linkages
+                <h2 className="font-mono" style={{ fontSize: "1.05rem", fontWeight: 700, letterSpacing: "0.04em" }}>
+                  COMMAND // CASE DOCKET QUEUE
+                </h2>
+                <span className="font-mono" style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
+                  20 Canonical Benchmark Investigations with Graph-Grounded Entity Linkages
                 </span>
               </div>
 
@@ -177,34 +179,36 @@ export const App: React.FC = () => {
                 <select
                   value={filterRisk}
                   onChange={(e) => setFilterRisk(e.target.value)}
+                  className="font-mono"
                   style={{
                     background: "var(--bg-tertiary)",
                     color: "#fff",
                     border: "1px solid var(--border-color)",
                     padding: "6px 12px",
-                    borderRadius: 6,
-                    fontSize: "0.8rem"
+                    borderRadius: 0,
+                    fontSize: "0.75rem"
                   }}
                 >
-                  <option value="ALL">All Risk Tiers</option>
-                  <option value="HIGH">High Risk (&ge; 0.70)</option>
-                  <option value="MEDIUM">Medium Risk (0.40 - 0.69)</option>
-                  <option value="LOW">Low Risk (&lt; 0.40)</option>
+                  <option value="ALL">ALL RISK TIERS</option>
+                  <option value="HIGH">HIGH RISK (&ge; 0.70)</option>
+                  <option value="MEDIUM">MEDIUM RISK (0.40 - 0.69)</option>
+                  <option value="LOW">LOW RISK (&lt; 0.40)</option>
                 </select>
 
                 <select
                   value={filterStatus}
                   onChange={(e) => setFilterStatus(e.target.value)}
+                  className="font-mono"
                   style={{
                     background: "var(--bg-tertiary)",
                     color: "#fff",
                     border: "1px solid var(--border-color)",
                     padding: "6px 12px",
-                    borderRadius: 6,
-                    fontSize: "0.8rem"
+                    borderRadius: 0,
+                    fontSize: "0.75rem"
                   }}
                 >
-                  <option value="">All Statuses</option>
+                  <option value="">ALL STATUSES</option>
                   <option value="INVESTIGATING">INVESTIGATING</option>
                   <option value="AWAITING_APPROVAL">AWAITING_APPROVAL</option>
                   <option value="AWAITING_EVIDENCE">AWAITING_EVIDENCE</option>
@@ -217,24 +221,25 @@ export const App: React.FC = () => {
             <table className="data-table">
               <thead>
                 <tr>
-                  <th>Case Docket ID</th>
-                  <th>Subject Customer</th>
-                  <th>Trigger Transaction</th>
-                  <th>Risk Score</th>
-                  <th>Confidence</th>
-                  <th>Status</th>
-                  <th>Identified Pattern</th>
-                  <th>Actions</th>
+                  <th className="font-mono">CASE DOCKET</th>
+                  <th className="font-mono">SUBJECT</th>
+                  <th className="font-mono">TRIGGER TXN</th>
+                  <th className="font-mono">RISK SCORE</th>
+                  <th className="font-mono">CONFIDENCE</th>
+                  <th className="font-mono">STATUS</th>
+                  <th className="font-mono">TYPOLOGY</th>
+                  <th className="font-mono">ACTION</th>
                 </tr>
               </thead>
               <tbody>
                 {filteredCases.map((c) => (
                   <tr key={c.case_id}>
-                    <td style={{ fontWeight: 700, color: "var(--accent-cyan)" }}>{c.case_id}</td>
-                    <td>{c.subject_customer_id}</td>
-                    <td>{c.trigger_txn_id}</td>
+                    <td className="font-mono" style={{ fontWeight: 700, color: "var(--accent-cyan)" }}>{c.case_id}</td>
+                    <td className="font-mono">{c.subject_customer_id}</td>
+                    <td className="font-mono">{c.trigger_txn_id}</td>
                     <td>
                       <span
+                        className="font-mono"
                         style={{
                           fontWeight: 700,
                           color: c.risk_score >= 0.70 ? "var(--accent-rose)" : (c.risk_score >= 0.40 ? "var(--accent-amber)" : "var(--accent-emerald)")
@@ -244,28 +249,28 @@ export const App: React.FC = () => {
                       </span>
                     </td>
                     <td>
-                      <span style={{ fontWeight: 600, color: "var(--accent-cyan)" }}>
+                      <span className="font-mono" style={{ fontWeight: 700, color: "var(--accent-cyan)" }}>
                         {Math.round(c.confidence * 100)}%
                       </span>
                     </td>
                     <td>
-                      <span className={`status-badge ${c.status === "AWAITING_APPROVAL" ? "warning" : (c.status === "ACTION_EXECUTED" ? "active" : "")}`}>
+                      <span className={`status-badge font-mono ${c.status === "AWAITING_APPROVAL" ? "warning" : (c.status === "ACTION_EXECUTED" ? "active" : "")}`}>
                         {c.status}
                       </span>
                     </td>
-                    <td style={{ color: "var(--text-secondary)", fontSize: "0.78rem" }}>
+                    <td className="font-mono" style={{ color: "var(--text-secondary)", fontSize: "0.72rem" }}>
                       {c.fraud_patterns.join(", ") || "None Identified"}
                     </td>
                     <td>
                       <button
                         className="btn-primary"
-                        style={{ padding: "5px 10px", fontSize: "0.75rem" }}
+                        style={{ padding: "5px 10px", fontSize: "0.72rem", borderRadius: 0 }}
                         onClick={() => {
                           loadCaseData(c.case_id);
                           setActiveTab("investigation");
                         }}
                       >
-                        Investigate <ArrowRight size={12} />
+                        TRACE <ArrowRight size={11} />
                       </button>
                     </td>
                   </tr>
@@ -284,47 +289,47 @@ export const App: React.FC = () => {
               <div className="glass-panel" style={{ padding: 16 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
                   <div>
-                    <span style={{ fontSize: "0.72rem", color: "var(--text-muted)", textTransform: "uppercase" }}>
-                      Active Case File
+                    <span className="font-mono" style={{ fontSize: "0.72rem", color: "var(--text-muted)", textTransform: "uppercase" }}>
+                      ACTIVE DOCKET
                     </span>
-                    <h2 style={{ fontSize: "1.2rem", fontWeight: 700, color: "#fff" }}>{selectedCase.case_id}</h2>
+                    <h2 className="font-mono" style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--accent-cyan)" }}>{selectedCase.case_id}</h2>
                   </div>
-                  <span className={`status-badge ${selectedCase.status === "AWAITING_APPROVAL" ? "warning" : "active"}`}>
+                  <span className={`status-badge font-mono ${selectedCase.status === "AWAITING_APPROVAL" ? "warning" : "active"}`}>
                     {selectedCase.status}
                   </span>
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, fontSize: "0.8rem", marginBottom: 12 }}>
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, fontSize: "0.78rem", marginBottom: 12 }}>
                   <div>
-                    <span style={{ color: "var(--text-muted)" }}>Subject: </span>
-                    <span style={{ color: "var(--accent-cyan)", fontWeight: 600 }}>{selectedCase.subject_customer_id}</span>
+                    <span className="font-mono" style={{ color: "var(--text-muted)" }}>SUBJECT: </span>
+                    <span className="font-mono" style={{ color: "var(--accent-cyan)", fontWeight: 700 }}>{selectedCase.subject_customer_id}</span>
                   </div>
                   <div>
-                    <span style={{ color: "var(--text-muted)" }}>Trigger: </span>
-                    <span style={{ color: "#fff", fontWeight: 500 }}>{selectedCase.trigger_txn_id}</span>
+                    <span className="font-mono" style={{ color: "var(--text-muted)" }}>TRIGGER: </span>
+                    <span className="font-mono" style={{ color: "#fff", fontWeight: 600 }}>{selectedCase.trigger_txn_id}</span>
                   </div>
                   <div>
-                    <span style={{ color: "var(--text-muted)" }}>Risk: </span>
-                    <span style={{ color: "var(--accent-rose)", fontWeight: 700 }}>{selectedCase.risk_score.toFixed(2)}</span>
+                    <span className="font-mono" style={{ color: "var(--text-muted)" }}>RISK: </span>
+                    <span className="font-mono" style={{ color: "var(--accent-rose)", fontWeight: 700 }}>{selectedCase.risk_score.toFixed(2)}</span>
                   </div>
                   <div>
-                    <span style={{ color: "var(--text-muted)" }}>Confidence: </span>
-                    <span style={{ color: "var(--accent-emerald)", fontWeight: 700 }}>{Math.round(selectedCase.confidence * 100)}%</span>
+                    <span className="font-mono" style={{ color: "var(--text-muted)" }}>CONF: </span>
+                    <span className="font-mono" style={{ color: "var(--accent-emerald)", fontWeight: 700 }}>{Math.round(selectedCase.confidence * 100)}%</span>
                   </div>
                 </div>
 
                 <button
                   className="btn-primary"
-                  style={{ width: "100%", justifyContent: "center" }}
+                  style={{ width: "100%", justifyContent: "center", borderRadius: 0 }}
                   onClick={() => handleRunInvestigation(selectedCase.case_id)}
                   disabled={isInvestigating}
                 >
                   <Play size={14} />
-                  {isInvestigating ? "Agent Investigating..." : "Run Autonomous Investigation"}
+                  {isInvestigating ? "AGENT INVESTIGATING..." : "RUN AUTONOMOUS INVESTIGATION"}
                 </button>
               </div>
 
-              {/* Evidence Board */}
+              {/* Signals Board */}
               <div style={{ flex: 1, minHeight: 0 }}>
                 <EvidencePanel
                   caseData={selectedCase}
@@ -338,11 +343,11 @@ export const App: React.FC = () => {
             <div className="col-panel" style={{ overflow: "hidden" }}>
               <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 10 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--text-secondary)" }}>
-                    TigerGraph 2-Hop Traversal (Interactive Neighborhood):
+                  <span className="font-mono" style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--accent-cyan)", letterSpacing: "0.04em" }}>
+                    NETWORK // TIGERGRAPH 2-HOP TRAVERSAL:
                   </span>
-                  <span style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
-                    {graphData?.node_count || 0} Entities | {graphData?.edge_count || 0} Relationships
+                  <span className="font-mono" style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
+                    {graphData?.node_count || 0} ENTITIES | {graphData?.edge_count || 0} RELATIONS
                   </span>
                 </div>
                 <GraphViewer data={graphData} />
@@ -350,8 +355,8 @@ export const App: React.FC = () => {
 
               {/* Agent Timeline */}
               <div className="glass-panel" style={{ padding: 14 }}>
-                <div style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--accent-cyan)", marginBottom: 8 }}>
-                  Agent Autonomous Reasoning & Tool Timeline:
+                <div className="font-mono" style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--accent-cyan)", marginBottom: 8, letterSpacing: "0.04em" }}>
+                  AGENT EXECUTION & REASONING STREAM:
                 </div>
                 <TimelineViewer timeline={timeline} />
               </div>
@@ -361,17 +366,17 @@ export const App: React.FC = () => {
             <div className="col-panel">
               <div className="glass-panel" style={{ padding: 16, flex: 1 }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                  <h3 style={{ fontSize: "0.95rem", fontWeight: 700, color: "#fff" }}>
-                    Next-Best Action Plan
+                  <h3 className="font-mono" style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--accent-cyan)", letterSpacing: "0.04em" }}>
+                    NEXT MOVE // ACTIONS
                   </h3>
-                  <span style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
-                    Policy-Enforced
+                  <span className="font-mono" style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>
+                    GUARDRAILS ENFORCED
                   </span>
                 </div>
 
                 {selectedCase.recommended_actions.length === 0 ? (
-                  <p style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
-                    No actions generated yet. Click "Run Autonomous Investigation" to formulate NBA plan.
+                  <p className="font-mono" style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
+                    No actions generated yet. Click "RUN AUTONOMOUS INVESTIGATION" to formulate Next Move.
                   </p>
                 ) : (
                   <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
@@ -379,31 +384,31 @@ export const App: React.FC = () => {
                       <div
                         key={idx}
                         style={{
-                          background: "rgba(0, 0, 0, 0.35)",
-                          border: `1px solid ${act.priority === "CRITICAL" ? "rgba(244, 63, 94, 0.4)" : "var(--border-color)"}`,
-                          borderRadius: 6,
+                          background: "var(--bg-tertiary)",
+                          border: `1px solid ${act.priority === "CRITICAL" ? "var(--accent-rose)" : "var(--border-color)"}`,
+                          borderRadius: 0,
                           padding: 12
                         }}
                       >
                         <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                          <span style={{ fontWeight: 700, fontSize: "0.85rem", color: "var(--accent-cyan)" }}>
+                          <span className="font-mono" style={{ fontWeight: 700, fontSize: "0.82rem", color: "var(--accent-cyan)" }}>
                             {act.action}
                           </span>
-                          <span style={{ fontSize: "0.7rem", fontWeight: 700, color: act.priority === "CRITICAL" ? "var(--accent-rose)" : "var(--accent-amber)" }}>
+                          <span className="font-mono" style={{ fontSize: "0.68rem", fontWeight: 700, color: act.priority === "CRITICAL" ? "var(--accent-rose)" : "var(--accent-amber)" }}>
                             {act.priority}
                           </span>
                         </div>
-                        <div style={{ fontSize: "0.78rem", color: "var(--text-secondary)", marginBottom: 6 }}>
+                        <div style={{ fontSize: "0.75rem", color: "var(--text-secondary)", marginBottom: 6 }}>
                           {act.reason}
                         </div>
-                        <div style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginBottom: 8 }}>
-                          Route: <strong style={{ color: "#fff" }}>{act.approval_route}</strong> | Policy: {act.policy_basis.join(", ")}
+                        <div className="font-mono" style={{ fontSize: "0.68rem", color: "var(--text-muted)", marginBottom: 8 }}>
+                          ROUTE: <strong style={{ color: "#fff" }}>{act.approval_route}</strong> | POLICY: {act.policy_basis.join(", ")}
                         </div>
 
                         {act.approval_required ? (
                           <button
                             className="btn-primary"
-                            style={{ width: "100%", padding: "6px 10px", fontSize: "0.75rem", background: "linear-gradient(135deg, #10b981 0%, #059669 100%)" }}
+                            style={{ width: "100%", padding: "6px 10px", fontSize: "0.72rem", background: "var(--accent-emerald)", color: "#000", fontWeight: 700, borderRadius: 0 }}
                             onClick={() => {
                               approveCaseAction(selectedCase.case_id, {
                                 action: act.action,
@@ -414,11 +419,11 @@ export const App: React.FC = () => {
                               }).then(() => loadCaseData(selectedCase.case_id));
                             }}
                           >
-                            <CheckCircle2 size={12} /> Sign & Execute as {activeRole}
+                            <CheckCircle2 size={12} /> AUTHORIZE MOVE AS {activeRole}
                           </button>
                         ) : (
-                          <div style={{ fontSize: "0.72rem", color: "var(--accent-emerald)" }}>
-                            ✓ Executed Autonomously
+                          <div className="font-mono" style={{ fontSize: "0.7rem", color: "var(--accent-emerald)" }}>
+                            [✓] EXECUTED AUTONOMOUSLY
                           </div>
                         )}
                       </div>
@@ -428,19 +433,19 @@ export const App: React.FC = () => {
 
                 {/* SAR View Modal Trigger */}
                 {activeSar && (
-                  <div style={{ marginTop: 16, background: "rgba(244, 63, 94, 0.1)", border: "1px solid rgba(244, 63, 94, 0.3)", borderRadius: 6, padding: 12 }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6, color: "var(--accent-rose)", fontWeight: 700, fontSize: "0.82rem", marginBottom: 4 }}>
-                      <FileText size={14} /> FinCEN Suspicious Activity Report (SAR)
+                  <div style={{ marginTop: 16, background: "rgba(244, 63, 94, 0.1)", border: "1px solid rgba(244, 63, 94, 0.3)", borderRadius: 0, padding: 12 }}>
+                    <div className="font-mono" style={{ display: "flex", alignItems: "center", gap: 6, color: "var(--accent-rose)", fontWeight: 700, fontSize: "0.78rem", marginBottom: 4 }}>
+                      <FileText size={14} /> FINCEN SUSPICIOUS ACTIVITY REPORT (SAR)
                     </div>
                     <p style={{ fontSize: "0.72rem", color: "var(--text-secondary)", marginBottom: 8 }}>
-                      Statutory $5,000 threshold triggered. Formal regulatory draft prepared.
+                      Statutory $5,000 BSA threshold exceeded. Regulatory draft sealed.
                     </p>
                     <button
                       className="btn-secondary"
-                      style={{ fontSize: "0.75rem", width: "100%" }}
+                      style={{ fontSize: "0.72rem", width: "100%", borderRadius: 0 }}
                       onClick={() => alert(JSON.stringify(activeSar, null, 2))}
                     >
-                      View Generated SAR Draft JSON
+                      VIEW SAR DOCKET JSON
                     </button>
                   </div>
                 )}
@@ -454,17 +459,19 @@ export const App: React.FC = () => {
           <div className="glass-panel" style={{ padding: 20, height: "calc(100vh - 220px)", display: "flex", flexDirection: "column" }}>
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
               <div>
-                <h2 style={{ fontSize: "1.1rem", fontWeight: 700 }}>TigerGraph Multi-Hop Topology Explorer</h2>
-                <span style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
+                <h2 className="font-mono" style={{ fontSize: "1.05rem", fontWeight: 700, letterSpacing: "0.04em" }}>
+                  NETWORK // MULTI-HOP TOPOLOGY EXPLORER
+                </h2>
+                <span className="font-mono" style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
                   Deep Graph Traversal across Customer, Account, Transaction, Device, IP, and Card entities
                 </span>
               </div>
               <div style={{ display: "flex", gap: 8 }}>
-                <button className="btn-secondary" onClick={() => loadCaseData("CASE-001")}>Case 001</button>
-                <button className="btn-secondary" onClick={() => loadCaseData("CASE-002")}>Case 002</button>
-                <button className="btn-secondary" onClick={() => loadCaseData("CASE-003")}>Case 003</button>
-                <button className="btn-secondary" onClick={() => loadCaseData("CASE-004")}>Case 004</button>
-                <button className="btn-secondary" onClick={() => loadCaseData("CASE-020")}>Case 020</button>
+                <button className="btn-secondary" style={{ borderRadius: 0 }} onClick={() => loadCaseData("CASE-001")}>CASE 001</button>
+                <button className="btn-secondary" style={{ borderRadius: 0 }} onClick={() => loadCaseData("CASE-002")}>CASE 002</button>
+                <button className="btn-secondary" style={{ borderRadius: 0 }} onClick={() => loadCaseData("CASE-003")}>CASE 003</button>
+                <button className="btn-secondary" style={{ borderRadius: 0 }} onClick={() => loadCaseData("CASE-004")}>CASE 004</button>
+                <button className="btn-secondary" style={{ borderRadius: 0 }} onClick={() => loadCaseData("CASE-020")}>CASE 020</button>
               </div>
             </div>
             <GraphViewer data={graphData} />
@@ -480,8 +487,8 @@ export const App: React.FC = () => {
           />
         )}
 
-        {/* Tab 5: Approval Center */}
-        {activeTab === "approval" && (
+        {/* Tab 5: Clearance Center */}
+        {activeTab === "clearance" && (
           <ApprovalCenter
             cases={cases}
             activeRole={activeRole}
@@ -489,7 +496,7 @@ export const App: React.FC = () => {
           />
         )}
 
-        {/* Tab 6: Live Demo Mode */}
+        {/* Tab 6: Live Trials Mode */}
         {activeTab === "demo" && (
           <DemoWalkthrough onSelectCase={loadCaseData} />
         )}

@@ -1,6 +1,5 @@
 import React from "react";
 import type { TimelineStep } from "../types";
-import { Clock, ArrowRightCircle } from "lucide-react";
 
 interface TimelineViewerProps {
   timeline: TimelineStep[];
@@ -9,42 +8,46 @@ interface TimelineViewerProps {
 export const TimelineViewer: React.FC<TimelineViewerProps> = ({ timeline }) => {
   if (!timeline || timeline.length === 0) {
     return (
-      <div style={{ color: "var(--text-muted)", fontSize: "0.8rem", padding: "10px" }}>
-        No timeline events recorded yet. Run investigation to observe agent activity.
+      <div className="font-mono" style={{ color: "var(--text-muted)", fontSize: "0.75rem", padding: "10px" }}>
+        // AGENT LOG IDLE. INITIATE TRACE TO OBSERVE ACTIVITY.
       </div>
     );
   }
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", gap: "8px", maxHeight: "180px", overflowY: "auto" }}>
-      {timeline.map((step, idx) => (
-        <div
-          key={idx}
-          style={{
-            display: "flex",
-            alignItems: "flex-start",
-            gap: "10px",
-            fontSize: "0.78rem",
-            padding: "6px 8px",
-            borderRadius: "4px",
-            background: "rgba(0, 0, 0, 0.25)",
-            borderLeft: "2px solid var(--accent-cyan)"
-          }}
-        >
-          <div style={{ minWidth: "55px", color: "var(--text-muted)", fontSize: "0.72rem", display: "flex", alignItems: "center", gap: 3 }}>
-            <Clock size={10} />
-            {step.time_str}
+    <div
+      className="font-mono"
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        gap: "4px",
+        maxHeight: "190px",
+        overflowY: "auto",
+        background: "var(--bg-primary)",
+        padding: "8px 10px",
+        border: "1px solid var(--border-subtle)"
+      }}
+    >
+      {timeline.map((step, idx) => {
+        const stepNum = String(idx + 1).padStart(2, "0");
+        return (
+          <div
+            key={idx}
+            style={{
+              fontSize: "0.72rem",
+              lineHeight: 1.4,
+              display: "flex",
+              alignItems: "flex-start",
+              gap: "8px"
+            }}
+          >
+            <span style={{ color: "var(--text-muted)", minWidth: "55px" }}>[{step.time_str}]</span>
+            <span style={{ color: "var(--accent-cyan)", fontWeight: 700 }}>[{stepNum}]</span>
+            <span style={{ color: "#fff", fontWeight: 600 }}>{step.step_name}:</span>
+            <span style={{ color: "var(--text-secondary)", flex: 1 }}>{step.details}</span>
           </div>
-          <div style={{ flex: 1 }}>
-            <div style={{ fontWeight: 600, color: "var(--accent-cyan)", display: "flex", alignItems: "center", gap: 5 }}>
-              <ArrowRightCircle size={11} /> {step.step_name}
-            </div>
-            <div style={{ color: "var(--text-secondary)", marginTop: "2px", lineHeight: 1.3 }}>
-              {step.details}
-            </div>
-          </div>
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };

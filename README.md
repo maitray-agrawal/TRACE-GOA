@@ -1,4 +1,7 @@
-# TigerGraph Agentic Fraud Investigation & Next-Best Action System — HHGOA
+# TRACE//GOA — Agentic Fraud Investigation & Next-Best Action Engine
+
+> **Trace the signal. Find the network. Make the move.**
+> *Hacker House Goa (HHGOA) — TigerGraph Agentic Fraud Challenge*
 
 [![TigerGraph](https://img.shields.io/badge/TigerGraph-Savanna%20%7C%20CE-orange.svg)](https://www.tigergraph.com/)
 [![MCP](https://img.shields.io/badge/MCP-FastMCP%20Standard-blue.svg)](https://modelcontextprotocol.io/)
@@ -7,7 +10,7 @@
 [![React](https://img.shields.io/badge/React-19%20%7C%20Vite-purple.svg)](https://react.dev/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-lightgrey.svg)](LICENSE)
 
-An enterprise-grade autonomous fraud investigation platform powered by **TigerGraph**, deterministic GSQL analytics, Model Context Protocol (MCP), GraphRAG, and an immutable cryptographic decision ledger.
+**TRACE//GOA** is an enterprise-grade autonomous fraud investigation platform powered by **TigerGraph**, deterministic GSQL analytics, Model Context Protocol (MCP), GraphRAG, and an immutable cryptographic decision ledger.
 
 ---
 
@@ -20,7 +23,7 @@ Financial institutions face sophisticated fraud syndicates operating across frag
 ---
 
 ## 2. Solution Overview
-The **HHGOA Platform** transforms uncertain fraud triggers into defensible, evidence-grounded investigations with:
+**TRACE//GOA** transforms uncertain fraud triggers into defensible, evidence-grounded investigations with:
 - **TigerGraph GSQL & MCP**: Deterministic 2-hop neighborhood expansion, device/IP reuse detection, and Weakly Connected Component (WCC) community clustering.
 - **GraphRAG Subsystem**: Assembles structured Evidence Packs by merging graph subgraphs with statutory institutional knowledge (FinCEN BSA 31 CFR § 1020.320, CFPB Regulation E).
 - **Uncertainty & Additional Evidence Loop**: When risk is elevated but confidence is incomplete, the agent does NOT freeze accounts unilaterally; it triggers out-of-band Step-up Authentication and re-evaluates the case upon response.

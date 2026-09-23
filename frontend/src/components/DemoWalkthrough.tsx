@@ -27,11 +27,11 @@ export const DemoWalkthrough: React.FC<DemoWalkthroughProps> = () => {
   const [graphData, setGraphData] = useState<SubgraphData | null>(null);
 
   const STEPS = [
-    { title: "Trigger Intake & Case docket initialized", desc: "Incoming transaction fraud alert detected. Case opened in state INVESTIGATING." },
-    { title: "TigerGraph 2-Hop Neighborhood Expansion", desc: "GSQL queries traverse customer, cards, devices, proxy IPs, and merchant nodes." },
-    { title: "Pattern Detection & GraphRAG Synthesis", desc: "Matched against 5 canonical typologies; retrieved institutional policy mandates." },
-    { title: "Uncertainty Check & Step-up Auth Challenge", desc: "Risk is elevated but confidence below threshold. Triggered customer challenge." },
-    { title: "Reassessment, Next-Best Action & Ledger Commitment", desc: "Confidence upgraded. Proposed NBA, requested approval, and recorded SHA-256 block." }
+    { title: "[01] SIGNAL INGESTED", desc: "Incoming transaction fraud alert detected. Case docket opened in state INVESTIGATING." },
+    { title: "[02] NETWORK EXPANSION", desc: "TigerGraph multi-hop neighborhood traversed via GSQL and Model Context Protocol." },
+    { title: "[03] PATTERN & GUARDRAILS", desc: "Matched against 5 canonical typologies; retrieved institutional policy mandates." },
+    { title: "[04] UNCERTAINTY LOOP", desc: "Risk is elevated but confidence below threshold. Triggered customer challenge." },
+    { title: "[05] NEXT MOVE & LEDGER", desc: "Confidence upgraded. Proposed NBA, requested clearance, and sealed SHA-256 block." }
   ];
 
   const handleStart = async () => {
@@ -73,11 +73,11 @@ export const DemoWalkthrough: React.FC<DemoWalkthroughProps> = () => {
       {/* Demo Header */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
         <div>
-          <h2 style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--accent-cyan)", display: "flex", alignItems: "center", gap: 8 }}>
-            Interactive Demo Mode — Live Agentic Fraud Investigation
+          <h2 className="font-mono" style={{ fontSize: "1.15rem", fontWeight: 700, color: "var(--accent-cyan)", display: "flex", alignItems: "center", gap: 8, letterSpacing: "0.04em" }}>
+            TRIALS // LIVE DEMO RUNNER
           </h2>
-          <span style={{ fontSize: "0.8rem", color: "var(--text-muted)" }}>
-            Autonomous Closed-Loop Graph Investigation Demonstrable in Under 3 Minutes
+          <span className="font-mono" style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
+            Autonomous Closed-Loop Graph Investigation Demonstrable in 15 Deterministic Steps (&lt; 3 Min)
           </span>
         </div>
 
@@ -85,14 +85,15 @@ export const DemoWalkthrough: React.FC<DemoWalkthroughProps> = () => {
           <select
             value={selectedCaseId}
             onChange={(e) => { setSelectedCaseId(e.target.value); handleReset(); }}
+            className="font-mono"
             style={{
               background: "var(--bg-tertiary)",
               color: "#fff",
               border: "1px solid var(--border-color)",
               padding: "8px 12px",
-              borderRadius: 6,
-              fontSize: "0.85rem",
-              fontWeight: 600
+              borderRadius: 0,
+              fontSize: "0.8rem",
+              fontWeight: 700
             }}
           >
             {DEMO_CASES.map((dc) => (
@@ -100,11 +101,11 @@ export const DemoWalkthrough: React.FC<DemoWalkthroughProps> = () => {
             ))}
           </select>
 
-          <button className="btn-primary" onClick={handleStart} disabled={isRunning || currentStep === 5}>
-            <Play size={14} /> Start Demo
+          <button className="btn-primary" style={{ borderRadius: 0 }} onClick={handleStart} disabled={isRunning || currentStep === 5}>
+            <Play size={14} /> RUN TRIAL
           </button>
-          <button className="btn-secondary" onClick={handleReset}>
-            <RotateCcw size={14} /> Reset
+          <button className="btn-secondary" style={{ borderRadius: 0 }} onClick={handleReset}>
+            <RotateCcw size={14} /> RESET
           </button>
         </div>
       </div>
@@ -120,24 +121,25 @@ export const DemoWalkthrough: React.FC<DemoWalkthroughProps> = () => {
             <div
               key={idx}
               style={{
-                background: isCurrent ? "rgba(99, 102, 241, 0.2)" : (isDone ? "rgba(16, 185, 129, 0.1)" : "rgba(0,0,0,0.3)"),
-                border: `1px solid ${isCurrent ? "var(--accent-indigo)" : (isDone ? "var(--accent-emerald)" : "var(--border-color)")}`,
-                borderRadius: 8,
+                background: isCurrent ? "rgba(0, 242, 254, 0.15)" : (isDone ? "rgba(16, 185, 129, 0.1)" : "var(--bg-tertiary)"),
+                border: `1px solid ${isCurrent ? "var(--accent-cyan)" : (isDone ? "var(--accent-emerald)" : "var(--border-color)")}`,
+                borderRadius: 0,
                 padding: 12
               }}
             >
               <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
                 {isDone ? (
-                  <CheckCircle2 size={14} color="var(--accent-emerald)" />
+                  <CheckCircle2 size={13} color="var(--accent-emerald)" />
                 ) : (
                   <span
+                    className="font-mono"
                     style={{
                       width: 18,
                       height: 18,
-                      borderRadius: "50%",
-                      background: isCurrent ? "var(--accent-indigo)" : "var(--border-color)",
-                      color: "#fff",
-                      fontSize: "0.7rem",
+                      borderRadius: 0,
+                      background: isCurrent ? "var(--accent-cyan)" : "var(--border-color)",
+                      color: isCurrent ? "#000" : "#fff",
+                      fontSize: "0.68rem",
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
@@ -147,14 +149,14 @@ export const DemoWalkthrough: React.FC<DemoWalkthroughProps> = () => {
                     {stepNum}
                   </span>
                 )}
-                <span style={{ fontSize: "0.78rem", fontWeight: 700, color: isCurrent ? "#fff" : "var(--text-secondary)" }}>
-                  Step {stepNum}
+                <span className="font-mono" style={{ fontSize: "0.72rem", fontWeight: 700, color: isCurrent ? "var(--accent-cyan)" : "var(--text-secondary)" }}>
+                  STEP 0{stepNum}
                 </span>
               </div>
-              <div style={{ fontSize: "0.75rem", fontWeight: 600, color: "var(--text-primary)", marginBottom: 4 }}>
+              <div className="font-mono" style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: 4 }}>
                 {s.title}
               </div>
-              <div style={{ fontSize: "0.7rem", color: "var(--text-muted)", lineHeight: 1.3 }}>
+              <div style={{ fontSize: "0.68rem", color: "var(--text-muted)", lineHeight: 1.3 }}>
                 {s.desc}
               </div>
             </div>
