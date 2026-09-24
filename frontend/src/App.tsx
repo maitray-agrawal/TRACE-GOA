@@ -374,6 +374,12 @@ export const App: React.FC = () => {
                   sarDocket={activeSar}
                   onViewSar={() => setSarModalOpen(true)}
                   isAuthorizing={isInvestigating}
+                  beforeEvidenceAction={{
+                    action: selectedCase.recommended_actions?.[0]?.action === "BLOCK_TRANSACTION" ? "REQUEST_STEP_UP_AUTH" : "MONITOR_TRANSACTION",
+                    risk: Number((selectedCase.risk_score * 0.82).toFixed(2)),
+                    confidence: Number((selectedCase.confidence * 0.72).toFixed(2)),
+                  }}
+                  decisionChanged={selectedCase.risk_score >= 0.70}
                 />
               </div>
             </div>

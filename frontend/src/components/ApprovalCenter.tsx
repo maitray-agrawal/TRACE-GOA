@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import type { CaseRecord } from "../types";
 import { RubberStamp } from "../art/RubberStamp";
-import { ShieldCheck, ShieldAlert, CheckCircle, XCircle, UserCheck, AlertTriangle } from "lucide-react";
+import { ShieldCheck, ShieldAlert, CheckCircle, XCircle, UserCheck, Lock, AlertTriangle, ArrowUpRight } from "lucide-react";
 import { approveCaseAction } from "../services/api";
 
 interface ApprovalCenterProps {
@@ -10,15 +10,27 @@ interface ApprovalCenterProps {
   onActionComplete?: () => void;
 }
 
+const ROLE_RANKS: Record<string, number> = {
+  ANALYST: 1,
+  SENIOR_ANALYST: 2,
+  FRAUD_MANAGER: 3,
+};
+
 export const ApprovalCenter: React.FC<ApprovalCenterProps> = ({ cases, activeRole, onActionComplete }) => {
   const [approverName, setApproverName] = useState("Lead Investigator M. Agrawal");
   const [notes, setNotes] = useState("");
   const [processingCaseId, setProcessingCaseId] = useState<string | null>(null);
-  const [recentDecision, setRecentDecision] = useState<{ caseId: string; type: "APPROVED" | "REJECTED" } | null>(null);
+  const [recentDecision, setRecentDecision] = useState<{ caseId: string; type: "APPROVED" | "REJECTED" | "ESCALATED" } | null>(null);
 
   const pendingCases = cases.filter((c) => c.status === "AWAITING_APPROVAL");
 
-  const handleDecision = async (caseId: string, actionName: string, approved: boolean) => {
+  const canApproveRole = (requiredRole: string): boolean => {
+    const userRank = ROLE_RANKS[activeRole] || 1;
+    const reqRank = ROLE_RANKS[requiredRole] || 2;
+    return userRank >= reqRank;
+  };
+
+  const handleDecision = async (caseId: string, actionName: string, approved: boolean, isEscalation = false) => {
     setProcessingCaseId(caseId);
     try {
       await approveCaseAction(caseId, {
@@ -26,12 +38,12 @@ export const ApprovalCenter: React.FC<ApprovalCenterProps> = ({ cases, activeRol
         approver_name: approverName,
         approver_role: activeRole,
         approved,
-        notes: notes || (approved ? "Authorized pursuant to policy review" : "Rejected: insufficient evidence")
+        notes: notes || (isEscalation ? "Escalated to Fraud Manager clearance" : approved ? "Authorized pursuant to policy review" : "Rejected: insufficient evidence")
       });
-      setRecentDecision({ caseId, type: approved ? "APPROVED" : "REJECTED" });
+      setRecentDecision({ caseId, type: isEscalation ? "ESCALATED" : approved ? "APPROVED" : "REJECTED" });
       setNotes("");
       onActionComplete?.();
-      setTimeout(() => setRecentDecision(null), 3500);
+      setTimeout(() => setRecentDecision(null), 3000);
     } catch (e) {
       alert(`Approval error: ${e}`);
     } finally {
@@ -50,11 +62,11 @@ export const ApprovalCenter: React.FC<ApprovalCenterProps> = ({ cases, activeRol
             </span>
             <h2 className="font-serif text-2xl font-black text-ink tracking-tight flex items-center gap-2">
               <ShieldAlert className="text-terracotta" size={24} />
-              Clearance Center // Rubber Stamp Approvals
+              Supervisory Clearance Center // Rubber Stamp Approvals
             </h2>
           </div>
           <p className="font-mono text-xs text-ink/70 mt-1">
-            High-Impact Enforcement Actions Requiring Supervisory Electronic Sign-Off & Ledger Notarization
+            High-Impact Enforcement Actions Requiring Supervisory Electronic Sign-Off &amp; SHA-256 Ledger Notarization
           </p>
         </div>
 
@@ -62,13 +74,18 @@ export const ApprovalCenter: React.FC<ApprovalCenterProps> = ({ cases, activeRol
         <div className="flex items-center gap-2 bg-sand/50 p-2 rounded-lg border-2 border-ink">
           <UserCheck size={16} className="text-goa-green-700" />
           <div className="flex flex-col">
-            <span className="font-mono text-[9px] font-bold text-ink/60 uppercase">SIGNING AS ({activeRole}):</span>
-            <input
-              type="text"
-              value={approverName}
-              onChange={(e) => setApproverName(e.target.value)}
-              className="font-mono text-xs font-bold bg-paper text-ink px-2 py-1 rounded border border-ink focus:outline-none focus:ring-1 focus:ring-ink"
-            />
+            <span className="font-mono text-[9px] font-bold text-ink/60 uppercase">CURRENT USER ROLE:</span>
+            <div className="flex items-center gap-2">
+              <span className="font-mono text-xs font-black text-ink bg-sun-yellow px-1.5 py-0.2 rounded border border-ink">
+                {activeRole}
+              </span>
+              <input
+                type="text"
+                value={approverName}
+                onChange={(e) => setApproverName(e.target.value)}
+                className="font-mono text-xs font-bold bg-paper text-ink px-2 py-0.5 rounded border border-ink focus:outline-none focus:ring-1 focus:ring-ink"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -91,6 +108,7 @@ export const ApprovalCenter: React.FC<ApprovalCenterProps> = ({ cases, activeRol
               reason: c.recommended_actions?.[0]?.reason || "Supervisory clearance required by institutional policy"
             };
 
+            const isAuthorized = canApproveRole(pending.required_role);
             const isCurrentDecision = recentDecision?.caseId === c.case_id;
 
             return (
@@ -100,7 +118,7 @@ export const ApprovalCenter: React.FC<ApprovalCenterProps> = ({ cases, activeRol
               >
                 {/* Stamp Overlay on Decision */}
                 {isCurrentDecision && recentDecision && (
-                  <div className="absolute inset-0 bg-paper/85 z-20 flex items-center justify-center animate-bounce">
+                  <div className="absolute inset-0 bg-paper/90 z-20 flex items-center justify-center animate-bounce">
                     <RubberStamp
                       type={recentDecision.type}
                       by={approverName}
@@ -121,31 +139,47 @@ export const ApprovalCenter: React.FC<ApprovalCenterProps> = ({ cases, activeRol
                     </span>
                   </div>
 
-                  <span className="font-mono text-[10px] font-black px-2 py-0.5 rounded bg-sun-yellow text-ink border border-ink flex items-center gap-1">
-                    <AlertTriangle size={11} />
-                    REQUIRES: {pending.required_role}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-[10px] font-black px-2 py-0.5 rounded bg-sun-yellow text-ink border border-ink flex items-center gap-1">
+                      <AlertTriangle size={11} />
+                      REQUIRED ROLE: {pending.required_role}
+                    </span>
+
+                    {!isAuthorized && (
+                      <span className="font-mono text-[10px] font-black px-2 py-0.5 rounded bg-hot-pink text-paper border border-ink flex items-center gap-1">
+                        <Lock size={11} />
+                        LOCKED FOR {activeRole}
+                      </span>
+                    )}
+                  </div>
                 </div>
 
-                {/* Proposed Move Box */}
+                {/* Action + Policy Summary Box */}
                 <div className="bg-paper p-3.5 rounded-lg border-2 border-ink mb-4 space-y-2">
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-wrap items-center justify-between gap-2">
                     <span className="font-mono text-xs font-black text-terracotta uppercase tracking-wide">
-                      PROPOSED ENFORCEMENT: {pending.action}
+                      PROPOSED MOVE: {pending.action}
                     </span>
-                    <span className="font-mono text-[10px] text-ink/70">
-                      RISK SCORE: <strong>{c.risk_score.toFixed(2)}</strong> | CONFIDENCE: <strong>{Math.round(c.confidence * 100)}%</strong>
-                    </span>
+                    <div className="flex items-center gap-2 font-mono text-[10px] text-ink/70">
+                      <span>STATUS: <strong className="text-amber-800">PENDING SIGN-OFF</strong></span>
+                      <span>•</span>
+                      <span>RISK: <strong>{c.risk_score.toFixed(2)}</strong></span>
+                      <span>•</span>
+                      <span>CONFIDENCE: <strong>{Math.round(c.confidence * 100)}%</strong></span>
+                    </div>
                   </div>
+
                   <p className="font-sans text-xs text-ink/90 leading-relaxed">
                     {pending.reason}
                   </p>
-                  <div className="font-mono text-[10px] text-ink/60 border-t border-ink/10 pt-1.5 flex items-center gap-2">
-                    <span>TYPOLOGY: <strong>{c.fraud_patterns?.join(", ") || "Synthetic Identity"}</strong></span>
+
+                  <div className="font-mono text-[10px] text-ink/60 border-t border-ink/10 pt-1.5 flex items-center justify-between">
+                    <span>POLICY BASIS: <strong>POL-04 (Dual-Control Mandatory Clearance)</strong></span>
+                    <span>TYPOLOGY: <strong>{c.fraud_patterns?.join(", ") || "Cross-Card Syndicate"}</strong></span>
                   </div>
                 </div>
 
-                {/* Bottom Decision Actions */}
+                {/* Supervisory Authorization Controls */}
                 <div className="flex flex-wrap items-center gap-3">
                   <input
                     type="text"
@@ -154,21 +188,40 @@ export const ApprovalCenter: React.FC<ApprovalCenterProps> = ({ cases, activeRol
                     onChange={(e) => setNotes(e.target.value)}
                     className="flex-1 min-w-[220px] font-mono text-xs bg-paper text-ink px-3 py-2 rounded border-2 border-ink focus:outline-none focus:ring-1 focus:ring-ink"
                   />
+
+                  {/* APPROVE STAMP BUTTON */}
                   <button
                     onClick={() => handleDecision(c.case_id, pending.action, true)}
-                    disabled={processingCaseId === c.case_id}
-                    className="btn-goa bg-goa-green-500 hover:bg-goa-green-700 text-paper text-xs py-2 px-4 flex items-center gap-1.5 font-black uppercase tracking-wider"
+                    disabled={processingCaseId === c.case_id || !isAuthorized}
+                    title={!isAuthorized ? `Requires ${pending.required_role} approval. Current role: ${activeRole}.` : 'Authorize and seal decision block'}
+                    className={`btn-goa text-xs py-2 px-4 flex items-center gap-1.5 font-black uppercase tracking-wider ${
+                      isAuthorized
+                        ? 'bg-goa-green-500 hover:bg-goa-green-700 text-paper'
+                        : 'bg-gray-300 text-gray-500 cursor-not-allowed border-gray-400'
+                    }`}
                   >
-                    <CheckCircle size={14} />
-                    STAMP APPROVE
+                    {!isAuthorized ? <Lock size={13} /> : <CheckCircle size={14} />}
+                    <span>STAMP APPROVE</span>
                   </button>
+
+                  {/* REJECT STAMP BUTTON */}
                   <button
                     onClick={() => handleDecision(c.case_id, pending.action, false)}
                     disabled={processingCaseId === c.case_id}
                     className="btn-goa bg-hot-pink hover:bg-red-700 text-paper text-xs py-2 px-4 flex items-center gap-1.5 font-black uppercase tracking-wider"
                   >
                     <XCircle size={14} />
-                    STAMP REJECT
+                    <span>STAMP REJECT</span>
+                  </button>
+
+                  {/* ESCALATE BUTTON */}
+                  <button
+                    onClick={() => handleDecision(c.case_id, pending.action, false, true)}
+                    disabled={processingCaseId === c.case_id}
+                    className="btn-goa bg-sun-yellow hover:bg-yellow-400 text-ink text-xs py-2 px-3 flex items-center gap-1 font-black uppercase tracking-wider"
+                  >
+                    <ArrowUpRight size={13} />
+                    <span>ESCALATE [L3]</span>
                   </button>
                 </div>
               </div>

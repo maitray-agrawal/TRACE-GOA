@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import type { LedgerEntry } from "../types";
-import { ShieldCheck, ShieldAlert, Link as LinkIcon, Hash, RefreshCw, AlertTriangle, Lock } from "lucide-react";
+import { ShieldCheck, ShieldAlert, Link as LinkIcon, Hash, RefreshCw, AlertTriangle, Lock, ArrowDown } from "lucide-react";
 import { verifyLedger } from "../services/api";
 
 interface DecisionLedgerViewerProps {
@@ -57,11 +57,11 @@ export const DecisionLedgerViewer: React.FC<DecisionLedgerViewerProps> = ({ case
             </span>
             <h2 className="font-serif text-2xl font-black text-ink tracking-tight flex items-center gap-2">
               <Lock size={22} className="text-goa-green-700" />
-              Forensic Decision Ledger // Case {caseId}
+              SHA-256 Hash-Chained Decision Ledger // Case {caseId}
             </h2>
           </div>
           <p className="font-mono text-xs text-ink/70 mt-1">
-            SHA-256 Cryptographic Chain of Custody for Every Autonomous Agent & Human Supervisory Move
+            Block N &rarr; Hash(N) &rarr; Hash(N+1) Sequential Cryptographic Custody for Every Autonomous Agent &amp; Supervisory Move
           </p>
         </div>
 
@@ -99,12 +99,25 @@ export const DecisionLedgerViewer: React.FC<DecisionLedgerViewerProps> = ({ case
           <button
             onClick={handleVerify}
             disabled={isVerifying}
-            className="btn-goa bg-goa-green-500 hover:bg-goa-green-700 text-paper text-xs py-1.5 px-4 font-black uppercase tracking-wider flex items-center gap-1.5"
+            className="btn-goa bg-goa-green-500 hover:bg-goa-green-700 text-paper text-xs py-1.5 px-4 font-black uppercase tracking-wider flex items-center gap-1.5 shadow-goa-sm"
           >
             <RefreshCw size={13} className={isVerifying ? "animate-spin" : ""} />
             <span>{isVerifying ? "VERIFYING HASHES..." : "SWEEP INTEGRITY"}</span>
           </button>
         </div>
+      </div>
+
+      {/* Hash-Chaining Explainer Bar */}
+      <div className="p-3 bg-sand/40 rounded-xl border-2 border-ink font-mono text-[11px] text-ink flex flex-wrap items-center justify-between gap-2">
+        <div className="flex items-center gap-2">
+          <span className="font-black bg-ink text-sun-yellow px-2 py-0.5 rounded">CHAIN ARCHITECTURE:</span>
+          <span>Block N payload</span>
+          <ArrowDown size={11} className="text-ink/60" />
+          <span>SHA-256(Block N)</span>
+          <ArrowDown size={11} className="text-ink/60" />
+          <span>Block N+1 includes PrevHash</span>
+        </div>
+        <span className="font-bold text-goa-green-700">MATHEMATICAL NON-REPUDIATION</span>
       </div>
 
       {/* Ledger Chain Container */}
@@ -141,16 +154,18 @@ export const DecisionLedgerViewer: React.FC<DecisionLedgerViewerProps> = ({ case
                       : "card-goa card-goa-sand"
                   }`}
                 >
+                  {/* Event + Timestamp */}
                   <div className="flex flex-wrap items-center justify-between gap-2 border-b border-ink/15 pb-2 mb-2">
                     <span className="font-mono text-xs font-black text-ink uppercase flex items-center gap-1.5">
                       <Hash size={13} className="text-terracotta" />
-                      BLOCK #{entry.entry_id} — {entry.event_type}
+                      EVENT #{entry.entry_id}: {entry.event_type}
                     </span>
                     <span className="font-mono text-[10px] text-ink/60 bg-paper px-2 py-0.5 rounded border border-ink/30">
                       {new Date(entry.timestamp * 1000).toLocaleString()}
                     </span>
                   </div>
 
+                  {/* Actor + Decision */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono mb-2">
                     <div>
                       <span className="text-ink/60 uppercase">ACTOR: </span>
@@ -162,25 +177,26 @@ export const DecisionLedgerViewer: React.FC<DecisionLedgerViewerProps> = ({ case
                     </div>
                   </div>
 
+                  {/* Rationale */}
                   {entry.reason && (
-                    <div className="bg-paper/70 p-2.5 rounded border border-ink/20 mb-2 font-sans text-xs text-ink/90 leading-relaxed">
+                    <div className="bg-paper/80 p-2.5 rounded border border-ink/20 mb-2 font-sans text-xs text-ink/90 leading-relaxed">
                       <strong className="font-mono text-[10px] text-ink/60 uppercase block mb-0.5">RATIONALE:</strong>
                       {entry.reason}
                     </div>
                   )}
 
-                  {/* Cryptographic Hashes */}
+                  {/* Explicit Cryptographic Hashes */}
                   <div className="p-2.5 bg-paper rounded border-2 border-ink/30 font-mono text-[10px] space-y-1">
                     <div className="flex items-center gap-1.5 text-ink/70">
                       <LinkIcon size={11} className="text-ink/50" />
-                      <span>PREV HASH:</span>
+                      <span className="font-bold">PREVIOUS HASH:</span>
                       <span className="text-ink font-bold font-mono truncate">
                         {isTampered ? "0000_TAMPERED_HASH_FAILURE_9999" : entry.previous_hash}
                       </span>
                     </div>
                     <div className="flex items-center gap-1.5 text-ink/70">
                       <Hash size={11} className="text-goa-green-700" />
-                      <span>CURR HASH:</span>
+                      <span className="font-bold">CURRENT HASH:</span>
                       <span className="text-goa-green-900 font-bold font-mono truncate">
                         {entry.current_hash}
                       </span>

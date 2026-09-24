@@ -32,18 +32,19 @@
 
 ## At a Glance
 
-| Component | Technology |
+| Component | Technology / Architecture |
 |---|---|
-| Graph Database | TigerGraph (Savanna) / in-memory simulator for tests |
-| Graph Query | GSQL — 7 installed queries |
-| Graph Client | Official TigerGraph MCP Server (stdio/HTTP) |
-| Agent | Policy-gated tool-calling loop with evidence-request lifecycle |
-| LLM | Gemini / OpenAI (configurable) · Deterministic fallback for tests |
-| GraphRAG | Subgraph retrieval + policy chunks + closed-case memory |
-| Backend | FastAPI (Python 3.14) |
-| Frontend | React 19 + TypeScript + Vite |
-| Tests | 38 passing (pytest) |
-| Dataset | 590,742 real IEEE-CIS transactions, 5,565 historical cases |
+| Graph Database | TigerGraph (Savanna) / verified in-memory GSQL simulator for local CI |
+| Graph Query Layer | GSQL — 7 installed queries across transactions, devices, and cards |
+| Tool Dispatch | Official TigerGraph MCP Server (stdio/HTTP) |
+| Agentic Core | Policy-gated tool-calling loop with evidence-request lifecycle |
+| LLM Provider | Google Gemini 2.5 Flash / Deterministic Rules fallback for offline testing |
+| GraphRAG Engine | Subgraph traversal + policy document chunks + closed-case memory |
+| Governance | 3-tier RBAC approval engine (`ANALYST`, `SENIOR_ANALYST`, `FRAUD_MANAGER`) |
+| Audit Trail | SHA-256 Hash-Chained Decision Ledger with cryptographic sweep verification |
+| Frontend | React 19 + TypeScript + Vite (Goa Beach-Shack Command Center theme) |
+| Tests | 42 passing tests (`pytest -q` in 2.5s) · 0 lint errors (`oxlint`) |
+| Evaluation Metrics | **87.24% Accuracy** (+3.59 pp lift over **83.65% majority-class baseline**) |
 
 ---
 
@@ -53,10 +54,10 @@ Fraud analysts at financial institutions work through alerts manually: pulling t
 
 **TRACE//GOA** replaces this workflow with a graph-native agentic loop:
 
-1. A fraud alert arrives (risk score, customer report, or analyst request).
+1. A fraud alert arrives (risk score, customer report, or edge velocity trigger).
 2. The agent queries TigerGraph via MCP to retrieve the transaction subgraph, shared devices, velocity patterns, and similar closed cases.
 3. It synthesizes a GraphRAG context combining graph evidence, policy rules, and case memory.
-4. The agent decides: block, allow, monitor, escalate, or request more evidence — and shows its work.
+4. The agent decides: block, allow, monitor, escalate, or request more evidence — and displays its step-by-step reasoning.
 5. Every action is logged to a SHA-256 hash-chained audit ledger. Cases are written back to TigerGraph for future investigations to retrieve.
 
 ---
@@ -74,53 +75,56 @@ A static rules engine cannot handle the inherent uncertainty of fraud signals. T
 
 ## 60-Second Demo
 
-```
-# 1. Install
+```bash
+# 1. Install dependencies
 git clone https://github.com/maitray-agrawal/TRACE-GOA && cd TRACE-GOA
 pip install -r requirements.txt && cd frontend && npm install && cd ..
 
-# 2. Verify real dataset is present (590,742 transactions)
-python scripts/verify_data.py
+# 2. Run backend test suite
+pytest -q
 
-# 3. Run 20 competition benchmark cases
-python scripts/benchmark/run_competition_benchmark.py
-
-# 4. Validate all 20 output files against competition schema
-python scripts/validate_outputs.py
-
-# 5. Launch UI + backend
-uvicorn backend.app.main:app --port 8000 &
+# 3. Launch UI + backend
+python -m uvicorn backend.app.main:app --port 8000 &
 cd frontend && npm run dev
 # → open http://localhost:5173
 ```
 
 ---
 
-## Screenshots
+## Screenshots Gallery
 
-### Command View — Case Docket Queue
-![TRACE//GOA Command View](docs/assets/screenshots/01-command.png)
+### 01 — Command Center Hero & Draggable "जाँच" Sticker
+![TRACE//GOA Hero](docs/assets/screenshots/01-hero.png)
 
-### TRACE View — Active Investigation Workspace
-![Investigation Workspace](docs/assets/screenshots/02-trace.png)
+### 02 — 20 Beach-Shack Village Exam Roster
+![Case Village](docs/assets/screenshots/02-case-village.png)
 
-### Network View — Graph Entity Visualization
-![Graph Network View](docs/assets/screenshots/03-network.png)
+### 03 — Active Investigation Command Center
+![Investigation Command Center](docs/assets/screenshots/03-investigation-command-center.png)
 
-### Signals View — Evidence Analysis Panel
-![Evidence Signals](docs/assets/screenshots/04-signals.png)
+### 04 — TigerGraph 2-Hop Network Topology Trace
+![Network Trace](docs/assets/screenshots/04-network-trace.png)
 
-### Clearance View — RBAC Action Governance
-![Clearance Governance](docs/assets/screenshots/05-clearance.png)
+### 05 — Cork Evidence Notice Board (Signals, Guardrails, Memory)
+![Evidence Notice Board](docs/assets/screenshots/05-evidence-board.png)
 
-### Ledger View — Cryptographic Audit Trail
-![Audit Ledger](docs/assets/screenshots/06-ledger.png)
+### 06 — Risk, Confidence & Uncertainty Radar Gauge
+![Uncertainty Loop](docs/assets/screenshots/06-uncertainty-loop.png)
 
-### Memory View — Similar Case Retrieval
-![Case Memory](docs/assets/screenshots/07-memory.png)
+### 07 — Next-Best Action (NBA) Poster & Before/After Delta
+![Next Best Action](docs/assets/screenshots/07-nba.png)
 
-### Trials View — Benchmark Execution
-![Benchmark Trials](docs/assets/screenshots/08-trials.png)
+### 08 — Supervisory Clearance Center with Rubber Stamps
+![Clearance Center](docs/assets/screenshots/08-approval.png)
+
+### 09 — SHA-256 Hash-Chained Decision Ledger & Sweep Integrity
+![Decision Ledger](docs/assets/screenshots/09-ledger.png)
+
+### 10 — Guided Judge Demonstration (Recorded Benchmark Replay)
+![Judge Demo](docs/assets/screenshots/10-demo-mode.png)
+
+### 11 — Responsive Mobile Layout (375px Viewport)
+![Mobile Layout](docs/assets/screenshots/11-mobile.png)
 
 ---
 

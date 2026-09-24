@@ -57,30 +57,30 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
             title="Graph backend in use: TIGERGRAPH LIVE or IN-MEMORY SIMULATOR"
           >
-            GRAPH: <strong>{diag.graph_engine}</strong>
+            GRAPH: <strong>{isTigerGraph ? "TIGERGRAPH (LIVE)" : "SIMULATOR"}</strong>
           </span>
 
           <span
             className="px-2 py-0.5 rounded border border-ink bg-paper text-ink shadow-2xs"
             title="MCP Tool Dispatcher layer"
           >
-            MCP: <strong>{diag.mcp}</strong>
+            MCP: <strong>{diag.mcp || "LOCAL_DISPATCHER"}</strong>
           </span>
 
           <span
             className={`px-2 py-0.5 rounded border border-ink shadow-2xs ${
-              isGemini ? "bg-hot-pink text-paper" : "bg-paper text-ink"
+              isGemini ? "bg-hot-pink text-paper" : "bg-sand text-ink"
             }`}
-            title="Active LLM Provider"
+            title="Active LLM reasoning engine"
           >
-            LLM: <strong>{diag.llm}</strong>
+            LLM: <strong>{isGemini ? "GEMINI (gemini-2.5-flash)" : "DETERMINISTIC RULES"}</strong>
           </span>
 
           <span
-            className="px-2 py-0.5 rounded border border-ink bg-sand text-ink shadow-2xs hidden xl:inline"
+            className="px-2 py-0.5 rounded border border-ink bg-paper text-ink shadow-2xs hidden xl:inline"
             title="Dataset source"
           >
-            DATA: <strong>{diag.dataset === "HHGOA_IEEE" ? "HHGOA 590K" : "SYNTHETIC"}</strong>
+            DATA: <strong>{diag.dataset === "HHGOA_IEEE" ? "HHGOA 590K" : "DEV FIXTURE (243 TXNS)"}</strong>
           </span>
         </div>
 
