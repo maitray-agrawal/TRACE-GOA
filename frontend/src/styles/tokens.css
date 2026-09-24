@@ -1,0 +1,242 @@
+/* TRACE//GOA — "Goa Beach-Shack Command Center" Design Tokens */
+:root {
+  /* Palette */
+  --goa-green-900: #044e2a;
+  --goa-green-700: #066a38;
+  --goa-green-600: #0d8447;
+  --goa-green-500: #1e9b52;
+  --goa-green-300: #6ec893;
+  --goa-green-200: #a9ddb9;
+  --goa-green-100: #dff4e7;
+  
+  --sun-yellow: #ffe100;
+  --sun-yellow-light: #fff275;
+  --hot-pink: #ff0a78;
+  --hot-pink-light: #ff68a8;
+  --terracotta: #d9532b;
+  --sand: #f3d9a4;
+  --sand-light: #fbf2df;
+  --sand-dark: #dfbf82;
+  --paper: #ffffff;
+  --ink: #0b2a1a;
+  --ink-muted: #2d4c3c;
+  --ink-faint: rgba(11, 42, 26, 0.2);
+
+  /* Semantic Verdicts */
+  --verdict-fraud: var(--hot-pink);
+  --verdict-uncertain: var(--sun-yellow);
+  --verdict-legit: var(--goa-green-500);
+  --verdict-policy: var(--terracotta);
+
+  /* Typography */
+  --font-display: 'Instrument Serif', 'Playfair Display', Georgia, serif;
+  --font-mono: 'JetBrains Mono', 'IBM Plex Mono', monospace;
+  --font-wordmark: 'Rubik Mono One', 'Bowlby One', Impact, sans-serif;
+  --font-body: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  /* Ink Borders & Shadows */
+  --border-ink: 2.5px solid var(--ink);
+  --border-ink-thin: 1.5px solid var(--ink);
+  --border-ink-thick: 3.5px solid var(--ink);
+
+  --shadow-sm: 3px 3px 0px var(--ink);
+  --shadow-md: 5px 5px 0px var(--ink);
+  --shadow-lg: 8px 8px 0px var(--ink);
+  --shadow-pink: 5px 5px 0px var(--hot-pink);
+  --shadow-yellow: 5px 5px 0px var(--sun-yellow);
+
+  /* Radii */
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-pill: 9999px;
+
+  /* Transitions */
+  --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Base Body Style */
+body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--goa-green-900);
+  color: var(--paper);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Chunky Poster Headings */
+.font-display {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  letter-spacing: -0.01em;
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.font-wordmark {
+  font-family: var(--font-wordmark);
+}
+
+/* Stitched / Dotted CTA */
+.btn-goa-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  background-color: var(--sun-yellow);
+  color: var(--ink);
+  font-family: var(--font-mono);
+  font-weight: 800;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.65rem 1.4rem;
+  border-radius: var(--radius-sm);
+  border: var(--border-ink);
+  box-shadow: var(--shadow-sm);
+  cursor: pointer;
+  transition: transform 0.12s var(--ease-smooth), box-shadow 0.12s var(--ease-smooth);
+  text-decoration: none;
+  user-select: none;
+}
+
+.btn-goa-primary:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-md);
+  background-color: var(--sun-yellow-light);
+}
+
+.btn-goa-primary:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px var(--ink);
+}
+
+.btn-goa-pink {
+  background-color: var(--hot-pink);
+  color: var(--paper);
+}
+
+.btn-goa-pink:hover {
+  background-color: var(--hot-pink-light);
+}
+
+.btn-goa-green {
+  background-color: var(--goa-green-500);
+  color: var(--paper);
+}
+
+.btn-goa-outline {
+  background-color: transparent;
+  color: var(--sun-yellow);
+  border: 2px dashed var(--sun-yellow);
+  box-shadow: none;
+}
+
+.btn-goa-outline:hover {
+  background-color: rgba(255, 225, 0, 0.12);
+  transform: translate(-1px, -1px);
+}
+
+/* Tactile Cards */
+.card-goa {
+  background-color: var(--goa-green-700);
+  border: var(--border-ink);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  position: relative;
+  transition: transform 0.15s var(--ease-smooth), box-shadow 0.15s var(--ease-smooth);
+}
+
+.card-goa:hover {
+  box-shadow: var(--shadow-lg);
+}
+
+.card-goa-sand {
+  background-color: var(--sand);
+  color: var(--ink);
+}
+
+.card-goa-paper {
+  background-color: var(--paper);
+  color: var(--ink);
+}
+
+/* Poster Title with Stroke Effect */
+.poster-title {
+  font-family: var(--font-display);
+  color: var(--sun-yellow);
+  line-height: 0.9;
+  text-transform: uppercase;
+  text-shadow: 3px 3px 0px var(--ink), -1px -1px 0px var(--ink), 1px -1px 0px var(--ink), -1px 1px 0px var(--ink);
+}
+
+/* Pink Investigation Sticker ("जाँच") */
+.sticker-pink {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--hot-pink);
+  color: var(--paper);
+  border: var(--border-ink);
+  box-shadow: var(--shadow-sm);
+  padding: 0.25rem 0.75rem;
+  border-radius: var(--radius-sm);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transform: rotate(-4deg);
+  transition: transform 0.2s var(--ease-spring);
+  cursor: grab;
+  user-select: none;
+}
+
+.sticker-pink:hover {
+  transform: rotate(2deg) scale(1.05);
+}
+
+.sticker-yellow {
+  background-color: var(--sun-yellow);
+  color: var(--ink);
+  border: var(--border-ink);
+  box-shadow: var(--shadow-sm);
+  padding: 0.2rem 0.6rem;
+  border-radius: var(--radius-sm);
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: 0.75rem;
+  transform: rotate(2deg);
+}
+
+/* Palm Tree Swaying Animation */
+@keyframes palm-sway {
+  0%, 100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(2.5deg);
+  }
+}
+
+.palm-sway {
+  transform-origin: bottom center;
+  animation: palm-sway 6s ease-in-out infinite;
+}
+
+/* Reduced Motion Support */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .palm-sway {
+    animation: none !important;
+  }
+}

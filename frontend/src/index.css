@@ -1,44 +1,28 @@
-/* ==============================================================================
-   TRACE//GOA — Brand Visual System
-   Design Philosophy: "Less noise. More signal."
-   HackerHouse Goa terminal-inspired, dark-first, high information density,
-   sharp geometric containers, monospace technical metadata.
-   ============================================================================== */
-
-@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap");
+@import "./styles/tokens.css";
 
 :root {
-  /* Dark-first terminal palette */
-  --bg-primary: #08090c;
-  --bg-secondary: #0d0f14;
-  --bg-tertiary: #13171f;
-  --bg-surface: #10131a;
-  --bg-card: #0d1017;
+  /* Backward-compatible mappings to Goa Beach-Shack tokens */
+  --bg-primary: var(--goa-green-900);
+  --bg-secondary: var(--goa-green-700);
+  --bg-tertiary: var(--goa-green-600);
+  --bg-surface: var(--goa-green-700);
+  --bg-card: var(--goa-green-700);
   
-  /* Precision terminal borders */
-  --border-color: #212631;
-  --border-subtle: #191c24;
-  --border-highlight: #3b4252;
-  --border-active: #06b6d4;
+  --border-color: var(--ink);
+  --border-subtle: rgba(11, 42, 26, 0.4);
+  --border-highlight: var(--sun-yellow);
+  --border-active: var(--sun-yellow);
   
-  /* Text */
-  --text-primary: #e6edf3;
-  --text-secondary: #8b949e;
-  --text-muted: #565d68;
+  --text-primary: var(--paper);
+  --text-secondary: var(--goa-green-200);
+  --text-muted: #82b896;
   
-  /* Restrained Goa Accents */
-  --accent-cyan: #00f2fe;        /* Terminal Phosphor */
-  --accent-emerald: #10b981;     /* Signal Verified */
-  --accent-amber: #f59e0b;       /* Uncertainty / Goa Gold */
-  --accent-rose: #ff3366;        /* Hostile Signal */
-  --accent-indigo: #6366f1;      /* Graph Edge */
-  --accent-terracotta: #ea580c;  /* Goa Terracotta */
-
-  /* Typography */
-  --font-mono: "JetBrains Mono", "SF Mono", "Fira Code", Menlo, Consolas, monospace;
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  
-  --radius: 0px; /* Non-negotiable: Sharp geometric containers */
+  --accent-cyan: var(--sun-yellow);
+  --accent-emerald: var(--goa-green-500);
+  --accent-amber: var(--sun-yellow);
+  --accent-rose: var(--hot-pink);
+  --accent-indigo: var(--sand-dark);
+  --accent-terracotta: var(--terracotta);
 }
 
 * {
