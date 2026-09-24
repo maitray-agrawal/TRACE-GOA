@@ -55,7 +55,7 @@ TRACE//GOA is a graph-native, autonomous fraud investigation system designed to 
 ```mermaid
 flowchart TD
     subgraph INGEST ["1. Alert Trigger & Case Docket"]
-        T["Incoming Alert Trigger\n(Risk Score / Velocity / Dispute)"] --> CD["Case Docket & Memory Lookup\n(outputs/cases/ / case_memory.db)"]
+        T["Incoming Alert Trigger\n(Risk Score / Velocity / Dispute)"] --> CD["Case Docket & Memory Lookup\n(cases/ / case_memory.db)"]
     end
 
     subgraph GRAPH ["2. TigerGraph & MCP Layer"]
@@ -105,8 +105,8 @@ flowchart TD
 | **Case Explanation** | [`backend/app/llm/provider.py`](backend/app/llm/provider.py) | **LIVE** | Human-readable reasoning narratives generated per docket |
 | **Analyst UI Command Center** | [`frontend/src/`](frontend/src/) | **LIVE** | Hacker House Goa 2026 beach-shack themed command center |
 | **Graph Write-Back** | [`backend/app/graph/client.py`](backend/app/graph/client.py) | **VERIFIED** | Writes `Case`, `Finding`, and `Action` vertices back to graph |
-| **Regulatory SAR Filings** | [`backend/app/actions/sar.py`](backend/app/actions/sar.py) | **LIVE** | Automated FinCEN BSA 31 CFR § 1020.320 dockets for exposure >= $5,000 |
-| **Pre/Post Evidence NBA** | [`outputs/cases/`](outputs/cases/) | **VERIFIED** | Every answer file logs `before_evidence` and `after_evidence` recommendations |
+| **Regulatory SAR Filings** | [`backend/app/policy/engine.py`](backend/app/policy/engine.py) | **LIVE** | Automated FinCEN BSA 31 CFR § 1020.320 evaluation |
+| **Pre/Post Evidence NBA** | [`cases/`](cases/) | **VERIFIED** | Every answer file in root `/cases/` logs `before_evidence` and `after_evidence` recommendations |
 
 ---
 
@@ -117,27 +117,28 @@ In accordance with strict hackathon transparency rules, every mode is honestly r
 | Subsystem | Live Mode | Fallback / Local Mode | Active in This Repo |
 |---|---|---|---|
 | **Graph Engine (`GRAPH`)** | TigerGraph Savanna Cloud instance via GSQL REST / pyTigerGraph | In-memory MultiDiGraph simulator with exact GSQL query logic | **SIMULATOR** (Savanna credentials in `.env`) |
-| **Tool Dispatcher (`MCP`)** | Official `tigergraph-mcp` server process via stdio/SSE | In-process MCP dispatcher with tool allowlist and secret scrubbing | **LOCAL_DISPATCHER** |
+| **Tool Dispatcher (`MCP`)** | Official `tigergraph-mcp` server process via stdio/SSE | In-process MCP dispatcher with tool allowlist and telemetry logging | **LOCAL_DISPATCHER** |
 | **Reasoning Core (`LLM`)** | Google Gemini 2.5 Flash (`google-genai` SDK, temp=0) | Deterministic Policy & Pattern Rules Engine | **GEMINI / DETERMINISTIC RULES** (Cached in `cache/llm/`) |
-| **Dataset Source (`DATA`)** | Full 590,742 IEEE-CIS transactions (`transactions.csv`) | Pre-extracted 2-hop benchmark subgraphs (`benchmark_subgraphs.json`) | **HHGOA_IEEE (590K TXNS)** |
+| **Dataset Source (`DATA`)** | Full 590,742 IEEE-CIS transactions (`transactions.csv`) | Extracted reproducible 2-hop benchmark subgraphs (`benchmark_subgraphs.json`) | **BENCHMARK SUBGRAPHS (20 CASES, 26,643 TXNS)** |
 | **Evidence Responder** | Automated interactive simulated cardholder response | Deterministic scenario responder (`EVIDENCE_SCENARIOS`) | **DETERMINISTIC SIMULATION** |
 
 ---
 
 ## Verified Results
 
-### 1. Official 20 Benchmark Cases (`outputs/cases/HHG-001.json` – `HHG-020.json`)
+### 1. Official 20 Benchmark Cases (`cases/HHG-001.json` – `cases/HHG-020.json`)
 
-All 20 benchmark test cases from the competition period were executed and validated:
+**Submission answer files are located in `/cases/` at the repository root.** All 20 benchmark test cases from the competition period were executed and validated:
 
 - **Total Cases Evaluated**: 20
-- **Final Verdicts**: 13 Confirmed Fraud · 4 Cleared Legitimate · 3 Escalated
-- **Evidence-Driven Flips**:
+- **Final Verdicts**: 3 Confirmed Fraud · 3 Cleared Legitimate · 14 Uncertain / Pending Evidence
+- **Evidence-Driven Flips**: 4 cases (20.0%)
   - `HHG-001`: High risk score (0.61) → Dispatched cardholder challenge → Customer confirmed authorization → Flipped to **ALLOW_TRANSACTION** (Cleared).
   - `HHG-005`: Suspicious micro-testing ($100.07) → Customer validation → Confirmed valid travel purchase → Flipped to **ALLOW_TRANSACTION** (Cleared).
   - `HHG-007`: In-person high-score alert → Cardholder confirmed travel purchase → Flipped to **ALLOW_TRANSACTION** (Cleared).
   - `HHG-012`: Out-of-region card transaction → Cardholder denied purchase → Upgraded confidence to 0.85 → Flipped to **BLOCK_CARD** (Confirmed Fraud).
-- **Regulatory SAR Filings**: **8 Cases** met statutory $5,000 FinCEN BSA thresholds with confirmed fraud syndicates.
+- **Tool Calls**: **68 total MCP tool calls** measured across 20 cases (3.4 avg / case).
+- **LLM Tokens**: **1,553 measured tokens** (Gemini 2.5 Flash + deterministic fallback).
 - **Graph Write-Back**: **20/20 Cases** verified written to graph vertices.
 
 ### 2. Backtest Performance on 5,565 Historical Closed Cases
@@ -220,19 +221,46 @@ python scripts/validate_outputs.py
 ```
 
 Expected output:
-```
-=== Benchmark Validation: 20 Cases ===
-[OK] HHG-001.json: Valid schema, verdict=legitimate, NBA flip verified.
-[OK] HHG-002.json: Valid schema, verdict=fraud, SAR attached.
+```text
+=== Validating 20 Competition Answer Files in D:\HHGOA\cases ===
+[*] Validating HHG-001.json...
+[*] Validating HHG-002.json...
 ...
-[OK] HHG-020.json: Valid schema, verdict=fraud.
-Validation Result: 20/20 VALID (0 errors)
+[*] Validating HHG-020.json...
+
+[+] Validation Summary: 20/20 cases passed schema validation
+=== ALL 20 COMPETITION ANSWER FILES VALID ===
 ```
 
-Generated answer files land in [`outputs/cases/`](outputs/cases/):
-- `outputs/cases/HHG-001.json` through `HHG-020.json`
-- Summary catalog: [`outputs/INDEX.md`](outputs/INDEX.md)
-- Run execution metadata: [`outputs/RUN_METADATA.json`](outputs/RUN_METADATA.json)
+### Official Submission Files Structure
+
+**Submission answer files are located in `/cases/` at the repository root.** The exact 20 competition answer files required by the submission guidelines are:
+
+```text
+cases/
+├── HHG-001.json
+├── HHG-002.json
+├── HHG-003.json
+├── HHG-004.json
+├── HHG-005.json
+├── HHG-006.json
+├── HHG-007.json
+├── HHG-008.json
+├── HHG-009.json
+├── HHG-010.json
+├── HHG-011.json
+├── HHG-012.json
+├── HHG-013.json
+├── HHG-014.json
+├── HHG-015.json
+├── HHG-016.json
+├── HHG-017.json
+├── HHG-018.json
+├── HHG-019.json
+└── HHG-020.json
+```
+
+*(These outputs are also mirrored in `outputs/cases/`, cataloged in [`outputs/INDEX.md`](outputs/INDEX.md), and machine-verified in [`outputs/benchmark/canonical_results.json`](outputs/benchmark/canonical_results.json)).*
 
 ---
 
@@ -240,33 +268,35 @@ Generated answer files land in [`outputs/cases/`](outputs/cases/):
 
 ```
 TRACE-GOA/
+├── cases/                    # Official 20 submission answer files (HHG-001.json .. HHG-020.json)
 ├── backend/                  # FastAPI backend application
 │   └── app/
-│       ├── actions/          # Next-best actions & approval workflows
-│       ├── agents/           # 17-state autonomous investigation FSM
-│       ├── api/              # REST API endpoints (/investigations, /diagnostics)
-│       ├── audit/            # SHA-256 hash-chained decision ledger
-│       ├── graph/            # TigerGraph client & MCP tool dispatcher
-│       ├── graphrag/         # Subgraph context & policy RAG synthesizer
-│       ├── llm/              # Gemini 2.5 Flash provider with rules fallback
-│       ├── memory/           # Historical closed-case memory indexing
+│       ├── agent/            # Hypothesis-driven investigation engine & stopping rules
+│       ├── api/              # REST API endpoints (/cases, /diagnostics, SSE stream)
+│       ├── graph/            # TigerGraph client & GSQL query runner
+│       ├── ledger/           # SHA-256 hash-chained decision ledger
+│       ├── llm/              # Gemini 2.5 Flash provider with deterministic rules fallback
+│       ├── mcp/              # Model Context Protocol client & tool dispatcher
+│       ├── patterns/         # Fraud typology detectors (5 documented + 2 discovered)
 │       └── policy/           # Institutional fraud policy engine (Rules R1-R10)
 ├── cache/llm/                # Committed LLM response cache for 100% reproducible runs
 ├── data/
-│   ├── competition/          # Benchmark subgraphs & competition docs
-│   └── README.md             # Dataset download and placement instructions
-├── dev_fixtures/             # Lightweight synthetic test fixtures (243 rows)
-├── docs/                     # Architecture, blog, threat model, demo script
-│   ├── assets/screenshots/   # 1440x900 and 390x844 responsive screenshots
-│   └── dev-notes/            # Historical development audit records
+│   ├── competition/          # Benchmark subgraphs (26,643 txns) & competition instructions
+│   └── README.md             # Dataset provenance and structure
+├── dev_fixtures/             # Lightweight synthetic test fixtures & legacy runs
+├── docs/                     # Architecture, blog, threat model, demo script, scorecard
+│   └── assets/screenshots/   # 1440x900 and 390x844 responsive screenshots
 ├── frontend/                 # React 19 + TypeScript + Vite Command Center
 │   ├── src/                  # Goa beach-shack design system & components
-│   └── public/               # Static assets & brand kit
+│   └── index.html            # Entrypoint
 ├── outputs/
-│   └── cases/                # Canonical 20 official benchmark answer files
+│   ├── benchmark/            # Canonical results (canonical_results.json, canonical_report.md)
+│   ├── cases/                # Mirrored 20 competition answer files
+│   ├── INDEX.md              # Tabular catalog of the 20 benchmark cases
+│   └── RUN_METADATA.json     # Execution telemetry and tool counts
 ├── scripts/                  # Benchmark runners, validation, and demo tools
-├── tests/                    # Pytest test suite (unit + integration)
-├── tigergraph/               # GSQL schemas, loading jobs, and queries
+├── tests/                    # Pytest test suite (unit + integration, 43 passed)
+├── tigergraph/               # GSQL schemas, loading jobs, and 7 production queries
 ├── .env.example              # Environment configuration template
 ├── Makefile                  # CLI automation targets
 ├── README.md                 # Project documentation & demo guide

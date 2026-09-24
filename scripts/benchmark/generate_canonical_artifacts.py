@@ -12,7 +12,7 @@ import time
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-CASES_DIR = BASE_DIR / "outputs" / "cases"
+CASES_DIR = BASE_DIR / "cases" if (BASE_DIR / "cases").exists() and len(list((BASE_DIR / "cases").glob("HHG-*.json"))) == 20 else BASE_DIR / "outputs" / "cases"
 BENCHMARK_DIR = BASE_DIR / "outputs" / "benchmark"
 BENCHMARK_DIR.mkdir(parents=True, exist_ok=True)
 

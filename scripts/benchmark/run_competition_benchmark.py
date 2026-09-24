@@ -34,7 +34,9 @@ load_dotenv(BASE_DIR / ".env")
 DATA_DIR = BASE_DIR / "data" / "competition"
 OUTPUTS_CASES_DIR = BASE_DIR / "outputs" / "cases"
 OUTPUTS_CASES_DIR.mkdir(parents=True, exist_ok=True)
-CASES_DIR = OUTPUTS_CASES_DIR
+ROOT_CASES_DIR = BASE_DIR / "cases"
+ROOT_CASES_DIR.mkdir(parents=True, exist_ok=True)
+CASES_DIR = ROOT_CASES_DIR
 
 
 # ─── Evidence scenarios ─────────────────────────────────────────────────────
@@ -635,9 +637,10 @@ def run_all(test_mode: bool = False, sim_graph: bool = False):
             import traceback; traceback.print_exc()
             continue
 
-        # Save outputs
-        outpath = OUTPUTS_CASES_DIR / f"{case_id}.json"
-        outpath.write_text(json.dumps(result, indent=2), encoding="utf-8")
+        # Save outputs to both root cases/ (required by competition) and outputs/cases/
+        serialized_result = json.dumps(result, indent=2)
+        (OUTPUTS_CASES_DIR / f"{case_id}.json").write_text(serialized_result, encoding="utf-8")
+        (ROOT_CASES_DIR / f"{case_id}.json").write_text(serialized_result, encoding="utf-8")
 
         v = result["case"]["verdict"]
         verdicts[v] = verdicts.get(v, 0) + 1

@@ -20,14 +20,15 @@ By coupling **TigerGraph's parallel graph traversal engine** with **Google Gemin
 
 ---
 
-### The Dataset
+### The Dataset & Reproducible Evaluation Artifact
 
 We evaluated TRACE//GOA on the IEEE-CIS Fraud Detection dataset (HHGOA Edition):
 - **590,742 total card transactions** spanning 6 months (July–December 2016).
 - **13,553 unique customers** and **144,432 identity records** (device OS, browser, proxy attributes).
 - **5,565 historical closed cases** (Months 1–4) utilized as labeled memory for few-shot GraphRAG retrieval.
 - **20 exam benchmark cases** (`HHG-001` through `HHG-020`, Months 5–6).
-- **26,643 transactions** ingested into the live evaluation subgraph for reproducible 2-hop topological analysis.
+
+To guarantee **100% offline reproducibility** while keeping the repository footprint under 100 MB without requiring multi-gigabyte raw downloads, the repository includes `data/competition/benchmark_subgraphs.json` (14.23 MB). This tracked artifact contains the exact **26,643 transactions** comprising the 2-hop topological ego-networks of the 20 benchmark cases.
 
 Crucially, raw risk scores are treated as **signals to be investigated, not decisions**. A risk score of 0.85 indicates an anomaly, but our investigations reveal that many such transactions are legitimate cardholder travel or family device sharing.
 
@@ -52,11 +53,16 @@ We authored and installed 7 high-performance GSQL queries:
 6. `temporal_velocity_burst`: Evaluates sliding-window velocity bursts ($N$ transactions in $T$ minutes).
 7. `similar_cases`: Retrieves historically closed cases with topological or behavioral similarity.
 
-#### 3. Official TigerGraph MCP Tooling
-Rather than using proprietary API bindings, the investigation agent interfaces with TigerGraph through the **Model Context Protocol (MCP)** standard. The LLM selects tools (`run_installed_query`, `get_node_neighbors`) via structured JSON-RPC, with every tool call, latency measurement, and returned subgraph logged for auditability. Across the 20 benchmark cases, the agent executed **68 MCP tool calls** (averaging 3.4 calls per case).
+#### 3. Dual-Mode Graph Execution: Live TigerGraph vs Simulator
+TRACE//GOA is architected with complete runtime honesty:
+- **Live TigerGraph Cloud**: When `TIGERGRAPH_HOST` and `TIGERGRAPH_API_KEY` are provisioned, queries execute directly against a live TigerGraph Savanna Cloud instance via `pyTigerGraph`.
+- **In-Memory Simulator**: When running in an unconfigured environment, it seamlessly runs an in-memory graph simulator reproducing exact GSQL graph traversal logic across the 26,643 evaluation transactions, transparently surfaced as `GRAPH: SIMULATOR` in the UI.
 
-#### 4. Continuous Graph Write-Back
-Investigation results are never discarded in volatile memory. Every completed case writes `Case`, `Finding`, and `Action` vertices directly back into TigerGraph. When a subsequent alert arrives, the agent queries TigerGraph for past precedents, closing the loop between real-time investigation and institutional memory.
+#### 4. Official Model Context Protocol (MCP) vs Local Dispatcher
+The investigation agent interfaces with TigerGraph through the **Model Context Protocol (MCP)** standard. It supports both the standalone `tigergraph-mcp` server and an in-process local MCP dispatcher with identical tool schemas (`run_installed_query`, `get_node_neighbors`). Every tool call logs arguments, execution latency, and return payloads. Across the 20 benchmark cases, the agent executed **68 MCP tool calls** (averaging 3.4 calls per case).
+
+#### 5. Continuous Graph Write-Back
+Investigation results are never discarded in volatile memory. Every completed case writes `Case`, `Finding`, and `Action` vertices directly back into TigerGraph. When a subsequent alert arrives, the agent queries TigerGraph for past precedents, closing the loop between real-time investigation and institutional memory. Verified on **20/20 cases**.
 
 ---
 
