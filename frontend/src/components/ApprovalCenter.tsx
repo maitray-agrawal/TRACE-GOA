@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import type { CaseRecord } from "../types";
-import { CheckCircle, XCircle, AlertCircle } from "lucide-react";
+import { RubberStamp } from "../art/RubberStamp";
+import { ShieldCheck, ShieldAlert, CheckCircle, XCircle, UserCheck, AlertTriangle } from "lucide-react";
 import { approveCaseAction } from "../services/api";
 
 interface ApprovalCenterProps {
@@ -10,9 +11,10 @@ interface ApprovalCenterProps {
 }
 
 export const ApprovalCenter: React.FC<ApprovalCenterProps> = ({ cases, activeRole, onActionComplete }) => {
-  const [approverName, setApproverName] = useState("Analyst J. Doe");
+  const [approverName, setApproverName] = useState("Lead Investigator M. Agrawal");
   const [notes, setNotes] = useState("");
   const [processingCaseId, setProcessingCaseId] = useState<string | null>(null);
+  const [recentDecision, setRecentDecision] = useState<{ caseId: string; type: "APPROVED" | "REJECTED" } | null>(null);
 
   const pendingCases = cases.filter((c) => c.status === "AWAITING_APPROVAL");
 
@@ -26,8 +28,10 @@ export const ApprovalCenter: React.FC<ApprovalCenterProps> = ({ cases, activeRol
         approved,
         notes: notes || (approved ? "Authorized pursuant to policy review" : "Rejected: insufficient evidence")
       });
+      setRecentDecision({ caseId, type: approved ? "APPROVED" : "REJECTED" });
       setNotes("");
       onActionComplete?.();
+      setTimeout(() => setRecentDecision(null), 3500);
     } catch (e) {
       alert(`Approval error: ${e}`);
     } finally {
@@ -36,114 +40,135 @@ export const ApprovalCenter: React.FC<ApprovalCenterProps> = ({ cases, activeRol
   };
 
   return (
-    <div className="glass-panel" style={{ padding: 20 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+    <div className="card-goa card-goa-paper p-6 border-3 border-ink shadow-goa select-none space-y-6">
+      {/* Top Header */}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b-2 border-ink pb-4">
         <div>
-          <h2 className="font-mono" style={{ fontSize: "1.05rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 8, letterSpacing: "0.04em" }}>
-            <AlertCircle size={18} color="var(--accent-amber)" />
-            CLEARANCE CENTER // SUPERVISORY SIGN-OFF
-          </h2>
-          <span className="font-mono" style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
-            High-Impact Enforcement Actions Requiring Supervisory Electronic Clearance
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-xs font-black uppercase tracking-wider bg-sun-yellow text-ink px-2 py-0.5 rounded border border-ink">
+              RBAC GOVERNANCE
+            </span>
+            <h2 className="font-serif text-2xl font-black text-ink tracking-tight flex items-center gap-2">
+              <ShieldAlert className="text-terracotta" size={24} />
+              Clearance Center // Rubber Stamp Approvals
+            </h2>
+          </div>
+          <p className="font-mono text-xs text-ink/70 mt-1">
+            High-Impact Enforcement Actions Requiring Supervisory Electronic Sign-Off & Ledger Notarization
+          </p>
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <span className="font-mono" style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>SIGNING AS:</span>
-          <input
-            type="text"
-            value={approverName}
-            onChange={(e) => setApproverName(e.target.value)}
-            className="font-mono"
-            style={{
-              background: "var(--bg-tertiary)",
-              color: "#fff",
-              border: "1px solid var(--border-color)",
-              padding: "4px 8px",
-              borderRadius: 0,
-              fontSize: "0.78rem"
-            }}
-          />
+
+        {/* Signer Identity Bar */}
+        <div className="flex items-center gap-2 bg-sand/50 p-2 rounded-lg border-2 border-ink">
+          <UserCheck size={16} className="text-goa-green-700" />
+          <div className="flex flex-col">
+            <span className="font-mono text-[9px] font-bold text-ink/60 uppercase">SIGNING AS ({activeRole}):</span>
+            <input
+              type="text"
+              value={approverName}
+              onChange={(e) => setApproverName(e.target.value)}
+              className="font-mono text-xs font-bold bg-paper text-ink px-2 py-1 rounded border border-ink focus:outline-none focus:ring-1 focus:ring-ink"
+            />
+          </div>
         </div>
       </div>
 
+      {/* Main Approval Queue */}
       {pendingCases.length === 0 ? (
-        <div style={{ padding: 40, textAlign: "center", color: "var(--text-muted)" }}>
-          <CheckCircle size={32} color="var(--accent-emerald)" style={{ margin: "0 auto 10px", opacity: 0.8 }} />
-          <p className="font-mono" style={{ fontSize: "0.85rem" }}>No actions currently awaiting clearance. Queue clear.</p>
+        <div className="py-16 text-center border-3 border-dashed border-ink/30 rounded-xl bg-sand/20 space-y-3">
+          <div className="text-4xl">🏖</div>
+          <h3 className="font-serif text-xl font-black text-ink">Clearance Queue Clear</h3>
+          <p className="font-mono text-xs text-ink/70 max-w-md mx-auto">
+            All high-impact enforcement actions have been vetted and signed. Return to the Village Grid to inspect incoming transactions.
+          </p>
         </div>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+        <div className="space-y-4">
           {pendingCases.map((c) => {
-            const pending = c.approvals.find((a) => a.status === "PENDING") || {
-              action: c.recommended_actions[0]?.action || "ACTION",
-              required_role: c.recommended_actions[0]?.approval_route || "FRAUD_MANAGER",
-              reason: c.recommended_actions[0]?.reason || "Supervisory clearance required"
+            const pending = c.approvals?.find((a) => a.status === "PENDING") || {
+              action: c.recommended_actions?.[0]?.action || "STEP_UP_AUTH",
+              required_role: c.recommended_actions?.[0]?.approval_route || "SENIOR_ANALYST",
+              reason: c.recommended_actions?.[0]?.reason || "Supervisory clearance required by institutional policy"
             };
+
+            const isCurrentDecision = recentDecision?.caseId === c.case_id;
 
             return (
               <div
                 key={c.case_id}
-                style={{
-                  background: "var(--bg-tertiary)",
-                  border: "1px solid var(--accent-amber)",
-                  borderRadius: 0,
-                  padding: "16px"
-                }}
+                className="relative card-goa card-goa-sand p-5 border-3 border-ink shadow-goa-sm overflow-hidden"
               >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 8 }}>
-                  <div>
-                    <span className="font-mono" style={{ fontWeight: 700, fontSize: "0.95rem", color: "var(--accent-cyan)" }}>{c.case_id}</span>
-                    <span className="font-mono" style={{ marginLeft: 10, fontSize: "0.75rem", color: "var(--text-muted)" }}>
-                      SUBJECT: {c.subject_customer_id} | TRIGGER: {c.trigger_txn_id}
+                {/* Stamp Overlay on Decision */}
+                {isCurrentDecision && recentDecision && (
+                  <div className="absolute inset-0 bg-paper/85 z-20 flex items-center justify-center animate-bounce">
+                    <RubberStamp
+                      type={recentDecision.type}
+                      by={approverName}
+                      date={new Date().toISOString().split("T")[0]}
+                      size="lg"
+                    />
+                  </div>
+                )}
+
+                {/* Case Top Bar */}
+                <div className="flex flex-wrap items-center justify-between gap-2 border-b-2 border-ink/20 pb-2 mb-3">
+                  <div className="flex items-center gap-3">
+                    <span className="font-mono text-sm font-black text-goa-green-900 bg-paper px-2.5 py-0.5 rounded border border-ink">
+                      {c.case_id}
+                    </span>
+                    <span className="font-mono text-xs text-ink/70">
+                      CUSTOMER: <strong className="text-ink">{c.subject_customer_id}</strong> | TRIGGER: {c.trigger_txn_id}
                     </span>
                   </div>
-                  <span className="status-badge warning font-mono">
+
+                  <span className="font-mono text-[10px] font-black px-2 py-0.5 rounded bg-sun-yellow text-ink border border-ink flex items-center gap-1">
+                    <AlertTriangle size={11} />
                     REQUIRES: {pending.required_role}
                   </span>
                 </div>
 
-                <div style={{ background: "rgba(0,0,0,0.4)", padding: "10px", borderRadius: 0, marginBottom: 12, fontSize: "0.82rem", border: "1px solid var(--border-color)" }}>
-                  <div className="font-mono" style={{ fontWeight: 700, color: "var(--accent-amber)", marginBottom: 4 }}>
-                    PROPOSED MOVE: {pending.action}
+                {/* Proposed Move Box */}
+                <div className="bg-paper p-3.5 rounded-lg border-2 border-ink mb-4 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs font-black text-terracotta uppercase tracking-wide">
+                      PROPOSED ENFORCEMENT: {pending.action}
+                    </span>
+                    <span className="font-mono text-[10px] text-ink/70">
+                      RISK SCORE: <strong>{c.risk_score.toFixed(2)}</strong> | CONFIDENCE: <strong>{Math.round(c.confidence * 100)}%</strong>
+                    </span>
                   </div>
-                  <div style={{ color: "var(--text-secondary)" }}>{pending.reason}</div>
-                  <div className="font-mono" style={{ fontSize: "0.7rem", color: "var(--text-muted)", marginTop: 6 }}>
-                    RISK: {c.risk_score} | CONFIDENCE: {c.confidence} | TYPOLOGY: {c.fraud_patterns.join(", ") || "None"}
+                  <p className="font-sans text-xs text-ink/90 leading-relaxed">
+                    {pending.reason}
+                  </p>
+                  <div className="font-mono text-[10px] text-ink/60 border-t border-ink/10 pt-1.5 flex items-center gap-2">
+                    <span>TYPOLOGY: <strong>{c.fraud_patterns?.join(", ") || "Synthetic Identity"}</strong></span>
                   </div>
                 </div>
 
-                <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+                {/* Bottom Decision Actions */}
+                <div className="flex flex-wrap items-center gap-3">
                   <input
                     type="text"
-                    placeholder="Optional justification or policy citation note..."
+                    placeholder="Enter supervisory rationale or policy citation note..."
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
-                    className="font-mono"
-                    style={{
-                      flex: 1,
-                      background: "var(--bg-primary)",
-                      color: "#fff",
-                      border: "1px solid var(--border-color)",
-                      padding: "8px 12px",
-                      borderRadius: 0,
-                      fontSize: "0.78rem"
-                    }}
+                    className="flex-1 min-w-[220px] font-mono text-xs bg-paper text-ink px-3 py-2 rounded border-2 border-ink focus:outline-none focus:ring-1 focus:ring-ink"
                   />
                   <button
-                    className="btn-primary"
-                    style={{ background: "var(--accent-emerald)", color: "#000", fontWeight: 700, borderRadius: 0 }}
                     onClick={() => handleDecision(c.case_id, pending.action, true)}
                     disabled={processingCaseId === c.case_id}
+                    className="btn-goa bg-goa-green-500 hover:bg-goa-green-700 text-paper text-xs py-2 px-4 flex items-center gap-1.5 font-black uppercase tracking-wider"
                   >
-                    <CheckCircle size={14} /> AUTHORIZE MOVE
+                    <CheckCircle size={14} />
+                    STAMP APPROVE
                   </button>
                   <button
-                    className="btn-danger"
-                    style={{ borderRadius: 0 }}
                     onClick={() => handleDecision(c.case_id, pending.action, false)}
                     disabled={processingCaseId === c.case_id}
+                    className="btn-goa bg-hot-pink hover:bg-red-700 text-paper text-xs py-2 px-4 flex items-center gap-1.5 font-black uppercase tracking-wider"
                   >
-                    <XCircle size={14} /> DENY MOVE
+                    <XCircle size={14} />
+                    STAMP REJECT
                   </button>
                 </div>
               </div>
@@ -151,6 +176,15 @@ export const ApprovalCenter: React.FC<ApprovalCenterProps> = ({ cases, activeRol
           })}
         </div>
       )}
+
+      {/* Footer Info */}
+      <div className="p-3 bg-goa-green-100 border border-goa-green-500/40 rounded-lg flex items-center justify-between font-mono text-[10px] text-goa-green-900">
+        <span className="flex items-center gap-1 font-bold">
+          <ShieldCheck size={13} />
+          CRYPTOGRAPHIC GUARANTEE: Every authorization decision is signed and appended to the SHA-256 Decision Ledger.
+        </span>
+        <span className="uppercase font-black">TRACE//GOA COMPLIANCE</span>
+      </div>
     </div>
   );
 };

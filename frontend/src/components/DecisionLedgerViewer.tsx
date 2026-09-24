@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import type { LedgerEntry } from "../types";
-import { ShieldCheck, ShieldAlert, Link, Hash, RefreshCw } from "lucide-react";
+import { ShieldCheck, ShieldAlert, Link as LinkIcon, Hash, RefreshCw, AlertTriangle, Lock } from "lucide-react";
 import { verifyLedger } from "../services/api";
 
 interface DecisionLedgerViewerProps {
@@ -12,12 +12,23 @@ interface DecisionLedgerViewerProps {
 export const DecisionLedgerViewer: React.FC<DecisionLedgerViewerProps> = ({ caseId, entries }) => {
   const [verificationResult, setVerificationResult] = useState<any>(null);
   const [isVerifying, setIsVerifying] = useState(false);
+  const [simulatedTamperIndex, setSimulatedTamperIndex] = useState<number | null>(null);
 
   const handleVerify = async () => {
     setIsVerifying(true);
     try {
       const res = await verifyLedger(caseId);
-      setVerificationResult(res);
+      if (simulatedTamperIndex !== null) {
+        // Show simulated tamper break
+        setVerificationResult({
+          is_valid: false,
+          error: `CHAIN BROKEN at Block #${simulatedTamperIndex}: Hash mismatch with previous block payload.`,
+          entries_verified: simulatedTamperIndex,
+          tampered_block: simulatedTamperIndex
+        });
+      } else {
+        setVerificationResult(res);
+      }
     } catch (e) {
       console.error(e);
     } finally {
@@ -25,101 +36,160 @@ export const DecisionLedgerViewer: React.FC<DecisionLedgerViewerProps> = ({ case
     }
   };
 
+  const toggleTamperSimulation = () => {
+    if (simulatedTamperIndex === null && entries.length > 1) {
+      setSimulatedTamperIndex(entries[1].entry_id);
+      setVerificationResult(null);
+    } else {
+      setSimulatedTamperIndex(null);
+      setVerificationResult(null);
+    }
+  };
+
   return (
-    <div className="glass-panel" style={{ padding: 20 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
+    <div className="card-goa card-goa-paper p-6 border-3 border-ink shadow-goa select-none space-y-6">
+      {/* Header */}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b-2 border-ink pb-4">
         <div>
-          <h2 className="font-mono" style={{ fontSize: "1.05rem", fontWeight: 700, display: "flex", alignItems: "center", gap: 8, letterSpacing: "0.04em" }}>
-            <Hash size={18} color="var(--accent-cyan)" />
-            LEDGER // FORENSIC AUDIT TRAIL — CASE {caseId}
-          </h2>
-          <span className="font-mono" style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
-            SHA-256 Merkle-Chained Tamper-Evident Forensic Decision Ledger
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-xs font-black uppercase tracking-wider bg-goa-green-500 text-paper px-2 py-0.5 rounded border border-ink">
+              IMMUTABLE AUDIT TRAIL
+            </span>
+            <h2 className="font-serif text-2xl font-black text-ink tracking-tight flex items-center gap-2">
+              <Lock size={22} className="text-goa-green-700" />
+              Forensic Decision Ledger // Case {caseId}
+            </h2>
+          </div>
+          <p className="font-mono text-xs text-ink/70 mt-1">
+            SHA-256 Cryptographic Chain of Custody for Every Autonomous Agent & Human Supervisory Move
+          </p>
         </div>
 
-        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
+        {/* Actions & Verification Badge */}
+        <div className="flex flex-wrap items-center gap-2.5">
           {verificationResult && (
-            <span
-              className={`status-badge ${verificationResult.is_valid ? "active" : "critical"} font-mono`}
-              style={{ fontSize: "0.75rem", padding: "6px 12px" }}
+            <div
+              className={`font-mono text-xs font-black px-3 py-1.5 rounded-lg border-2 border-ink flex items-center gap-1.5 shadow-goa-sm ${
+                verificationResult.is_valid
+                  ? "bg-goa-green-500 text-paper"
+                  : "bg-hot-pink text-paper animate-bounce"
+              }`}
             >
-              {verificationResult.is_valid ? <ShieldCheck size={14} /> : <ShieldAlert size={14} />}
-              {verificationResult.is_valid ? "LEDGER SEALED & VERIFIED" : "CHAIN TAMPERING DETECTED"}
-            </span>
+              {verificationResult.is_valid ? <ShieldCheck size={16} /> : <ShieldAlert size={16} />}
+              <span>
+                {verificationResult.is_valid
+                  ? `SEALED & VALIDATED (${verificationResult.entries_verified || entries.length} BLOCKS)`
+                  : "CRYPTOGRAPHIC TAMPER DETECTED"}
+              </span>
+            </div>
           )}
 
-          <button className="btn-primary" style={{ borderRadius: 0 }} onClick={handleVerify} disabled={isVerifying}>
-            <RefreshCw size={14} className={isVerifying ? "animate-spin" : ""} />
-            {isVerifying ? "VERIFYING HASHES..." : "VERIFY INTEGRITY"}
+          <button
+            onClick={toggleTamperSimulation}
+            className={`font-mono text-xs font-bold px-3 py-1.5 rounded border-2 border-ink transition-colors flex items-center gap-1.5 ${
+              simulatedTamperIndex !== null
+                ? "bg-hot-pink text-paper"
+                : "bg-sand hover:bg-sun-yellow text-ink"
+            }`}
+          >
+            <AlertTriangle size={13} />
+            <span>{simulatedTamperIndex !== null ? "REVERT TAMPER" : "SIMULATE TAMPER"}</span>
+          </button>
+
+          <button
+            onClick={handleVerify}
+            disabled={isVerifying}
+            className="btn-goa bg-goa-green-500 hover:bg-goa-green-700 text-paper text-xs py-1.5 px-4 font-black uppercase tracking-wider flex items-center gap-1.5"
+          >
+            <RefreshCw size={13} className={isVerifying ? "animate-spin" : ""} />
+            <span>{isVerifying ? "VERIFYING HASHES..." : "SWEEP INTEGRITY"}</span>
           </button>
         </div>
       </div>
 
+      {/* Ledger Chain Container */}
       {entries.length === 0 ? (
-        <div className="font-mono" style={{ padding: 30, textAlign: "center", color: "var(--text-muted)", fontSize: "0.8rem" }}>
-          No ledger events found for this case docket.
+        <div className="py-14 text-center border-3 border-dashed border-ink/30 rounded-xl bg-sand/20 font-mono text-xs text-ink/70">
+          No ledger events registered yet for case {caseId}. Run investigation to initiate blocks.
         </div>
       ) : (
-        <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-          {entries.map((entry) => (
-            <div
-              key={entry.entry_id}
-              style={{
-                background: "var(--bg-tertiary)",
-                border: "1px solid var(--border-color)",
-                borderRadius: 0,
-                padding: "12px 16px",
-                position: "relative"
-              }}
-            >
-              <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 6 }}>
-                <span className="font-mono" style={{ fontWeight: 700, color: "var(--accent-cyan)", fontSize: "0.82rem" }}>
-                  BLOCK #{entry.entry_id} — {entry.event_type}
-                </span>
-                <span className="font-mono" style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
-                  {new Date(entry.timestamp * 1000).toLocaleString()}
-                </span>
-              </div>
+        <div className="relative pl-6 space-y-4">
+          {/* Bamboo vertical connection line */}
+          <div className="absolute left-2.5 top-4 bottom-4 w-1.5 bg-amber-300 border-x border-ink rounded-full" />
 
-              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, fontSize: "0.78rem", marginBottom: 8 }}>
-                <div>
-                  <span style={{ color: "var(--text-muted)" }}>Actor: </span>
-                  <span style={{ color: "#fff", fontWeight: 500 }}>{entry.actor}</span>
+          {entries.map((entry, idx) => {
+            const isTampered = simulatedTamperIndex === entry.entry_id;
+
+            return (
+              <div key={entry.entry_id || idx} className="relative group">
+                {/* Hash Chain Node on Line */}
+                <div
+                  className={`absolute -left-6 top-3 w-5 h-5 rounded-full border-2 border-ink flex items-center justify-center font-mono text-[9px] font-black z-10 shadow-xs ${
+                    isTampered
+                      ? "bg-hot-pink text-paper ring-4 ring-red-400"
+                      : "bg-paper text-ink"
+                  }`}
+                >
+                  #{entry.entry_id}
                 </div>
-                <div>
-                  <span style={{ color: "var(--text-muted)" }}>Decision: </span>
-                  <span style={{ color: "var(--accent-emerald)", fontWeight: 600 }}>{entry.decision || "N/A"}</span>
+
+                {/* Block Card */}
+                <div
+                  className={`p-4 rounded-xl border-3 border-ink shadow-goa-sm transition-all ${
+                    isTampered
+                      ? "bg-red-50 border-hot-pink"
+                      : "card-goa card-goa-sand"
+                  }`}
+                >
+                  <div className="flex flex-wrap items-center justify-between gap-2 border-b border-ink/15 pb-2 mb-2">
+                    <span className="font-mono text-xs font-black text-ink uppercase flex items-center gap-1.5">
+                      <Hash size={13} className="text-terracotta" />
+                      BLOCK #{entry.entry_id} — {entry.event_type}
+                    </span>
+                    <span className="font-mono text-[10px] text-ink/60 bg-paper px-2 py-0.5 rounded border border-ink/30">
+                      {new Date(entry.timestamp * 1000).toLocaleString()}
+                    </span>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-mono mb-2">
+                    <div>
+                      <span className="text-ink/60 uppercase">ACTOR: </span>
+                      <strong className="text-ink">{entry.actor}</strong>
+                    </div>
+                    <div>
+                      <span className="text-ink/60 uppercase">DECISION: </span>
+                      <strong className="text-goa-green-700">{entry.decision || "LOGGED"}</strong>
+                    </div>
+                  </div>
+
+                  {entry.reason && (
+                    <div className="bg-paper/70 p-2.5 rounded border border-ink/20 mb-2 font-sans text-xs text-ink/90 leading-relaxed">
+                      <strong className="font-mono text-[10px] text-ink/60 uppercase block mb-0.5">RATIONALE:</strong>
+                      {entry.reason}
+                    </div>
+                  )}
+
+                  {/* Cryptographic Hashes */}
+                  <div className="p-2.5 bg-paper rounded border-2 border-ink/30 font-mono text-[10px] space-y-1">
+                    <div className="flex items-center gap-1.5 text-ink/70">
+                      <LinkIcon size={11} className="text-ink/50" />
+                      <span>PREV HASH:</span>
+                      <span className="text-ink font-bold font-mono truncate">
+                        {isTampered ? "0000_TAMPERED_HASH_FAILURE_9999" : entry.previous_hash}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-1.5 text-ink/70">
+                      <Hash size={11} className="text-goa-green-700" />
+                      <span>CURR HASH:</span>
+                      <span className="text-goa-green-900 font-bold font-mono truncate">
+                        {entry.current_hash}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
-
-              {entry.reason && (
-                <div style={{ fontSize: "0.75rem", color: "var(--text-secondary)", marginBottom: 8 }}>
-                  <span style={{ color: "var(--text-muted)" }}>Rationale: </span>
-                  {entry.reason}
-                </div>
-              )}
-
-              {/* Hash chain pointers */}
-              <div
-                style={{
-                  background: "rgba(0,0,0,0.5)",
-                  padding: "6px 10px",
-                  borderRadius: 4,
-                  fontSize: "0.7rem",
-                  fontFamily: "monospace",
-                  color: "var(--text-muted)"
-                }}
-              >
-                <div style={{ display: "flex", alignItems: "center", gap: 4, marginBottom: 2 }}>
-                  <Link size={10} /> Prev Hash: <span style={{ color: "#9ca3af" }}>{entry.previous_hash.slice(0, 32)}...</span>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
-                  <Hash size={10} /> Curr Hash: <span style={{ color: "var(--accent-indigo)" }}>{entry.current_hash.slice(0, 32)}...</span>
-                </div>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </div>
