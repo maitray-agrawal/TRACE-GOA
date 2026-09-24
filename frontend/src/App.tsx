@@ -316,21 +316,29 @@ export const App: React.FC = () => {
               </div>
             </div>
 
-            {/* Sun & Tide Coastal Radar Gauge */}
-            <SunTideGauge
-              confidence={selectedCase.confidence}
-              riskScore={selectedCase.risk_score}
-              enoughToAct={selectedCase.confidence >= 0.70}
-              missingEvidence={selectedCase.missing_evidence}
-              isInvestigating={isInvestigating}
-            />
+            {/* 3-Column Tactical Investigation Layout (timeline | graph + sun/tide gauge | evidence board + action card) */}
+            <div className="investigation-3col-grid">
+              {/* Column 1: Roadmap Timeline & Historical Precedents (minmax(280px, 1fr)) */}
+              <div className="space-y-5">
+                <TimelineViewer timeline={timeline} />
+                <PastEditionsStrip
+                  precedents={similarCases}
+                  onSelectPrecedent={(cid) => loadCaseData(cid)}
+                />
+              </div>
 
-            {/* 3-Column Tactical Investigation Layout */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
-              {/* Left Column: Network Graph + Roadmap Timeline (7 cols) */}
-              <div className="lg:col-span-7 space-y-5">
+              {/* Column 2: Sun & Tide Coastal Radar Gauge + TigerGraph Network Explorer (minmax(0, 2fr)) */}
+              <div className="space-y-5">
+                <SunTideGauge
+                  confidence={selectedCase.confidence}
+                  riskScore={selectedCase.risk_score}
+                  enoughToAct={selectedCase.confidence >= 0.70}
+                  missingEvidence={selectedCase.missing_evidence}
+                  isInvestigating={isInvestigating}
+                />
+
                 {/* TigerGraph Network Explorer */}
-                <div className="card-goa card-goa-paper p-4 border-3 border-ink shadow-goa flex flex-col h-[420px]">
+                <div className="card-goa card-goa-paper p-4 border-3 border-ink shadow-goa flex flex-col h-[460px]">
                   <div className="flex items-center justify-between border-b-2 border-ink pb-2 mb-2 font-mono text-xs font-black text-ink uppercase">
                     <span>TIGERGRAPH 2-HOP TRAVERSAL</span>
                     <span className="text-[10px] bg-sand px-2 py-0.5 rounded border border-ink font-bold">
@@ -341,32 +349,16 @@ export const App: React.FC = () => {
                     <GraphViewer data={graphData} />
                   </div>
                 </div>
-
-                {/* Bamboo Roadmap Timeline */}
-                <TimelineViewer timeline={timeline} />
-
-                {/* Historical Case Precedents Polaroid Strip */}
-                <PastEditionsStrip
-                  precedents={similarCases}
-                  onSelectPrecedent={(cid) => loadCaseData(cid)}
-                />
-
-                {/* Explainability Accordion */}
-                <ExplainabilityAccordion caseData={selectedCase} />
               </div>
 
-              {/* Right Column: Cork Notice Board + Next-Best Action Cards (5 cols) */}
-              <div className="lg:col-span-5 space-y-5">
-                {/* Cork Notice Board */}
-                <div className="min-h-[380px]">
-                  <EvidenceNoticeBoard
-                    caseData={selectedCase}
-                    policies={policies}
-                    similarCases={similarCases}
-                  />
-                </div>
+              {/* Column 3: Evidence Notice Board & Next-Best Action Card (minmax(300px, 1fr)) */}
+              <div className="space-y-5">
+                <EvidenceNoticeBoard
+                  caseData={selectedCase}
+                  policies={policies}
+                  similarCases={similarCases}
+                />
 
-                {/* Next-Best Action Recommendation Card */}
                 <ActionCard
                   actions={selectedCase.recommended_actions}
                   activeRole={activeRole}
@@ -380,6 +372,25 @@ export const App: React.FC = () => {
                     confidence: Number((selectedCase.confidence * 0.72).toFixed(2)),
                   }}
                   decisionChanged={selectedCase.risk_score >= 0.70}
+                />
+              </div>
+            </div>
+
+            {/* Below 3-Column Grid: Explainability Accordion & Cryptographic Ledger */}
+            <div className="space-y-5 pt-4 border-t-2 border-ink/20">
+              <ExplainabilityAccordion caseData={selectedCase} />
+              
+              <div className="card-goa card-goa-paper p-4 border-3 border-ink shadow-goa">
+                <div className="font-serif text-lg font-black text-ink mb-3 pb-2 border-b-2 border-ink flex items-center justify-between">
+                  <span>CRYPTOGRAPHIC DECISION AUDIT TRAIL // {selectedCase.case_id}</span>
+                  <span className="font-mono text-xs text-goa-green-700 bg-sand px-2 py-0.5 rounded border border-ink">
+                    SHA-256 HASH-CHAINED
+                  </span>
+                </div>
+                <DecisionLedgerViewer
+                  caseId={selectedCase.case_id}
+                  entries={ledgerEntries}
+                  onRefresh={() => loadCaseData(selectedCase.case_id)}
                 />
               </div>
             </div>

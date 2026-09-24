@@ -72,7 +72,7 @@ export const SignpostStats: React.FC<SignpostStatsProps> = ({
         </div>
 
         {/* Signpost Boards Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="signpost-grid">
           {/* Board 1: Benchmark Cases */}
           <div className="card-goa card-goa-sand p-4 border-3 border-ink rounded-lg shadow-goa-sm relative group hover:-translate-y-1 transition-transform">
             <div className="absolute top-2 right-2 text-xs font-mono font-black text-ink/40">

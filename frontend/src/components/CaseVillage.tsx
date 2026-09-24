@@ -131,7 +131,8 @@ export const CaseVillage: React.FC<CaseVillageProps> = ({
         </div>
 
         {/* 20 Beach-Shack Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+        {/* 20 Beach-Shack Grid */}
+        <div className="case-village-grid">
           {filteredCases.map((item) => {
             const isSelected = item.case_id === selectedCaseId;
             const requiresApproval = item.verdict === 'fraud';
@@ -180,22 +181,28 @@ export const CaseVillage: React.FC<CaseVillageProps> = ({
                     {item.pattern.replace(/_/g, ' ')}
                   </div>
 
-                  {/* Risk Score & Exposure */}
-                  <div className="flex items-center justify-between text-[11px] font-mono">
-                    <span className="text-ink/70">
-                      {item.exposure_usd > 0 ? `$${item.exposure_usd.toFixed(2)}` : '$0.00'}
-                    </span>
-                    <span
-                      className={`font-black ${
-                        item.verdict === 'fraud'
-                          ? 'text-hot-pink'
-                          : item.verdict === 'uncertain'
-                          ? 'text-amber-700'
-                          : 'text-goa-green-700'
-                      }`}
-                    >
-                      {Math.round(item.fraud_probability * 100)}% RISK
-                    </span>
+                  {/* Risk Score & Exposure on separate lines with a clear gap */}
+                  <div className="flex flex-col gap-1 text-[11px] font-mono mt-1 pt-1 border-t border-ink/20">
+                    <div className="flex items-center justify-between text-ink/75">
+                      <span className="text-[10px] text-ink/60 uppercase">EXPOSURE:</span>
+                      <span className="font-bold">
+                        {item.exposure_usd > 0 ? `$${item.exposure_usd.toFixed(2)}` : '$0.00'}
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] text-ink/60 uppercase">RISK SCORE:</span>
+                      <span
+                        className={`font-black ${
+                          item.verdict === 'fraud'
+                            ? 'text-hot-pink'
+                            : item.verdict === 'uncertain'
+                            ? 'text-amber-700'
+                            : 'text-goa-green-700'
+                        }`}
+                      >
+                        {Math.round(item.fraud_probability * 100)}% RISK
+                      </span>
+                    </div>
                   </div>
 
                   {/* Primary Action & Approval Route */}

@@ -67,109 +67,124 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
         <PalmTree variant="compact" size={95} />
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 relative z-10 flex flex-col items-center text-center">
-        {/* Top Product Category Eyebrow */}
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border-2 border-ink bg-sun-yellow text-ink text-xs font-mono font-black uppercase tracking-widest mb-4 shadow-goa-sm">
-          <span>HACKER HOUSE GOA 2026</span>
-          <span>·</span>
-          <span>AUTONOMOUS FRAUD AGENT</span>
-          <span>·</span>
-          <span className="text-goa-green-900 font-extrabold">TIGERGRAPH</span>
-        </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
+        <div className="hero-grid">
+          {/* Left Column: Title, Subtitle, Telemetry, CTAs */}
+          <div className="flex flex-col items-start text-left">
+            {/* Top Product Category Eyebrow */}
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border-2 border-ink bg-sun-yellow text-ink text-xs font-mono font-black uppercase tracking-widest mb-4 shadow-goa-sm">
+              <span>HACKER HOUSE GOA 2026</span>
+              <span>·</span>
+              <span>AUTONOMOUS FRAUD AGENT</span>
+              <span>·</span>
+              <span className="text-goa-green-900 font-extrabold">TIGERGRAPH</span>
+            </div>
 
-        {/* Central Sun Graphic */}
-        <div className="mb-2">
-          <Sun size={95} confidence={0.88} riskScore={0.75} showSea={false} />
-        </div>
+            {/* Giant Title with Absolutely Positioned Sticker */}
+            <div className="relative my-2 inline-block">
+              <h1 className="poster-title-clamp drop-shadow-md">
+                TRACE<span className="text-paper mx-1">//</span>GOA
+              </h1>
 
-        {/* Giant Stacked Title: TRACE // GOA */}
-        <div className="relative my-1 inline-block">
-          <h1 className="poster-title text-6xl sm:text-8xl md:text-9xl font-black tracking-tighter leading-none">
-            TRACE<span className="text-paper mx-1">//</span>GOA
-          </h1>
+              {/* Interactive Rotated Pink "जाँच" (Investigation) Sticker */}
+              <div
+                onMouseDown={handleMouseDown}
+                style={{
+                  transform: `translate(${stickerOffset.x}px, ${stickerOffset.y}px) rotate(${
+                    isDragging ? '12deg' : '-8deg'
+                  })`,
+                  transition: isDragging ? 'none' : 'transform 0.3s var(--ease-spring)',
+                }}
+                className="sticker-pink absolute -top-3 -right-2 sm:-right-6 md:-right-8 text-lg sm:text-2xl font-black py-1 px-3 z-20 cursor-grab active:cursor-grabbing shadow-goa border-3 border-ink"
+                title="Draggable investigation sticker (जाँच) — Grab and release!"
+              >
+                जाँच
+              </div>
+            </div>
 
-          {/* Interactive Rotated Pink "जाँच" (Investigation) Sticker */}
-          <div
-            onMouseDown={handleMouseDown}
-            style={{
-              transform: `translate(${stickerOffset.x}px, ${stickerOffset.y}px) rotate(${
-                isDragging ? '12deg' : '-8deg'
-              })`,
-              transition: isDragging ? 'none' : 'transform 0.3s var(--ease-spring)',
-            }}
-            className="sticker-pink absolute -top-4 -right-4 sm:-right-8 md:-right-12 text-xl sm:text-2xl md:text-3xl font-black py-1 px-4 z-20 cursor-grab active:cursor-grabbing shadow-goa border-3 border-ink"
-            title="Draggable investigation sticker (जाँच) — Grab and release!"
-          >
-            जाँच
+            {/* Product Subtitle */}
+            <h2 className="font-serif text-xl sm:text-2xl md:text-3xl font-black text-paper tracking-tight mt-1 max-w-xl leading-snug">
+              Agentic Fraud Investigation &amp; Next-Best Action Engine
+            </h2>
+
+            {/* Product Tagline */}
+            <p className="font-mono text-xs sm:text-sm text-sun-yellow font-black tracking-widest uppercase mt-2">
+              TRACE THE SIGNAL. FIND THE NETWORK. MAKE THE MOVE.
+            </p>
+
+            {/* Small Mono Technical Metadata Pill Strip */}
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 mt-4 max-w-xl">
+              {['TIGERGRAPH', 'MCP', 'GRAPHRAG', 'CASE MEMORY', 'HUMAN APPROVAL', 'AUDIT LEDGER'].map((tag) => (
+                <span
+                  key={tag}
+                  className="px-2 py-0.5 rounded-sm border border-ink bg-paper text-ink text-[10px] font-mono font-bold shadow-2xs"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+
+            {/* Live Backend Telemetry Pill Strip */}
+            <div className="flex flex-wrap items-center gap-2 mt-4">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm border-2 border-ink bg-sand text-ink text-[11px] font-mono font-bold shadow-xs">
+                <span
+                  className={`w-2 h-2 rounded-full ${
+                    isTigerGraph ? 'bg-goa-green-500 animate-pulse' : 'bg-sun-yellow'
+                  }`}
+                />
+                GRAPH:{' '}
+                <strong className={isTigerGraph ? 'text-goa-green-700' : 'text-amber-800'}>
+                  {liveBackendStatus?.graph_engine || 'SIMULATOR'}
+                </strong>
+              </span>
+
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm border-2 border-ink bg-sand text-ink text-[11px] font-mono font-bold shadow-xs">
+                LLM:{' '}
+                <strong className={isGemini ? 'text-hot-pink' : 'text-ink'}>
+                  {liveBackendStatus?.llm || 'DETERMINISTIC_RULES'}
+                </strong>
+              </span>
+
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm border-2 border-ink bg-sand text-ink text-[11px] font-mono font-bold shadow-xs">
+                <ShieldCheck size={12} className="text-goa-green-700" />
+                GUARDRAILS: <strong>POLICIES R1–R10</strong>
+              </span>
+            </div>
+
+            {/* Action Button Row with Stitched & Outlined Buttons */}
+            <div className="flex flex-wrap items-center gap-4 mt-6">
+              <button
+                onClick={onStartInvestigation}
+                className="btn-primary-stitched"
+              >
+                <span>START INVESTIGATION</span>
+                <ArrowRight size={16} />
+              </button>
+
+              <button
+                onClick={onOpenDemo}
+                className="btn-secondary-outlined"
+              >
+                <Play size={16} fill="currentColor" className="text-hot-pink" />
+                <span>VIEW BENCHMARK [D]</span>
+              </button>
+            </div>
           </div>
-        </div>
 
-        {/* Product Subtitle */}
-        <h2 className="font-serif text-xl sm:text-2xl md:text-3xl font-black text-paper tracking-tight mt-2 max-w-2xl">
-          Agentic Fraud Investigation &amp; Next-Best Action Engine
-        </h2>
-
-        {/* Product Tagline */}
-        <p className="font-mono text-xs sm:text-sm md:text-base text-sun-yellow font-black tracking-widest uppercase mt-2">
-          TRACE THE SIGNAL. FIND THE NETWORK. MAKE THE MOVE.
-        </p>
-
-        {/* Small Mono Technical Metadata Pill Strip */}
-        <div className="flex flex-wrap items-center justify-center gap-1.5 sm:gap-2 mt-4 max-w-2xl">
-          {['TIGERGRAPH', 'MCP', 'GRAPHRAG', 'CASE MEMORY', 'HUMAN APPROVAL', 'AUDIT LEDGER'].map((tag) => (
-            <span
-              key={tag}
-              className="px-2 py-0.5 rounded-sm border border-ink bg-paper text-ink text-[10px] font-mono font-bold shadow-2xs"
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        {/* Live Backend Telemetry Pill Strip */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mt-4">
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm border-2 border-ink bg-sand text-ink text-[11px] font-mono font-bold shadow-xs">
-            <span
-              className={`w-2 h-2 rounded-full ${
-                isTigerGraph ? 'bg-goa-green-500 animate-pulse' : 'bg-sun-yellow'
-              }`}
-            />
-            GRAPH:{' '}
-            <strong className={isTigerGraph ? 'text-goa-green-700' : 'text-amber-800'}>
-              {liveBackendStatus?.graph_engine || 'SIMULATOR'}
-            </strong>
-          </span>
-
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm border-2 border-ink bg-sand text-ink text-[11px] font-mono font-bold shadow-xs">
-            LLM:{' '}
-            <strong className={isGemini ? 'text-hot-pink' : 'text-ink'}>
-              {liveBackendStatus?.llm || 'DETERMINISTIC_RULES'}
-            </strong>
-          </span>
-
-          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-sm border-2 border-ink bg-sand text-ink text-[11px] font-mono font-bold shadow-xs">
-            <ShieldCheck size={12} className="text-goa-green-700" />
-            GUARDRAILS: <strong>POLICIES R1–R10</strong>
-          </span>
-        </div>
-
-        {/* Action Button Row */}
-        <div className="flex flex-wrap items-center justify-center gap-3.5 mt-6">
-          <button
-            onClick={onStartInvestigation}
-            className="btn-goa bg-sun-yellow hover:bg-yellow-400 text-ink text-sm sm:text-base py-3 px-6 shadow-goa font-black uppercase tracking-wider flex items-center gap-2"
-          >
-            <span>START INVESTIGATION</span>
-            <ArrowRight size={16} />
-          </button>
-
-          <button
-            onClick={onOpenDemo}
-            className="btn-goa bg-paper hover:bg-sand text-ink text-sm sm:text-base py-3 px-6 shadow-goa font-black uppercase tracking-wider flex items-center gap-2"
-          >
-            <Play size={16} fill="currentColor" className="text-hot-pink" />
-            <span>VIEW BENCHMARK [D]</span>
-          </button>
+          {/* Right Column: Sized Illustration Box (max-width: 520px) */}
+          <div className="hero-illustration-box flex flex-col items-center justify-center p-6 bg-goa-green-900/40 rounded-2xl border-3 border-ink shadow-goa">
+            <div className="w-full flex justify-center py-4">
+              <Sun size={180} confidence={0.88} riskScore={0.75} showSea={true} />
+            </div>
+            <div className="mt-4 px-4 py-2 bg-sand/90 rounded border-2 border-ink text-center">
+              <div className="font-mono text-xs font-black text-ink uppercase">
+                COASTAL RISK &amp; CONFIDENCE RADAR
+              </div>
+              <div className="font-mono text-[10px] text-ink/70">
+                Zenith angle = 0.88 Confidence · Tide height = 0.75 Risk Exposure
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

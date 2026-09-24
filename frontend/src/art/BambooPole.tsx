@@ -36,7 +36,7 @@ export const BambooPole: React.FC<BambooPoleProps> = ({
       </div>
 
       {/* Hanging Signboards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 px-2">
+      <div className="pipeline-grid px-2">
         {stages.map((stage) => {
           const isActive = stage.id === currentStageId || stage.status === 'active';
           const isDone = stage.status === 'completed';

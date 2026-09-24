@@ -30,66 +30,34 @@ export const Header: React.FC<HeaderProps> = ({
   const isTigerGraph = diag.graph_engine === "TIGERGRAPH";
   const isGemini = diag.llm && diag.llm.includes("GEMINI");
 
+  const isOfficialMcp = diag.mcp === "OFFICIAL" || diag.mcp === "OFFICIAL_TIGERGRAPH_MCP";
+  const isRealData = diag.dataset === "HHGOA_IEEE";
+
   return (
-    <header className="w-full bg-goa-green-900 border-b-4 border-ink px-4 py-3 select-none sticky top-0 z-50 shadow-md">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
-        {/* Left: Brand Logo & Tagline */}
-        <div className="flex items-center gap-3">
-          <div
-            onClick={() => setActiveTab("dashboard")}
-            className="cursor-pointer group flex items-center gap-2"
-          >
-            <span className="font-wordmark text-2xl sm:text-3xl text-sun-yellow tracking-tighter drop-shadow-sm group-hover:scale-105 transition-transform">
-              TRACE<span className="text-hot-pink">//</span>GOA
+    <header className="header-bar w-full select-none shadow-md">
+      <div className="max-w-7xl mx-auto px-4 py-2.5 flex flex-col gap-2">
+        {/* Main Header Bar: Wordmark Left | Tab Nav Center | Role Select Right */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-3 min-h-[48px]">
+          {/* Left: Brand Wordmark */}
+          <div className="flex items-center gap-3">
+            <div
+              onClick={() => setActiveTab("dashboard")}
+              className="cursor-pointer group flex items-center gap-2"
+            >
+              <span className="font-wordmark text-2xl sm:text-3xl text-sun-yellow tracking-tighter drop-shadow-sm group-hover:scale-105 transition-transform">
+                TRACE<span className="text-hot-pink">//</span>GOA
+              </span>
+            </div>
+            <span className="hidden lg:inline text-[11px] font-mono font-bold text-goa-green-200 border-l-2 border-ink pl-3 uppercase">
+              Hacker House Goa &apos;26
             </span>
           </div>
 
-          <span className="hidden lg:inline text-xs font-mono font-bold text-goa-green-200 border-l-2 border-ink pl-3 uppercase">
-            Hacker House Goa &apos;26
-          </span>
-        </div>
-
-        {/* Center: Live Backend Diagnostics Badges (Strict Honesty) */}
-        <div className="flex flex-wrap items-center justify-center gap-1.5 text-[11px] font-mono font-bold">
-          <span
-            className={`px-2 py-0.5 rounded border border-ink shadow-2xs ${
-              isTigerGraph ? "bg-goa-green-500 text-paper" : "bg-sun-yellow text-ink"
-            }`}
-            title="Graph backend in use: TIGERGRAPH LIVE or IN-MEMORY SIMULATOR"
-          >
-            GRAPH: <strong>{isTigerGraph ? "TIGERGRAPH (LIVE)" : "SIMULATOR"}</strong>
-          </span>
-
-          <span
-            className="px-2 py-0.5 rounded border border-ink bg-paper text-ink shadow-2xs"
-            title="MCP Tool Dispatcher layer"
-          >
-            MCP: <strong>{diag.mcp || "LOCAL_DISPATCHER"}</strong>
-          </span>
-
-          <span
-            className={`px-2 py-0.5 rounded border border-ink shadow-2xs ${
-              isGemini ? "bg-hot-pink text-paper" : "bg-sand text-ink"
-            }`}
-            title="Active LLM reasoning engine"
-          >
-            LLM: <strong>{isGemini ? "GEMINI (gemini-2.5-flash)" : "DETERMINISTIC RULES"}</strong>
-          </span>
-
-          <span
-            className="px-2 py-0.5 rounded border border-ink bg-paper text-ink shadow-2xs hidden xl:inline"
-            title="Dataset source"
-          >
-            DATA: <strong>{diag.dataset === "HHGOA_IEEE" ? "HHGOA 590K" : "DEV FIXTURE (243 TXNS)"}</strong>
-          </span>
-        </div>
-
-        {/* Right: Nav Tabs & Role Selector */}
-        <div className="flex items-center gap-2 flex-wrap justify-center">
-          <nav className="flex items-center gap-1 bg-goa-green-700 p-1 rounded-md border-2 border-ink shadow-xs">
+          {/* Center: Primary Tab Navigation */}
+          <nav className="flex items-center gap-1 bg-goa-green-700 p-1 rounded-md border-2 border-ink shadow-xs overflow-x-auto max-w-full">
             <button
               onClick={() => setActiveTab("dashboard")}
-              className={`px-2.5 py-1 rounded text-xs font-mono font-extrabold uppercase transition-all flex items-center gap-1 ${
+              className={`px-2.5 py-1 rounded text-xs font-mono font-extrabold uppercase transition-all flex items-center gap-1 shrink-0 ${
                 activeTab === "dashboard"
                   ? "bg-sun-yellow text-ink border border-ink shadow-xs"
                   : "text-goa-green-100 hover:text-paper"
@@ -100,7 +68,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             <button
               onClick={() => setActiveTab("investigation")}
-              className={`px-2.5 py-1 rounded text-xs font-mono font-extrabold uppercase transition-all flex items-center gap-1 ${
+              className={`px-2.5 py-1 rounded text-xs font-mono font-extrabold uppercase transition-all flex items-center gap-1 shrink-0 ${
                 activeTab === "investigation"
                   ? "bg-sun-yellow text-ink border border-ink shadow-xs"
                   : "text-goa-green-100 hover:text-paper"
@@ -111,7 +79,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             <button
               onClick={() => setActiveTab("graph")}
-              className={`px-2.5 py-1 rounded text-xs font-mono font-extrabold uppercase transition-all flex items-center gap-1 ${
+              className={`px-2.5 py-1 rounded text-xs font-mono font-extrabold uppercase transition-all flex items-center gap-1 shrink-0 ${
                 activeTab === "graph"
                   ? "bg-sun-yellow text-ink border border-ink shadow-xs"
                   : "text-goa-green-100 hover:text-paper"
@@ -122,7 +90,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             <button
               onClick={() => setActiveTab("ledger")}
-              className={`px-2.5 py-1 rounded text-xs font-mono font-extrabold uppercase transition-all flex items-center gap-1 ${
+              className={`px-2.5 py-1 rounded text-xs font-mono font-extrabold uppercase transition-all flex items-center gap-1 shrink-0 ${
                 activeTab === "ledger"
                   ? "bg-sun-yellow text-ink border border-ink shadow-xs"
                   : "text-goa-green-100 hover:text-paper"
@@ -133,7 +101,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             <button
               onClick={() => setActiveTab("clearance")}
-              className={`px-2.5 py-1 rounded text-xs font-mono font-extrabold uppercase transition-all flex items-center gap-1 ${
+              className={`px-2.5 py-1 rounded text-xs font-mono font-extrabold uppercase transition-all flex items-center gap-1 shrink-0 ${
                 activeTab === "clearance"
                   ? "bg-sun-yellow text-ink border border-ink shadow-xs"
                   : "text-goa-green-100 hover:text-paper"
@@ -144,7 +112,7 @@ export const Header: React.FC<HeaderProps> = ({
 
             <button
               onClick={() => setActiveTab("demo")}
-              className={`px-2.5 py-1 rounded text-xs font-mono font-extrabold uppercase transition-all flex items-center gap-1 ${
+              className={`px-2.5 py-1 rounded text-xs font-mono font-extrabold uppercase transition-all flex items-center gap-1 shrink-0 ${
                 activeTab === "demo"
                   ? "bg-hot-pink text-paper border border-ink shadow-xs animate-pulse"
                   : "bg-terracotta text-paper hover:bg-hot-pink border border-ink"
@@ -155,8 +123,8 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           </nav>
 
-          {/* RBAC Role Selector Dropdown */}
-          <div className="flex items-center gap-1 bg-sand border-2 border-ink rounded-md px-2 py-0.5 shadow-xs">
+          {/* Right: RBAC Role Selector Dropdown */}
+          <div className="flex items-center gap-1 bg-sand border-2 border-ink rounded-md px-2.5 py-1 shadow-xs shrink-0">
             <span className="text-[10px] font-mono font-black text-ink/70 uppercase">ROLE:</span>
             <select
               value={activeRole}
@@ -168,6 +136,45 @@ export const Header: React.FC<HeaderProps> = ({
               <option value="FRAUD_MANAGER">FRAUD MANAGER [L3]</option>
             </select>
           </div>
+        </div>
+
+        {/* Sub-Bar: Status Badges in a Wrapping Row with Gaps (Strict Honesty & Green/Yellow Coding) */}
+        <div className="status-pills-row justify-center md:justify-start pt-1 border-t border-goa-green-700/50">
+          <span
+            className={`pill-mono text-[11px] font-mono font-black px-2.5 py-0.5 rounded border border-ink shadow-2xs ${
+              isTigerGraph ? "bg-goa-green-500 text-paper" : "bg-sun-yellow text-ink"
+            }`}
+            title="Graph backend in use: TIGERGRAPH LIVE or IN-MEMORY SIMULATOR"
+          >
+            GRAPH: <strong>{isTigerGraph ? "TIGERGRAPH (LIVE)" : "SIMULATOR"}</strong>
+          </span>
+
+          <span
+            className={`pill-mono text-[11px] font-mono font-black px-2.5 py-0.5 rounded border border-ink shadow-2xs ${
+              isOfficialMcp ? "bg-goa-green-500 text-paper" : "bg-sun-yellow text-ink"
+            }`}
+            title="MCP Tool Dispatcher layer"
+          >
+            MCP: <strong>{isOfficialMcp ? "OFFICIAL TIGERGRAPH MCP" : (diag.mcp || "LOCAL_DISPATCHER")}</strong>
+          </span>
+
+          <span
+            className={`pill-mono text-[11px] font-mono font-black px-2.5 py-0.5 rounded border border-ink shadow-2xs ${
+              isGemini ? "bg-goa-green-500 text-paper" : "bg-sun-yellow text-ink"
+            }`}
+            title="Active LLM reasoning engine"
+          >
+            LLM: <strong>{isGemini ? "GEMINI (gemini-2.5-flash)" : "DETERMINISTIC RULES"}</strong>
+          </span>
+
+          <span
+            className={`pill-mono text-[11px] font-mono font-black px-2.5 py-0.5 rounded border border-ink shadow-2xs ${
+              isRealData ? "bg-goa-green-500 text-paper" : "bg-sun-yellow text-ink"
+            }`}
+            title="Dataset source"
+          >
+            DATA: <strong>{isRealData ? "HHGOA_IEEE (590K TXNS)" : "DEV FIXTURE (243 TXNS)"}</strong>
+          </span>
         </div>
       </div>
     </header>
