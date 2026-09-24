@@ -227,3 +227,24 @@ def get_system_diagnostics() -> Dict[str, Any]:
         "dataset": dataset_type,
         "dataset_rows": dataset_rows
     }
+
+
+@router.get("/competition/cases")
+def list_competition_cases() -> List[Dict[str, Any]]:
+    """Returns the 20 official IEEE-CIS competition benchmark cases from cases/."""
+    from pathlib import Path
+    import json
+    base_dir = Path(__file__).resolve().parent.parent.parent.parent
+    cases_dir = base_dir / "cases"
+    if not cases_dir.exists():
+        cases_dir = base_dir / "outputs" / "cases"
+
+    results = []
+    for i in range(1, 21):
+        f = cases_dir / f"HHG-{i:03d}.json"
+        if f.exists():
+            try:
+                results.append(json.loads(f.read_text(encoding="utf-8")))
+            except Exception:
+                pass
+    return results

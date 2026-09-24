@@ -87,3 +87,13 @@ export async function fetchPolicies(): Promise<any[]> {
   const res = await fetch(`${API_BASE}/policies`);
   return res.json();
 }
+
+export async function fetchCompetitionCases(): Promise<any[]> {
+  try {
+    const res = await fetch(`${API_BASE}/competition/cases`);
+    if (res.ok) return await res.json();
+  } catch (e) {
+    console.warn("Competition cases endpoint fallback:", e);
+  }
+  return [];
+}
