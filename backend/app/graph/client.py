@@ -82,12 +82,58 @@ class InMemoryTigerGraphSimulator(BaseGraphClient):
         self.cases: Dict[str, Dict[str, Any]] = {}
         self.patterns: Dict[str, Dict[str, Any]] = {}
 
+    def _seed_from_competition(self):
+        from pathlib import Path
+        import json
+        sub_file = Path("data/competition/benchmark_subgraphs.json")
+        if not sub_file.exists():
+            base_dir = Path(__file__).resolve().parent.parent.parent.parent
+            sub_file = base_dir / "data" / "competition" / "benchmark_subgraphs.json"
+        
+        if sub_file.exists():
+            try:
+                data = json.loads(sub_file.read_text(encoding="utf-8"))
+                for txn in data.get("transactions", []):
+                    tid = str(txn.get("TransactionID"))
+                    if not tid:
+                        continue
+                    self.add_vertex("Transaction", tid, {
+                        "amount": float(txn.get("TransactionAmt", 0)),
+                        "risk_score": float(txn.get("risk_score", 0)),
+                        "channel": str(txn.get("channel", "online")),
+                        "addr1": str(txn.get("addr1", "")),
+                        "addr2": str(txn.get("addr2", "")),
+                    })
+                    cid = str(txn.get("customer_id", ""))
+                    if cid:
+                        self.add_vertex("Customer", cid, {"customer_id": cid})
+                        self.add_edge("Customer", cid, "Transaction", tid, "PERFORMS")
+                    card1 = str(txn.get("card1", ""))
+                    if card1:
+                        card_id = f"CARD_{card1}"
+                        self.add_vertex("Card", card_id, {"card_id": card_id, "brand": txn.get("card4", "")})
+                        self.add_edge("Transaction", tid, "Card", card_id, "USES_CARD")
+                
+                identities = data.get("identities", {})
+                for tid, id_info in identities.items():
+                    dev_info = id_info.get("DeviceInfo", "")
+                    if dev_info:
+                        self.add_vertex("DeviceProfile", dev_info[:50], id_info)
+                        self.add_edge("Transaction", str(tid), "DeviceProfile", dev_info[:50], "USES_DEVICE")
+                logger.info(f"Loaded {len(self.vertices)} competition vertices into graph simulator.")
+            except Exception as e:
+                logger.warning(f"Error seeding competition subgraphs: {e}")
+
     def _ensure_seeded(self):
         if len(self.graph) == 0:
             logger.info("Graph simulator is empty. Auto-seeding initial benchmark dataset...")
             try:
-                from scripts.ingest.generate_seed_dataset import build_and_seed_dataset
-                build_and_seed_dataset()
+                trace_mode = os.getenv("TRACE_MODE", "competition").lower()
+                if trace_mode == "competition":
+                    self._seed_from_competition()
+                else:
+                    from scripts.ingest.generate_seed_dataset import build_and_seed_dataset
+                    build_and_seed_dataset()
             except Exception as e:
                 logger.warning(f"Auto-seed exception: {e}")
 

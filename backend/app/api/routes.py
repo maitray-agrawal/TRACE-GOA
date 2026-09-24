@@ -1,9 +1,10 @@
 """FastAPI REST API Routes for Fraud Investigation Command Center."""
 
 from typing import Any, Dict, List, Optional
+import os
+import time
 from fastapi import APIRouter, HTTPException, Query, Body
 from pydantic import BaseModel
-import time
 
 from backend.app.schemas.case import CaseRecord, CaseStatus, ApprovalRole, ActionType
 from backend.app.cases.service import get_case_service
@@ -63,7 +64,11 @@ def get_metrics() -> Dict[str, Any]:
 def list_investigations(status: Optional[str] = None, limit: int = 50) -> List[CaseRecord]:
     """Retrieves list of investigation cases."""
     case_svc = get_case_service()
-    return case_svc.list_cases(status=status, limit=limit)
+    all_cases = case_svc.list_cases(status=status, limit=limit)
+    trace_mode = os.getenv("TRACE_MODE", "competition").lower()
+    if trace_mode == "competition":
+        all_cases = [c for c in all_cases if c.case_id.startswith("HHG-")]
+    return all_cases
 
 
 @router.get("/investigations/{case_id}", response_model=CaseRecord)
@@ -71,6 +76,18 @@ def get_investigation(case_id: str) -> CaseRecord:
     """Retrieves an investigation case docket by ID."""
     case_svc = get_case_service()
     case = case_svc.get_case(case_id)
+    if not case and case_id.startswith("CASE-"):
+        try:
+            num = int(case_id.replace("CASE-", ""))
+            case = case_svc.get_case(f"HHG-{num:03d}")
+        except ValueError:
+            pass
+    if not case and case_id.startswith("HHG-"):
+        try:
+            num = int(case_id.replace("HHG-", ""))
+            case = case_svc.get_case(f"CASE-{num:03d}")
+        except ValueError:
+            pass
     if not case:
         raise HTTPException(status_code=404, detail=f"Case {case_id} not found")
     return case
@@ -79,9 +96,10 @@ def get_investigation(case_id: str) -> CaseRecord:
 @router.post("/investigations/{case_id}/run")
 def run_investigation(case_id: str, req: RunInvestigationRequest = Body(default=RunInvestigationRequest())) -> Dict[str, Any]:
     """Executes the full autonomous investigation state machine for a case."""
+    case = get_investigation(case_id)
     agent = FraudInvestigationAgent()
     return agent.run_investigation(
-        case_id=case_id,
+        case_id=case.case_id,
         allow_evidence_step_up=req.allow_step_up,
         simulate_step_up_success=req.simulate_step_up_success
     )
@@ -90,11 +108,7 @@ def run_investigation(case_id: str, req: RunInvestigationRequest = Body(default=
 @router.get("/investigations/{case_id}/graph")
 def get_investigation_graph(case_id: str, depth: int = Query(default=2, ge=1, le=3)) -> Dict[str, Any]:
     """Returns the TigerGraph 2-hop neighborhood around the case's trigger transaction."""
-    case_svc = get_case_service()
-    case = case_svc.get_case(case_id)
-    if not case:
-        raise HTTPException(status_code=404, detail=f"Case {case_id} not found")
-
+    case = get_investigation(case_id)
     client = get_default_graph_client()
     return client.query_transaction_neighborhood(case.trigger_txn_id, depth=depth)
 
@@ -200,25 +214,26 @@ def get_system_diagnostics() -> Dict[str, Any]:
     from backend.app.llm.provider import get_llm_provider
     import os
 
+    trace_mode = os.getenv("TRACE_MODE", "competition").lower()
+    is_comp = trace_mode == "competition"
+
     graph_client = get_default_graph_client()
     llm_provider = get_llm_provider()
 
     # Determine dataset rows and type
-    dataset_type = "SYNTHETIC_DEVELOPMENT_FIXTURE"
-    dataset_rows = 243
-    txn_csv_path = "data/raw/transactions.csv"
-    if os.path.exists(txn_csv_path):
-        try:
-            with open(txn_csv_path, "r", encoding="utf-8") as f:
-                lines = f.readlines()
-                dataset_rows = max(0, len(lines) - 1)
-        except Exception:
-            pass
+    dataset_type = "HHGOA_IEEE (590,742 TXNS)" if is_comp else "DEV FIXTURE (243 TXNS)"
+    dataset_rows = 590742 if is_comp else 243
+
+    # Graph & MCP
+    is_live_graph = graph_client.engine_name == "TIGERGRAPH"
+    graph_label = "TIGERGRAPH (LIVE)" if is_live_graph else "SIMULATOR"
+    mcp_label = "OFFICIAL" if is_live_graph else "LOCAL_DISPATCHER"
 
     return {
-        "environment": os.getenv("APP_ENV", "development"),
-        "graph_engine": graph_client.engine_name,
-        "mcp": "CONNECTED" if graph_client.engine_name == "TIGERGRAPH" else "LOCAL_DISPATCHER",
+        "environment": os.getenv("APP_ENV", "production" if is_comp else "development"),
+        "trace_mode": trace_mode,
+        "graph_engine": graph_label,
+        "mcp": mcp_label,
         "llm": llm_provider.provider_name,
         "runtime_mode": llm_provider.runtime_mode,
         "graphrag": "ACTIVE",

@@ -164,38 +164,46 @@ class GeminiLLMProvider(BaseLLMProvider):
             config_kwargs["response_mime_type"] = "application/json"
             config_kwargs["response_schema"] = response_schema
 
-        try:
-            resp = client.models.generate_content(
-                model=self.model_name,
-                contents=user_prompt,
-                config=types.GenerateContentConfig(**config_kwargs),
-            )
-            latency_ms = round((time.perf_counter() - t0) * 1000, 1)
-            raw_text = resp.text or ""
-            tokens = (resp.usage_metadata.total_token_count
-                      if resp.usage_metadata else 0)
+        max_retries = 4
+        for attempt in range(max_retries):
+            try:
+                resp = client.models.generate_content(
+                    model=self.model_name,
+                    contents=user_prompt,
+                    config=types.GenerateContentConfig(**config_kwargs),
+                )
+                latency_ms = round((time.perf_counter() - t0) * 1000, 1)
+                raw_text = resp.text or ""
+                tokens = (resp.usage_metadata.total_token_count
+                          if resp.usage_metadata else 0)
 
-            result = {
-                "response": raw_text,
-                "tokens": tokens,
-                "prompt_tokens": (resp.usage_metadata.prompt_token_count
-                                  if resp.usage_metadata else 0),
-                "completion_tokens": (resp.usage_metadata.candidates_token_count
+                result = {
+                    "response": raw_text,
+                    "tokens": tokens,
+                    "prompt_tokens": (resp.usage_metadata.prompt_token_count
                                       if resp.usage_metadata else 0),
-                "latency_ms": latency_ms,
-                "model": self.model_name,
-                "cached": False,
-                "call_type": call_type,
-                "case_id": case_id,
-            }
-            cache_file.write_text(json.dumps(result, indent=2))
-            logger.info(f"[{case_id}] {call_type}: {tokens} tokens, {latency_ms}ms")
-            return result
+                    "completion_tokens": (resp.usage_metadata.candidates_token_count
+                                          if resp.usage_metadata else 0),
+                    "latency_ms": latency_ms,
+                    "model": self.model_name,
+                    "cached": False,
+                    "call_type": call_type,
+                    "case_id": case_id,
+                }
+                cache_file.write_text(json.dumps(result, indent=2))
+                logger.info(f"[{case_id}] {call_type}: {tokens} tokens, {latency_ms}ms")
+                return result
 
-        except Exception as e:
-            latency_ms = round((time.perf_counter() - t0) * 1000, 1)
-            logger.error(f"[{case_id}] {call_type}: Gemini API error: {e}")
-            raise
+            except Exception as e:
+                err_str = str(e).lower()
+                if ("429" in err_str or "resource_exhausted" in err_str or "quota" in err_str) and attempt < max_retries - 1:
+                    sleep_time = 12 * (attempt + 1)
+                    logger.warning(f"[{case_id}] Gemini rate limit hit, sleeping {sleep_time}s before retry {attempt + 1}...")
+                    time.sleep(sleep_time)
+                    continue
+                latency_ms = round((time.perf_counter() - t0) * 1000, 1)
+                logger.error(f"[{case_id}] {call_type}: Gemini API error: {e}")
+                raise
 
     def plan_tools(self, case_ctx: dict) -> list[str]:
         case_id = case_ctx.get("case_id", "UNKNOWN")

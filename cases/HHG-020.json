@@ -104,7 +104,7 @@
       },
       "status": "SUCCESS",
       "latency_ms": 0.02,
-      "timestamp": 1790238299.3710926,
+      "timestamp": 1790248024.984763,
       "response_preview": "{\"nodes\": [], \"edges\": [], \"node_count\": 0, \"edge_count\": 0, \"summary\": \"Transaction 3509359 not in graph\"}",
       "error": null
     },
@@ -117,7 +117,7 @@
       },
       "status": "SUCCESS",
       "latency_ms": 0.02,
-      "timestamp": 1790238299.376047,
+      "timestamp": 1790248024.991926,
       "response_preview": "{\"device_id\": \"Trident/7.0\", \"is_suspicious\": false, \"accounts\": [], \"cards\": [], \"reused_count\": 0}",
       "error": null
     },
@@ -129,8 +129,8 @@
         "window_seconds": 3600
       },
       "status": "SUCCESS",
-      "latency_ms": 0.02,
-      "timestamp": 1790238299.380071,
+      "latency_ms": 0.03,
+      "timestamp": 1790248024.9968936,
       "response_preview": "{\"account_id\": \"C12265\", \"burst_detected\": false, \"burst_count\": 0, \"burst_volume\": 0.0}",
       "error": null
     },
@@ -155,11 +155,11 @@
         ]
       },
       "status": "SUCCESS",
-      "latency_ms": 0.14,
-      "timestamp": 1790238299.3852775,
+      "latency_ms": 0.13,
+      "timestamp": 1790248025.002428,
       "response_preview": "{\"success\": true, \"case_id\": \"BENCH-HHG-020\", \"vertex_type\": \"Case\", \"edges_created\": 2, \"status\": \"RESOLVED\"}",
       "error": null
     }
   ],
-  "latency_s": 0.024
+  "latency_s": 0.025
 }

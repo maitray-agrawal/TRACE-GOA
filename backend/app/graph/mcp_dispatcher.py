@@ -105,6 +105,15 @@ class MCPToolDispatcher:
                 status="UNAUTHORIZED", latency_ms=0.0, timestamp=timestamp, error=err
             )
             self.call_log.append(call)
+            ledger = get_decision_ledger()
+            ledger.record_event(
+                case_id=case_id,
+                actor="MCPToolDispatcher",
+                event_type="UNAUTHORIZED_TOOL_BLOCKED",
+                input_data={"tool": tool_name, "args": scrubbed_args},
+                decision="BLOCKED",
+                reason=err
+            )
             return {"success": False, "error": err, "status": "UNAUTHORIZED",
                     "tool": tool_name, "case_id": case_id, "latency_ms": 0.0}
 

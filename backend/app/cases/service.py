@@ -15,9 +15,9 @@ logger = logging.getLogger("CaseService")
 class CaseService:
     """Manages active investigations, case state transitions, and persistent storage."""
 
-    def __init__(self, db_path: str = "data/cases.db"):
-        self.db_path = db_path
-        os.makedirs(os.path.dirname(db_path) if os.path.dirname(db_path) else ".", exist_ok=True)
+    def __init__(self, db_path: Optional[str] = None):
+        self.db_path = db_path or os.getenv("TRACE_CASES_DB", "data/cases.db")
+        os.makedirs(os.path.dirname(self.db_path) if os.path.dirname(self.db_path) else ".", exist_ok=True)
         self._init_db()
 
     def _init_db(self):
@@ -144,8 +144,13 @@ class CaseService:
 # Global singleton
 _CASE_SERVICE: Optional[CaseService] = None
 
-def get_case_service() -> CaseService:
+def get_case_service(db_path: Optional[str] = None) -> CaseService:
     global _CASE_SERVICE
-    if _CASE_SERVICE is None:
-        _CASE_SERVICE = CaseService()
+    target_path = db_path or os.getenv("TRACE_CASES_DB", "data/cases.db")
+    if _CASE_SERVICE is None or _CASE_SERVICE.db_path != target_path:
+        _CASE_SERVICE = CaseService(db_path=target_path)
     return _CASE_SERVICE
+
+def reset_case_service() -> None:
+    global _CASE_SERVICE
+    _CASE_SERVICE = None

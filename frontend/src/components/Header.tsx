@@ -31,7 +31,7 @@ export const Header: React.FC<HeaderProps> = ({
   const isGemini = diag.llm && diag.llm.includes("GEMINI");
 
   const isOfficialMcp = diag.mcp === "OFFICIAL" || diag.mcp === "OFFICIAL_TIGERGRAPH_MCP";
-  const isRealData = diag.dataset === "HHGOA_IEEE";
+  const isRealData = Boolean(diag.dataset && (diag.dataset.includes("HHGOA_IEEE") || diag.dataset_rows > 1000));
 
   return (
     <header className="header-bar w-full select-none shadow-md">
@@ -173,7 +173,7 @@ export const Header: React.FC<HeaderProps> = ({
             }`}
             title="Dataset source"
           >
-            DATA: <strong>{isRealData ? "HHGOA_IEEE (590K TXNS)" : "DEV FIXTURE (243 TXNS)"}</strong>
+            DATA: <strong>{isRealData ? (diag.dataset || "HHGOA_IEEE (590,742 TXNS)") : "DEV FIXTURE (243 TXNS)"}</strong>
           </span>
         </div>
       </div>

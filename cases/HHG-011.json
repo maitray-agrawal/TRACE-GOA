@@ -103,8 +103,8 @@
         "depth": 2
       },
       "status": "SUCCESS",
-      "latency_ms": 0.03,
-      "timestamp": 1790238299.1616297,
+      "latency_ms": 0.02,
+      "timestamp": 1790248024.7725248,
       "response_preview": "{\"nodes\": [], \"edges\": [], \"node_count\": 0, \"edge_count\": 0, \"summary\": \"Transaction 3583368 not in graph\"}",
       "error": null
     },
@@ -117,7 +117,7 @@
       },
       "status": "SUCCESS",
       "latency_ms": 0.02,
-      "timestamp": 1790238299.1668758,
+      "timestamp": 1790248024.7778506,
       "response_preview": "{\"device_id\": \"SM-G610F Build/NRD90M\", \"is_suspicious\": false, \"accounts\": [], \"cards\": [], \"reused_count\": 0}",
       "error": null
     },
@@ -129,8 +129,8 @@
         "window_seconds": 3600
       },
       "status": "SUCCESS",
-      "latency_ms": 0.03,
-      "timestamp": 1790238299.1710305,
+      "latency_ms": 0.02,
+      "timestamp": 1790248024.7818036,
       "response_preview": "{\"account_id\": \"C11923\", \"burst_detected\": false, \"burst_count\": 0, \"burst_volume\": 0.0}",
       "error": null
     },
@@ -155,8 +155,8 @@
         ]
       },
       "status": "SUCCESS",
-      "latency_ms": 0.13,
-      "timestamp": 1790238299.1761236,
+      "latency_ms": 0.12,
+      "timestamp": 1790248024.7869198,
       "response_preview": "{\"success\": true, \"case_id\": \"BENCH-HHG-011\", \"vertex_type\": \"Case\", \"edges_created\": 2, \"status\": \"RESOLVED\"}",
       "error": null
     }

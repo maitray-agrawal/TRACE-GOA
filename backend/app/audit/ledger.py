@@ -20,9 +20,9 @@ GENESIS_HASH = "0000000000000000000000000000000000000000000000000000000000000000
 class DecisionLedger:
     """Manages hash-chained event logs for investigation cases."""
 
-    def __init__(self, db_path: str = "data/decision_ledger.db"):
-        self.db_path = db_path
-        os.makedirs(os.path.dirname(db_path) if os.path.dirname(db_path) else ".", exist_ok=True)
+    def __init__(self, db_path: Optional[str] = None):
+        self.db_path = db_path or os.getenv("TRACE_LEDGER_DB", "data/decision_ledger.db")
+        os.makedirs(os.path.dirname(self.db_path) if os.path.dirname(self.db_path) else ".", exist_ok=True)
         self._init_db()
 
     def _init_db(self):
@@ -193,8 +193,13 @@ class DecisionLedger:
 # Global singleton
 _LEDGER_INSTANCE: Optional[DecisionLedger] = None
 
-def get_decision_ledger() -> DecisionLedger:
+def get_decision_ledger(db_path: Optional[str] = None) -> DecisionLedger:
     global _LEDGER_INSTANCE
-    if _LEDGER_INSTANCE is None:
-        _LEDGER_INSTANCE = DecisionLedger()
+    target_path = db_path or os.getenv("TRACE_LEDGER_DB", "data/decision_ledger.db")
+    if _LEDGER_INSTANCE is None or _LEDGER_INSTANCE.db_path != target_path:
+        _LEDGER_INSTANCE = DecisionLedger(db_path=target_path)
     return _LEDGER_INSTANCE
+
+def reset_decision_ledger() -> None:
+    global _LEDGER_INSTANCE
+    _LEDGER_INSTANCE = None

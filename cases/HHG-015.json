@@ -104,7 +104,7 @@
       },
       "status": "SUCCESS",
       "latency_ms": 0.02,
-      "timestamp": 1790238299.254812,
+      "timestamp": 1790248024.8684058,
       "response_preview": "{\"nodes\": [], \"edges\": [], \"node_count\": 0, \"edge_count\": 0, \"summary\": \"Transaction 3464869 not in graph\"}",
       "error": null
     },
@@ -117,7 +117,7 @@
       },
       "status": "SUCCESS",
       "latency_ms": 0.02,
-      "timestamp": 1790238299.2603807,
+      "timestamp": 1790248024.8730426,
       "response_preview": "{\"device_id\": \"Trident/7.0\", \"is_suspicious\": false, \"accounts\": [], \"cards\": [], \"reused_count\": 0}",
       "error": null
     },
@@ -130,7 +130,7 @@
       },
       "status": "SUCCESS",
       "latency_ms": 0.02,
-      "timestamp": 1790238299.26429,
+      "timestamp": 1790248024.8772523,
       "response_preview": "{\"account_id\": \"C03042\", \"burst_detected\": false, \"burst_count\": 0, \"burst_volume\": 0.0}",
       "error": null
     },
@@ -156,7 +156,7 @@
       },
       "status": "SUCCESS",
       "latency_ms": 0.13,
-      "timestamp": 1790238299.2693825,
+      "timestamp": 1790248024.8825426,
       "response_preview": "{\"success\": true, \"case_id\": \"BENCH-HHG-015\", \"vertex_type\": \"Case\", \"edges_created\": 2, \"status\": \"RESOLVED\"}",
       "error": null
     }

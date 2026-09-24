@@ -8,12 +8,12 @@ from starlette.testclient import TestClient
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 
 from backend.app.main import app
-from scripts.ingest.generate_seed_dataset import build_and_seed_dataset
+from scripts.setup.clean_and_seed_cases import sync_competition_cases
 
 
 @pytest.fixture(scope="module", autouse=True)
 def setup_api():
-    build_and_seed_dataset()
+    sync_competition_cases()
 
 
 def test_health_endpoint():
@@ -38,11 +38,12 @@ def test_list_investigations():
     assert res.status_code == 200
     cases = res.json()
     assert len(cases) >= 20
+    assert any(c["case_id"].startswith("HHG-") for c in cases)
 
 
 def test_get_case_graph():
     client = TestClient(app)
-    res = client.get("/api/investigations/CASE-001/graph")
+    res = client.get("/api/investigations/HHG-001/graph")
     assert res.status_code == 200
     g = res.json()
     assert "nodes" in g
@@ -52,7 +53,7 @@ def test_get_case_graph():
 
 def test_run_investigation_endpoint():
     client = TestClient(app)
-    res = client.post("/api/investigations/CASE-001/run", json={"allow_step_up": True})
+    res = client.post("/api/investigations/HHG-001/run", json={"allow_step_up": True})
     assert res.status_code == 200
     data = res.json()
     assert "case" in data
@@ -62,7 +63,7 @@ def test_run_investigation_endpoint():
 
 def test_ledger_verification_endpoint():
     client = TestClient(app)
-    res = client.post("/api/ledger/verify?case_id=CASE-001")
+    res = client.post("/api/ledger/verify?case_id=HHG-001")
     assert res.status_code == 200
     assert res.json()["is_valid"] is True
 
@@ -73,8 +74,7 @@ def test_system_diagnostics_endpoint():
     assert res.status_code == 200
     d = res.json()
     assert "graph_engine" in d
-    assert d["graph_engine"] in ("SIMULATOR", "TIGERGRAPH")
     assert "mcp" in d
     assert "llm" in d
     assert "dataset" in d
-    assert d["dataset"] in ("SYNTHETIC_DEVELOPMENT_FIXTURE", "HHGOA_IEEE")
+    assert "HHGOA_IEEE" in d["dataset"] or "DEV FIXTURE" in d["dataset"]

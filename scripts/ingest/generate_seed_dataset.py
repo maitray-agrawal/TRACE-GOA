@@ -263,19 +263,21 @@ def build_and_seed_dataset(export_dir: str = "data/processed") -> Dict[str, Any]
                     client.add_vertex("Transaction", out_id, out_data)
                     client.add_edge("Account", acct_id, "Transaction", out_id, "PERFORMS_TRANSACTION", {"timestamp": out_ts})
 
-        # Also register in CaseService DB
-        from backend.app.cases.service import get_case_service
-        from backend.app.schemas.case import CaseStatus
-        case_svc = get_case_service()
-        c_record = case_svc.create_case(
-            case_id=c_id,
-            trigger_txn_id=txn_id,
-            subject_customer_id=cust_id,
-            initial_risk=r_score,
-            initial_confidence=0.50 if r_score in (0.64, 0.73) else round(min(0.96, r_score + 0.05), 2)
-        )
-        c_record.status = CaseStatus.INVESTIGATING
-        case_svc.update_case(c_record)
+        # Only register synthetic cases in CaseService if in dev mode
+        trace_mode = os.getenv("TRACE_MODE", "competition").lower()
+        if trace_mode != "competition":
+            from backend.app.cases.service import get_case_service
+            from backend.app.schemas.case import CaseStatus
+            case_svc = get_case_service()
+            c_record = case_svc.create_case(
+                case_id=c_id,
+                trigger_txn_id=txn_id,
+                subject_customer_id=cust_id,
+                initial_risk=r_score,
+                initial_confidence=0.50 if r_score in (0.64, 0.73) else round(min(0.96, r_score + 0.05), 2)
+            )
+            c_record.status = CaseStatus.INVESTIGATING
+            case_svc.update_case(c_record)
 
     # 4. Seed Historical Closed Cases (Months 1-4) for Case Memory
     logger.info("Seeding 10 Historical Closed Cases for Case Memory...")
