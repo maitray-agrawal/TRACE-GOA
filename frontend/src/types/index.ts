@@ -102,6 +102,7 @@ export interface TimelineStep {
   details: string;
   timestamp: number;
   time_str: string;
+  latency_ms?: number;
 }
 
 export interface LedgerEntry {

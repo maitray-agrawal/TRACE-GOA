@@ -1,31 +1,38 @@
 import React, { useState, useMemo } from "react";
 import type { SubgraphData, GraphNode } from "../types";
-import { ZoomIn, ZoomOut, Maximize2, Layers } from "lucide-react";
+import { ZoomIn, ZoomOut, Maximize2, Layers, Waves } from "lucide-react";
 
 interface GraphViewerProps {
   data: SubgraphData | null;
   onNodeClick?: (node: GraphNode) => void;
   height?: string | number;
+  className?: string;
 }
 
-const NODE_COLORS: Record<string, string> = {
-  Transaction: "var(--accent-rose)", // #f43f5e
-  Customer: "var(--accent-cyan)",     // #00f2fe
-  Account: "#3b82f6",                 // Blue
-  Device: "var(--accent-amber)",      // #f59e0b
-  IP: "#a855f7",                      // Purple
-  Card: "var(--accent-emerald)",      // #10b981
-  Merchant: "#ec4899",                // Pink
-  Case: "#e11d48",                    // Crimson
-  FraudPattern: "#ff0055"             // Neon Red
+const GOA_NODE_COLORS: Record<string, { bg: string; text: string }> = {
+  Transaction: { bg: "var(--sun-yellow)", text: "var(--ink)" },
+  Customer: { bg: "var(--goa-green-200)", text: "var(--ink)" },
+  Account: { bg: "var(--sand)", text: "var(--ink)" },
+  Device: { bg: "var(--sand-dark)", text: "var(--ink)" },
+  IP: { bg: "var(--goa-green-300)", text: "var(--ink)" },
+  Card: { bg: "var(--paper)", text: "var(--ink)" },
+  Merchant: { bg: "#FFD180", text: "var(--ink)" },
+  Case: { bg: "var(--hot-pink)", text: "var(--paper)" },
+  FraudPattern: { bg: "var(--hot-pink)", text: "var(--paper)" },
 };
 
-export const GraphViewer: React.FC<GraphViewerProps> = ({ data, onNodeClick, height = "100%" }) => {
+export const GraphViewer: React.FC<GraphViewerProps> = ({
+  data,
+  onNodeClick,
+  height = "100%",
+  className = "",
+}) => {
   const [zoom, setZoom] = useState(1.0);
   const [pan, setPan] = useState({ x: 0, y: 0 });
   const [isDragging, setIsDragging] = useState(false);
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [selectedNode, setSelectedNode] = useState<GraphNode | null>(null);
+  const [isWaveActive, setIsWaveActive] = useState(false);
 
   // Compute node coordinates around central target transaction
   const positionedNodes = useMemo(() => {
@@ -33,14 +40,14 @@ export const GraphViewer: React.FC<GraphViewerProps> = ({ data, onNodeClick, hei
 
     const nodes = [...data.nodes];
     const centerNode = nodes.find((n) => n.id === data.target_transaction) || nodes[0];
-    const centerX = 350;
+    const centerX = 360;
     const centerY = 240;
 
     const positioned: GraphNode[] = [];
     positioned.push({ ...centerNode, x: centerX, y: centerY });
 
     const otherNodes = nodes.filter((n) => n.id !== centerNode.id);
-    const radius = Math.min(180, 50 + otherNodes.length * 15);
+    const radius = Math.min(190, 60 + otherNodes.length * 16);
     const angleStep = (2 * Math.PI) / Math.max(otherNodes.length, 1);
 
     otherNodes.forEach((node, i) => {
@@ -48,7 +55,7 @@ export const GraphViewer: React.FC<GraphViewerProps> = ({ data, onNodeClick, hei
       positioned.push({
         ...node,
         x: centerX + Math.cos(angle) * radius,
-        y: centerY + Math.sin(angle) * radius
+        y: centerY + Math.sin(angle) * radius,
       });
     });
 
@@ -76,60 +83,119 @@ export const GraphViewer: React.FC<GraphViewerProps> = ({ data, onNodeClick, hei
 
   if (!data || positionedNodes.length === 0) {
     return (
-      <div className="graph-container" style={{ display: "flex", alignItems: "center", justifyContent: "center", height }}>
-        <div style={{ textAlign: "center", color: "var(--text-muted)" }}>
-          <Layers size={36} style={{ margin: "0 auto 10px", opacity: 0.5 }} />
-          <p>No active graph data loaded. Select a case to inspect TigerGraph neighborhood.</p>
+      <div
+        className={`card-goa card-goa-sand flex items-center justify-center p-8 text-center select-none ${className}`}
+        style={{ height }}
+      >
+        <div>
+          <Layers size={40} className="mx-auto mb-2 text-ink/40" />
+          <h4 className="font-mono text-sm font-bold text-ink uppercase tracking-wider">
+            NO ACTIVE GRAPH SUBGRAPH LOADED
+          </h4>
+          <p className="font-mono text-xs text-ink/70 mt-1 max-w-sm">
+            Select a case from the Beach-Shack Village to traverse TigerGraph 2-hop neighborhood.
+          </p>
         </div>
       </div>
     );
   }
 
+  const centerNode = positionedNodes[0];
+
   return (
     <div
-      className="graph-container"
+      className={`card-goa bg-goa-green-700 relative overflow-hidden border-3 border-ink rounded-xl shadow-md select-none ${className}`}
       style={{ height, cursor: isDragging ? "grabbing" : "grab" }}
       onMouseDown={handleMouseDown}
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
     >
-      {/* Zoom / Pan toolbar */}
-      <div style={{ position: "absolute", top: 12, right: 12, display: "flex", gap: 6, zIndex: 10 }}>
-        <button
-          className="btn-secondary"
-          style={{ padding: "6px 8px" }}
-          onClick={() => setZoom((z) => Math.min(z + 0.2, 2.5))}
-          title="Zoom In"
-        >
-          <ZoomIn size={14} />
-        </button>
-        <button
-          className="btn-secondary"
-          style={{ padding: "6px 8px" }}
-          onClick={() => setZoom((z) => Math.max(z - 0.2, 0.4))}
-          title="Zoom Out"
-        >
-          <ZoomOut size={14} />
-        </button>
-        <button
-          className="btn-secondary"
-          style={{ padding: "6px 8px" }}
-          onClick={() => { setZoom(1.0); setPan({ x: 0, y: 0 }); }}
-          title="Reset View"
-        >
-          <Maximize2 size={14} />
-        </button>
+      {/* Top Bar Controls */}
+      <div className="absolute top-3 inset-x-3 flex items-center justify-between z-10 pointer-events-none">
+        <div className="pointer-events-auto flex items-center gap-1.5">
+          <span className="font-mono text-xs font-black px-2.5 py-1 rounded bg-sun-yellow text-ink border-2 border-ink shadow-xs">
+            TIGERGRAPH // 2-HOP TOPOLOGY
+          </span>
+          <button
+            type="button"
+            onClick={() => setIsWaveActive(!isWaveActive)}
+            className={`btn-goa-primary text-[11px] py-1 px-2.5 flex items-center gap-1 ${
+              isWaveActive ? "bg-hot-pink text-paper animate-pulse" : "bg-paper text-ink"
+            }`}
+            title="Toggle outward hop-by-hop traversal wave animation"
+          >
+            <Waves size={13} /> {isWaveActive ? "HOP WAVE ON" : "HOP WAVE"}
+          </button>
+        </div>
+
+        {/* Zoom Controls */}
+        <div className="pointer-events-auto flex items-center gap-1 bg-sand p-1 rounded border-2 border-ink shadow-xs">
+          <button
+            type="button"
+            className="p-1 rounded hover:bg-sand-light text-ink transition-colors"
+            onClick={() => setZoom((z) => Math.min(z + 0.2, 2.5))}
+            title="Zoom In"
+          >
+            <ZoomIn size={14} />
+          </button>
+          <button
+            type="button"
+            className="p-1 rounded hover:bg-sand-light text-ink transition-colors"
+            onClick={() => setZoom((z) => Math.max(z - 0.2, 0.4))}
+            title="Zoom Out"
+          >
+            <ZoomOut size={14} />
+          </button>
+          <button
+            type="button"
+            className="p-1 rounded hover:bg-sand-light text-ink transition-colors"
+            onClick={() => {
+              setZoom(1.0);
+              setPan({ x: 0, y: 0 });
+            }}
+            title="Reset View"
+          >
+            <Maximize2 size={14} />
+          </button>
+        </div>
       </div>
 
       {/* SVG Canvas */}
-      <svg width="100%" height="100%">
+      <svg width="100%" height="100%" className="w-full h-full">
         <g transform={`translate(${pan.x}, ${pan.y}) scale(${zoom})`}>
-          {/* Edges */}
+          {/* Animated concentric Hop-Waves from Trigger Transaction */}
+          {isWaveActive && centerNode && (
+            <g className="pointer-events-none">
+              <circle
+                cx={centerNode.x}
+                cy={centerNode.y}
+                r="70"
+                fill="none"
+                stroke="var(--sun-yellow)"
+                strokeWidth="2.5"
+                opacity="0.6"
+                strokeDasharray="4 3"
+              />
+              <circle
+                cx={centerNode.x}
+                cy={centerNode.y}
+                r="150"
+                fill="none"
+                stroke="var(--hot-pink)"
+                strokeWidth="2.5"
+                opacity="0.4"
+                strokeDasharray="6 4"
+              />
+            </g>
+          )}
+
+          {/* Edges with Chunky Ink Styling */}
           {data.edges.map((e, idx) => {
             const src = nodeMap.get(e.source);
             const tgt = nodeMap.get(e.target);
-            if (!src || !tgt || src.x == null || src.y == null || tgt.x == null || tgt.y == null) return null;
+            if (!src || !tgt || src.x == null || src.y == null || tgt.x == null || tgt.y == null)
+              return null;
 
             const midX = (src.x + tgt.x) / 2;
             const midY = (src.y + tgt.y) / 2;
@@ -141,18 +207,30 @@ export const GraphViewer: React.FC<GraphViewerProps> = ({ data, onNodeClick, hei
                   y1={src.y}
                   x2={tgt.x}
                   y2={tgt.y}
-                  stroke="rgba(107, 114, 128, 0.4)"
-                  strokeWidth={1.5}
+                  stroke="var(--ink)"
+                  strokeWidth={2.5}
+                />
+                <rect
+                  x={midX - 28}
+                  y={midY - 8}
+                  width="56"
+                  height="14"
+                  rx="3"
+                  fill="var(--sand)"
+                  stroke="var(--ink)"
+                  strokeWidth="1.2"
                 />
                 <text
                   x={midX}
-                  y={midY - 4}
-                  fill="var(--text-muted)"
+                  y={midY + 2.5}
+                  fill="var(--ink)"
                   fontSize={8}
+                  fontWeight={800}
+                  fontFamily="var(--font-mono)"
                   textAnchor="middle"
                   style={{ pointerEvents: "none", userSelect: "none" }}
                 >
-                  {e.type}
+                  {e.type.slice(0, 10)}
                 </text>
               </g>
             );
@@ -160,7 +238,7 @@ export const GraphViewer: React.FC<GraphViewerProps> = ({ data, onNodeClick, hei
 
           {/* Nodes */}
           {positionedNodes.map((node) => {
-            const color = NODE_COLORS[node.type] || "#9ca3af";
+            const styling = GOA_NODE_COLORS[node.type] || { bg: "var(--paper)", text: "var(--ink)" };
             const isTarget = node.id === data.target_transaction;
             const isSelected = selectedNode?.id === node.id;
 
@@ -174,43 +252,64 @@ export const GraphViewer: React.FC<GraphViewerProps> = ({ data, onNodeClick, hei
                   onNodeClick?.(node);
                 }}
                 style={{ cursor: "pointer" }}
+                className="group"
               >
-                {/* Glow ring for selected or target transaction */}
+                {/* Glow ring for target transaction or selected node */}
                 {(isTarget || isSelected) && (
                   <circle
-                    r={26}
-                    fill="none"
-                    stroke={color}
-                    strokeWidth={2}
-                    opacity={0.8}
-                    strokeDasharray={isTarget ? "4 3" : undefined}
+                    r={28}
+                    fill={isTarget ? "var(--sun-yellow)" : "var(--hot-pink)"}
+                    opacity="0.3"
+                    className="animate-pulse"
                   />
                 )}
+
+                {/* Node Solid Circle */}
                 <circle
-                  r={18}
-                  fill="#111827"
-                  stroke={color}
-                  strokeWidth={2.5}
+                  r={20}
+                  fill={styling.bg}
+                  stroke="var(--ink)"
+                  strokeWidth="2.5"
+                  className="transition-transform group-hover:scale-110 drop-shadow-xs"
                 />
+
+                {/* Node Type Monogram */}
                 <text
                   textAnchor="middle"
-                  dy={4}
-                  fill="#ffffff"
-                  fontSize={8}
-                  fontWeight={700}
+                  dy={4.5}
+                  fill={styling.text}
+                  fontSize={9}
+                  fontWeight={900}
+                  fontFamily="var(--font-mono)"
                   style={{ pointerEvents: "none", userSelect: "none" }}
                 >
                   {node.type.slice(0, 3).toUpperCase()}
                 </text>
-                <text
-                  textAnchor="middle"
-                  dy={30}
-                  fill="var(--text-secondary)"
-                  fontSize={9}
-                  style={{ pointerEvents: "none", userSelect: "none" }}
-                >
-                  {node.id}
-                </text>
+
+                {/* Node ID Label Pill Below */}
+                <g transform="translate(0, 30)">
+                  <rect
+                    x="-40"
+                    y="-8"
+                    width="80"
+                    height="16"
+                    rx="3"
+                    fill="var(--paper)"
+                    stroke="var(--ink)"
+                    strokeWidth="1.5"
+                  />
+                  <text
+                    textAnchor="middle"
+                    dy={3.5}
+                    fill="var(--ink)"
+                    fontSize={8.5}
+                    fontWeight={700}
+                    fontFamily="var(--font-mono)"
+                    style={{ pointerEvents: "none", userSelect: "none" }}
+                  >
+                    {node.id.length > 12 ? node.id.slice(0, 10) + "…" : node.id}
+                  </text>
+                </g>
               </g>
             );
           })}
@@ -219,36 +318,24 @@ export const GraphViewer: React.FC<GraphViewerProps> = ({ data, onNodeClick, hei
 
       {/* Selected Node Details Floating Overlay */}
       {selectedNode && (
-        <div
-          style={{
-            position: "absolute",
-            bottom: 12,
-            left: 12,
-            background: "rgba(10, 14, 23, 0.95)",
-            border: "1px solid var(--accent-cyan)",
-            borderRadius: 0,
-            padding: "10px 14px",
-            fontSize: "0.78rem",
-            maxWidth: 340,
-            zIndex: 10
-          }}
-        >
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 6 }}>
-            <span className="font-mono" style={{ fontWeight: 700, color: NODE_COLORS[selectedNode.type] || "#fff", letterSpacing: "0.04em" }}>
-              [{selectedNode.type.toUpperCase()}] {selectedNode.id}
+        <div className="absolute bottom-3 left-3 bg-sand p-3.5 rounded-lg border-2 border-ink shadow-md max-w-sm z-20 select-text">
+          <div className="flex items-center justify-between gap-2 border-b-2 border-ink pb-1.5 mb-2">
+            <span className="font-mono text-xs font-black text-ink uppercase tracking-wide">
+              [{selectedNode.type}] {selectedNode.id}
             </span>
             <button
               onClick={() => setSelectedNode(null)}
-              style={{ background: "none", border: "none", color: "var(--text-muted)", cursor: "pointer", fontSize: "0.8rem" }}
+              className="text-ink hover:text-hot-pink font-bold text-sm leading-none px-1"
             >
               ✕
             </button>
           </div>
-          <div style={{ maxHeight: 120, overflowY: "auto" }}>
+
+          <div className="max-h-32 overflow-y-auto text-xs font-mono space-y-1 pr-1">
             {Object.entries(selectedNode.attributes).map(([k, v]) => (
-              <div key={k} style={{ display: "flex", justifyContent: "space-between", gap: 10, marginBottom: 2 }}>
-                <span style={{ color: "var(--text-muted)" }}>{k}:</span>
-                <span style={{ color: "var(--text-primary)", fontWeight: 500, wordBreak: "break-all" }}>
+              <div key={k} className="flex justify-between gap-2">
+                <span className="text-ink/70 font-semibold">{k}:</span>
+                <span className="text-ink font-bold break-all">
                   {typeof v === "boolean" ? (v ? "true" : "false") : String(v)}
                 </span>
               </div>
