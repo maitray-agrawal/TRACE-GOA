@@ -1,0 +1,11 @@
+{
+  "response": "[\"query_neighborhood\", \"detect_device_reuse\", \"get_temporal_velocity\", \"find_similar_cases\"]",
+  "tokens": 574,
+  "prompt_tokens": 271,
+  "completion_tokens": 26,
+  "latency_ms": 2477.2,
+  "model": "gemini-2.5-flash",
+  "cached": false,
+  "call_type": "plan_tools",
+  "case_id": "HHG-006"
+}

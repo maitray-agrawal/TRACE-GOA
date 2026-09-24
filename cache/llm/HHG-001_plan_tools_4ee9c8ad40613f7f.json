@@ -1,0 +1,11 @@
+{
+  "response": "[\"query_neighborhood\", \"get_temporal_velocity\", \"find_similar_cases\"]",
+  "tokens": 543,
+  "prompt_tokens": 275,
+  "completion_tokens": 19,
+  "latency_ms": 2967.7,
+  "model": "gemini-2.5-flash",
+  "cached": false,
+  "call_type": "plan_tools",
+  "case_id": "HHG-001"
+}

@@ -1,0 +1,11 @@
+{
+  "response": "The investigation determined this transaction is legitimate. The customer explicitly confirmed the purchase, and the fraud probability is very low at 0.05. Based on this confirmation, we recommend allowing the transaction and closing the case.",
+  "tokens": 535,
+  "prompt_tokens": 253,
+  "completion_tokens": 44,
+  "latency_ms": 2533.3,
+  "model": "gemini-2.5-flash",
+  "cached": false,
+  "call_type": "write_explanation",
+  "case_id": "HHG-001"
+}

@@ -1,0 +1,11 @@
+{
+  "response": "{\"enough\": false, \"verdict\": \"uncertain\", \"confidence\": 0.7, \"explanation\": \"Fraud probability is 0.7, which is not high enough for a fraud verdict given only 1 evidence source, and the customer has not confirmed or denied. More evidence is needed.\"}",
+  "tokens": 1422,
+  "prompt_tokens": 368,
+  "completion_tokens": 63,
+  "latency_ms": 5986.6,
+  "model": "gemini-2.5-flash",
+  "cached": false,
+  "call_type": "decide_enough_to_act",
+  "case_id": "HHG-004"
+}

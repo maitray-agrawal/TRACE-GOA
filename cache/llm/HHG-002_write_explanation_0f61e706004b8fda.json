@@ -1,0 +1,11 @@
+{
+  "response": "The $292.36 transaction is deemed uncertain due to a high fraud probability of 79% and being flagged by our risk assessment. While no specific fraud pattern was identified, the elevated risk score necessitates further action. We recommend monitoring the card for unusual activity and contacting the customer directly to verify the transaction's legitimacy.",
+  "tokens": 897,
+  "prompt_tokens": 219,
+  "completion_tokens": 68,
+  "latency_ms": 4557.9,
+  "model": "gemini-2.5-flash",
+  "cached": false,
+  "call_type": "write_explanation",
+  "case_id": "HHG-002"
+}

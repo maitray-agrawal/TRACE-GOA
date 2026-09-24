@@ -1,0 +1,11 @@
+{
+  "response": "{\"enough\": false, \"verdict\": \"uncertain\", \"confidence\": 0.79, \"explanation\": \"Fraud probability is high (0.79) but below the 0.85 threshold, and there is only one evidence source, which is insufficient for a decisive verdict.\"}",
+  "tokens": 1189,
+  "prompt_tokens": 352,
+  "completion_tokens": 62,
+  "latency_ms": 5075.8,
+  "model": "gemini-2.5-flash",
+  "cached": false,
+  "call_type": "decide_enough_to_act",
+  "case_id": "HHG-002"
+}

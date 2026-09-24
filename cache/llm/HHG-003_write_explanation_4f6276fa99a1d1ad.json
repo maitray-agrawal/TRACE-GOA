@@ -1,0 +1,11 @@
+{
+  "response": "The investigation into the customer's reported transaction remains uncertain regarding fraud. While the transaction was flagged with a high fraud probability, no specific fraud patterns like new device usage or proxy connections were identified to confirm it. Therefore, we recommend monitoring the card and contacting the customer directly to verify the transaction details.",
+  "tokens": 869,
+  "prompt_tokens": 216,
+  "completion_tokens": 60,
+  "latency_ms": 6397.7,
+  "model": "gemini-2.5-flash",
+  "cached": false,
+  "call_type": "write_explanation",
+  "case_id": "HHG-003"
+}

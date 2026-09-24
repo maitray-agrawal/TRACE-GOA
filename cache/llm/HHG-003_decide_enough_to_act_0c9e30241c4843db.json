@@ -1,0 +1,11 @@
+{
+  "response": "{\n  \"enough\": false,\n  \"verdict\": \"uncertain\",\n  \"confidence\": 0.7,\n  \"explanation\": \"The fraud probability is 0.7, which is below the 0.85 threshold for a fraud verdict, and there is only one evidence source. The customer has not denied the transaction, preventing a decisive fraud verdict.\"\n}",
+  "tokens": 2318,
+  "prompt_tokens": 350,
+  "completion_tokens": 81,
+  "latency_ms": 10787.5,
+  "model": "gemini-2.5-flash",
+  "cached": false,
+  "call_type": "decide_enough_to_act",
+  "case_id": "HHG-003"
+}

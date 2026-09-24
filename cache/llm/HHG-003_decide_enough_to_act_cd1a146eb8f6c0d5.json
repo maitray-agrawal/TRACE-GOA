@@ -1,0 +1,11 @@
+{
+  "response": "{\"enough\": false, \"verdict\": \"uncertain\", \"confidence\": 0.7, \"explanation\": \"Fraud probability (0.7) is below the 0.85 threshold for fraud and there is only 1 evidence source. It is also above the 0.15 threshold for legitimate, and the customer has neither confirmed nor denied, requiring more evidence.\"}",
+  "tokens": 1788,
+  "prompt_tokens": 368,
+  "completion_tokens": 79,
+  "latency_ms": 8984.4,
+  "model": "gemini-2.5-flash",
+  "cached": false,
+  "call_type": "decide_enough_to_act",
+  "case_id": "HHG-003"
+}

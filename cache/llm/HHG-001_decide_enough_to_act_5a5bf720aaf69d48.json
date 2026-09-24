@@ -1,0 +1,11 @@
+{
+  "response": "{\"enough\": true, \"verdict\": \"legitimate\", \"confidence\": 0.95, \"explanation\": \"The customer explicitly confirmed the transaction, and the fraud probability is very low (0.0915).\"}",
+  "tokens": 1037,
+  "prompt_tokens": 371,
+  "completion_tokens": 49,
+  "latency_ms": 4545.2,
+  "model": "gemini-2.5-flash",
+  "cached": false,
+  "call_type": "decide_enough_to_act",
+  "case_id": "HHG-001"
+}

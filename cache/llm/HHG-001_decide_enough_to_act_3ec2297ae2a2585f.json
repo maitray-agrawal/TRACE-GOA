@@ -1,0 +1,11 @@
+{
+  "response": "{\"enough\": false, \"verdict\": \"uncertain\", \"confidence\": 0.61, \"explanation\": \"Fraud probability (0.61) is not high enough (>= 0.85) for a fraud verdict nor low enough (<= 0.15) for a legitimate verdict, and no other decisive conditions are met.\"}",
+  "tokens": 2382,
+  "prompt_tokens": 353,
+  "completion_tokens": 74,
+  "latency_ms": 10606.6,
+  "model": "gemini-2.5-flash",
+  "cached": false,
+  "call_type": "decide_enough_to_act",
+  "case_id": "HHG-001"
+}

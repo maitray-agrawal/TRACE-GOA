@@ -1,0 +1,11 @@
+{
+  "response": "{\"enough\": false, \"verdict\": \"uncertain\", \"confidence\": 0.79, \"explanation\": \"Fraud probability is 0.79, which is below the 0.85 threshold, and there is only one evidence source, not meeting the requirement of two for a fraud verdict.\"}",
+  "tokens": 1166,
+  "prompt_tokens": 370,
+  "completion_tokens": 65,
+  "latency_ms": 5401.5,
+  "model": "gemini-2.5-flash",
+  "cached": false,
+  "call_type": "decide_enough_to_act",
+  "case_id": "HHG-002"
+}

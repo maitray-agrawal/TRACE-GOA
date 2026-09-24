@@ -1,0 +1,11 @@
+{
+  "response": "{\"enough\": false, \"verdict\": \"uncertain\", \"confidence\": 0.7, \"explanation\": \"The fraud probability is 0.7, which is not decisive, and there is only one evidence source, preventing a definitive fraud verdict. The customer has not confirmed or denied the transaction.\"}",
+  "tokens": 1076,
+  "prompt_tokens": 350,
+  "completion_tokens": 63,
+  "latency_ms": 4682.1,
+  "model": "gemini-2.5-flash",
+  "cached": false,
+  "call_type": "decide_enough_to_act",
+  "case_id": "HHG-004"
+}
