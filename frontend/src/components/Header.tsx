@@ -1,6 +1,5 @@
 import React from "react";
 import { Terminal, Network, ShieldCheck, Activity, SlidersHorizontal, Play } from "lucide-react";
-
 import { fetchDiagnostics } from "../services/api";
 
 interface HeaderProps {
@@ -10,117 +9,166 @@ interface HeaderProps {
   setActiveRole: (role: string) => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab, activeRole, setActiveRole }) => {
+export const Header: React.FC<HeaderProps> = ({
+  activeTab,
+  setActiveTab,
+  activeRole,
+  setActiveRole,
+}) => {
   const [diag, setDiag] = React.useState<any>({
     graph_engine: "SIMULATOR",
     mcp: "LOCAL_DISPATCHER",
-    llm: "DETERMINISTIC_RULES",
+    llm: "GEMINI (gemini-2.5-flash)",
     graphrag: "ACTIVE",
-    dataset: "SYNTHETIC_DEVELOPMENT_FIXTURE"
+    dataset: "HHGOA_IEEE",
   });
 
   React.useEffect(() => {
     fetchDiagnostics().then(setDiag).catch(console.error);
   }, []);
 
+  const isTigerGraph = diag.graph_engine === "TIGERGRAPH";
+  const isGemini = diag.llm && diag.llm.includes("GEMINI");
+
   return (
-    <header className="app-header">
-      <div className="brand-section">
-        <div>
-          <div className="brand-logo">
-            TRACE<span className="cyan">//</span>GOA
+    <header className="w-full bg-goa-green-900 border-b-4 border-ink px-4 py-3 select-none sticky top-0 z-50 shadow-md">
+      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3">
+        {/* Left: Brand Logo & Tagline */}
+        <div className="flex items-center gap-3">
+          <div
+            onClick={() => setActiveTab("dashboard")}
+            className="cursor-pointer group flex items-center gap-2"
+          >
+            <span className="font-wordmark text-2xl sm:text-3xl text-sun-yellow tracking-tighter drop-shadow-sm group-hover:scale-105 transition-transform">
+              TRACE<span className="text-hot-pink">//</span>GOA
+            </span>
           </div>
-          <div className="brand-tagline">
-            Trace the signal. Find the network. Make the move.
-          </div>
+
+          <span className="hidden lg:inline text-xs font-mono font-bold text-goa-green-200 border-l-2 border-ink pl-3 uppercase">
+            Hacker House Goa &apos;26
+          </span>
         </div>
 
-        <div className="tech-tags">
-          <span className="tech-tag" title="Graph Engine">
-            GRAPH: <strong style={{ color: diag.graph_engine === "TIGERGRAPH" ? "var(--accent-cyan)" : "#f59e0b" }}>{diag.graph_engine}</strong> ●
+        {/* Center: Live Backend Diagnostics Badges (Strict Honesty) */}
+        <div className="flex flex-wrap items-center justify-center gap-1.5 text-[11px] font-mono font-bold">
+          <span
+            className={`px-2 py-0.5 rounded border border-ink shadow-2xs ${
+              isTigerGraph ? "bg-goa-green-500 text-paper" : "bg-sun-yellow text-ink"
+            }`}
+            title="Graph backend in use: TIGERGRAPH LIVE or IN-MEMORY SIMULATOR"
+          >
+            GRAPH: <strong>{diag.graph_engine}</strong>
           </span>
-          <span className="tech-tag" title="MCP Tool Layer">
-            MCP: <strong style={{ color: "var(--accent-emerald)" }}>{diag.mcp}</strong> ●
+
+          <span
+            className="px-2 py-0.5 rounded border border-ink bg-paper text-ink shadow-2xs"
+            title="MCP Tool Dispatcher layer"
+          >
+            MCP: <strong>{diag.mcp}</strong>
           </span>
-          <span className="tech-tag" title="LLM Runtime Engine">
-            LLM: <strong style={{ color: diag.llm && diag.llm.includes("GEMINI") ? "var(--accent-cyan)" : "#a855f7" }}>{diag.llm}</strong> ●
+
+          <span
+            className={`px-2 py-0.5 rounded border border-ink shadow-2xs ${
+              isGemini ? "bg-hot-pink text-paper" : "bg-paper text-ink"
+            }`}
+            title="Active LLM Provider"
+          >
+            LLM: <strong>{diag.llm}</strong>
           </span>
-          <span className="tech-tag" title="GraphRAG Synthesis Layer">
-            GRAPHRAG: <strong style={{ color: "var(--accent-emerald)" }}>{diag.graphrag}</strong> ●
-          </span>
-          <span className="tech-tag" title="Dataset Ingestion Baseline">
-            DATA: <strong style={{ color: diag.dataset === "HHGOA_IEEE" ? "var(--accent-cyan)" : "#eab308" }}>{diag.dataset === "HHGOA_IEEE" ? "HHGOA" : "DEV_FIXTURE"}</strong> ●
+
+          <span
+            className="px-2 py-0.5 rounded border border-ink bg-sand text-ink shadow-2xs hidden xl:inline"
+            title="Dataset source"
+          >
+            DATA: <strong>{diag.dataset === "HHGOA_IEEE" ? "HHGOA 590K" : "SYNTHETIC"}</strong>
           </span>
         </div>
-      </div>
 
-      <nav className="nav-tabs">
-        <button
-          className={`nav-tab-btn ${activeTab === "dashboard" ? "active" : ""}`}
-          onClick={() => setActiveTab("dashboard")}
-        >
-          <Activity size={13} /> COMMAND
-        </button>
-        <button
-          className={`nav-tab-btn ${activeTab === "investigation" ? "active" : ""}`}
-          onClick={() => setActiveTab("investigation")}
-        >
-          <Terminal size={13} /> TRACE
-        </button>
-        <button
-          className={`nav-tab-btn ${activeTab === "graph" ? "active" : ""}`}
-          onClick={() => setActiveTab("graph")}
-        >
-          <Network size={13} /> NETWORK
-        </button>
-        <button
-          className={`nav-tab-btn ${activeTab === "ledger" ? "active" : ""}`}
-          onClick={() => setActiveTab("ledger")}
-        >
-          <ShieldCheck size={13} /> LEDGER
-        </button>
-        <button
-          className={`nav-tab-btn ${activeTab === "clearance" ? "active" : ""}`}
-          onClick={() => setActiveTab("clearance")}
-        >
-          <SlidersHorizontal size={13} /> CLEARANCE
-        </button>
-        <button
-          className={`nav-tab-btn ${activeTab === "demo" ? "active" : ""}`}
-          onClick={() => setActiveTab("demo")}
-          style={{ borderColor: activeTab === "demo" ? "var(--accent-cyan)" : "rgba(0, 242, 254, 0.4)" }}
-        >
-          <Play size={13} color="var(--accent-cyan)" /> TRIALS // DEMO
-        </button>
-      </nav>
+        {/* Right: Nav Tabs & Role Selector */}
+        <div className="flex items-center gap-2 flex-wrap justify-center">
+          <nav className="flex items-center gap-1 bg-goa-green-700 p-1 rounded-md border-2 border-ink shadow-xs">
+            <button
+              onClick={() => setActiveTab("dashboard")}
+              className={`px-2.5 py-1 rounded text-xs font-mono font-extrabold uppercase transition-all flex items-center gap-1 ${
+                activeTab === "dashboard"
+                  ? "bg-sun-yellow text-ink border border-ink shadow-xs"
+                  : "text-goa-green-100 hover:text-paper"
+              }`}
+            >
+              <Activity size={12} /> COMMAND
+            </button>
 
-      <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-        <span className="tech-tag" style={{ border: "none", color: "var(--text-muted)" }}>
-          ROLE:
-        </span>
-        <select
-          value={activeRole}
-          onChange={(e) => setActiveRole(e.target.value)}
-          className="font-mono"
-          style={{
-            background: "var(--bg-tertiary)",
-            color: "var(--accent-cyan)",
-            border: "1px solid var(--border-color)",
-            padding: "4px 8px",
-            borderRadius: 0,
-            fontSize: "0.75rem",
-            fontWeight: 700
-          }}
-        >
-          <option value="ANALYST">ANALYST [L1]</option>
-          <option value="SENIOR_ANALYST">SENIOR ANALYST [L2]</option>
-          <option value="FRAUD_MANAGER">FRAUD MANAGER [L3]</option>
-        </select>
+            <button
+              onClick={() => setActiveTab("investigation")}
+              className={`px-2.5 py-1 rounded text-xs font-mono font-extrabold uppercase transition-all flex items-center gap-1 ${
+                activeTab === "investigation"
+                  ? "bg-sun-yellow text-ink border border-ink shadow-xs"
+                  : "text-goa-green-100 hover:text-paper"
+              }`}
+            >
+              <Terminal size={12} /> TRACE
+            </button>
 
-        <span className="status-indicator active">
-          <span style={{ width: 6, height: 6, background: "var(--accent-emerald)", display: "inline-block" }}></span>
-          ONLINE
-        </span>
+            <button
+              onClick={() => setActiveTab("graph")}
+              className={`px-2.5 py-1 rounded text-xs font-mono font-extrabold uppercase transition-all flex items-center gap-1 ${
+                activeTab === "graph"
+                  ? "bg-sun-yellow text-ink border border-ink shadow-xs"
+                  : "text-goa-green-100 hover:text-paper"
+              }`}
+            >
+              <Network size={12} /> NETWORK
+            </button>
+
+            <button
+              onClick={() => setActiveTab("ledger")}
+              className={`px-2.5 py-1 rounded text-xs font-mono font-extrabold uppercase transition-all flex items-center gap-1 ${
+                activeTab === "ledger"
+                  ? "bg-sun-yellow text-ink border border-ink shadow-xs"
+                  : "text-goa-green-100 hover:text-paper"
+              }`}
+            >
+              <ShieldCheck size={12} /> LEDGER
+            </button>
+
+            <button
+              onClick={() => setActiveTab("clearance")}
+              className={`px-2.5 py-1 rounded text-xs font-mono font-extrabold uppercase transition-all flex items-center gap-1 ${
+                activeTab === "clearance"
+                  ? "bg-sun-yellow text-ink border border-ink shadow-xs"
+                  : "text-goa-green-100 hover:text-paper"
+              }`}
+            >
+              <SlidersHorizontal size={12} /> CLEARANCE
+            </button>
+
+            <button
+              onClick={() => setActiveTab("demo")}
+              className={`px-2.5 py-1 rounded text-xs font-mono font-extrabold uppercase transition-all flex items-center gap-1 ${
+                activeTab === "demo"
+                  ? "bg-hot-pink text-paper border border-ink shadow-xs animate-pulse"
+                  : "bg-terracotta text-paper hover:bg-hot-pink border border-ink"
+              }`}
+              title="Automated Case Walkthrough Demo (Shortcut: D)"
+            >
+              <Play size={11} fill="currentColor" /> DEMO [D]
+            </button>
+          </nav>
+
+          {/* RBAC Role Selector Dropdown */}
+          <div className="flex items-center gap-1 bg-sand border-2 border-ink rounded-md px-2 py-0.5 shadow-xs">
+            <span className="text-[10px] font-mono font-black text-ink/70 uppercase">ROLE:</span>
+            <select
+              value={activeRole}
+              onChange={(e) => setActiveRole(e.target.value)}
+              className="bg-transparent text-ink font-mono text-xs font-bold border-none outline-none cursor-pointer"
+            >
+              <option value="ANALYST">ANALYST [L1]</option>
+              <option value="SENIOR_ANALYST">SENIOR ANALYST [L2]</option>
+              <option value="FRAUD_MANAGER">FRAUD MANAGER [L3]</option>
+            </select>
+          </div>
+        </div>
       </div>
     </header>
   );
