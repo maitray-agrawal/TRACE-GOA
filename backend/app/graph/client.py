@@ -565,19 +565,50 @@ class TigerGraphRESTClient(BaseGraphClient):
 # Global singleton instance
 _GLOBAL_GRAPH_CLIENT: Optional[BaseGraphClient] = None
 
-def get_default_graph_client() -> BaseGraphClient:
-    """Returns configured TigerGraph client, auto-fallback to in-memory simulator."""
-    global _GLOBAL_GRAPH_CLIENT
-    if _GLOBAL_GRAPH_CLIENT is None:
-        tg_host = os.getenv("TIGERGRAPH_HOST")
-        tg_graph = os.getenv("TIGERGRAPH_GRAPH", "FraudInvestigationGraph")
-        tg_token = os.getenv("TIGERGRAPH_API_TOKEN")
 
-        if tg_host and tg_host.startswith("http"):
-            logger.info(f"Connecting to live TigerGraph at {tg_host} (Graph: {tg_graph})")
+def get_default_graph_client(force_simulator: bool = False) -> BaseGraphClient:
+    """Returns configured TigerGraph client.
+
+    Modes (controlled by GRAPH_BACKEND env var):
+    - GRAPH_BACKEND=tigergraph  : Connects to live Savanna. Raises RuntimeError if host missing.
+    - GRAPH_BACKEND=simulator   : In-memory simulator (tests only). Must be explicit.
+    - (unset)                   : Simulator (backwards compat for existing unit tests).
+
+    For the submission benchmark, GRAPH_BACKEND=tigergraph is required.
+    Pass force_simulator=True only from test fixtures.
+    """
+    global _GLOBAL_GRAPH_CLIENT
+    if _GLOBAL_GRAPH_CLIENT is None or force_simulator:
+        graph_backend = os.getenv("GRAPH_BACKEND", "simulator").lower()
+        tg_host = os.getenv("TIGERGRAPH_HOST", "")
+        tg_graph = os.getenv("TIGERGRAPH_GRAPH", "FraudInvestigationGraph")
+        tg_token = os.getenv("TIGERGRAPH_API_TOKEN", "")
+
+        if force_simulator or graph_backend == "simulator":
+            logger.info("InMemoryTigerGraphSimulator activated (GRAPH_BACKEND=simulator or test fixture)")
+            client = InMemoryTigerGraphSimulator()
+            if force_simulator:
+                return client
+            _GLOBAL_GRAPH_CLIENT = client
+
+        elif graph_backend == "tigergraph":
+            if not tg_host or not tg_host.startswith("http"):
+                raise RuntimeError(
+                    "[FATAL] GRAPH_BACKEND=tigergraph but TIGERGRAPH_HOST is missing or invalid.\n"
+                    "Set TIGERGRAPH_HOST=https://your-workspace.i.tgcloud.io in .env\n"
+                    "or use GRAPH_BACKEND=simulator for local testing."
+                )
+            logger.info(f"TigerGraphRESTClient connecting to {tg_host} graph={tg_graph}")
             _GLOBAL_GRAPH_CLIENT = TigerGraphRESTClient(host=tg_host, graph=tg_graph, token=tg_token)
+
         else:
-            logger.info("Initializing high-fidelity InMemoryTigerGraphSimulator (NetworkX engine)")
+            logger.warning(f"Unknown GRAPH_BACKEND={graph_backend!r}, defaulting to simulator")
             _GLOBAL_GRAPH_CLIENT = InMemoryTigerGraphSimulator()
 
     return _GLOBAL_GRAPH_CLIENT
+
+
+def reset_graph_client() -> None:
+    """Resets the global singleton (used in tests to swap backends)."""
+    global _GLOBAL_GRAPH_CLIENT
+    _GLOBAL_GRAPH_CLIENT = None
