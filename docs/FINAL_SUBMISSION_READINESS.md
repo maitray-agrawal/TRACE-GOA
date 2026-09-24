@@ -21,7 +21,7 @@ All required deliverables are present, verified, and reproducible.
 | **Output** | 20 competition answer files | ✅ `cases/HHG-*.json` |
 | **Output** | Schema validation 20/20 | ✅ `python scripts/validate_outputs.py` |
 | **Output** | No label leakage | ✅ `pytest tests/unit/test_no_leakage.py` |
-| **Analysis** | Historical backtest | ✅ 87.24% accuracy on 1,113 held-out cases |
+| **Analysis** | Historical backtest | ✅ 87.24% accuracy vs 83.65% majority baseline (+3.59 pp) |
 | **Analysis** | Confidence calibration | ✅ `scripts/analysis/calibrate_confidence.py` |
 | **Analysis** | Undocumented patterns | ✅ 2 discovered (proxy ring + structuring burst) |
 | **Graph** | TigerGraph GSQL schema | ✅ 11 vertex types, 14 edge types |
@@ -29,14 +29,14 @@ All required deliverables are present, verified, and reproducible.
 | **Graph** | MCP server integration | ✅ Official TigerGraph MCP server wired |
 | **Agent** | PolicyEngine R1–R10 | ✅ Deterministic, LLM cannot bypass |
 | **Agent** | Evidence request lifecycle | ✅ Pre- and post-evidence NBA per case |
-| **Agent** | NBA flip demonstrated | ✅ HHG-001, HHG-005, HHG-012 |
+| **Agent** | NBA flip demonstrated | ✅ HHG-001, HHG-005, HHG-007, HHG-012 |
 | **Agent** | Audit ledger | ✅ SHA-256 hash-chained |
 | **Backend** | FastAPI starts | ✅ 200 OK on `/health` |
 | **Backend** | Case write-back | ✅ Cases written to graph after investigation |
 | **Frontend** | Production build | ✅ 0 TypeScript errors, 0 Vite errors |
 | **Frontend** | 8 views functional | ✅ All views verified |
 | **Frontend** | Live diagnostics | ✅ Header shows backend status |
-| **Tests** | Full suite | ✅ 38 passed |
+| **Tests** | Full suite | ✅ 42 passed |
 | **Docs** | README as demo guide | ✅ `README.md` |
 | **Docs** | Technical blog | ✅ `docs/BLOG.md` |
 | **Docs** | Judge demo script | ✅ `docs/DEMO_SCRIPT.md` |

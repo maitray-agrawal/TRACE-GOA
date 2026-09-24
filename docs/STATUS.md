@@ -47,10 +47,11 @@
 
 | Item | Status | Evidence |
 |---|---|---|
-| pytest suite | ✅ 38 PASSED | `pytest -q` → 38 passed in 2.43s |
-| No label leakage | ✅ | `tests/unit/test_no_leakage.py` → 3/3 pass |
-| Backtest on held-out cases | ✅ | 87.24% accuracy on 1,113 held-out cases |
+| pytest suite | ✅ 42 PASSED | `pytest -q` → 42 passed in 2.63s |
+| No label leakage | ✅ | `tests/unit/test_no_leakage.py` → 4/4 pass (includes detector signature check) |
+| Backtest on held-out cases | ✅ | 87.24% accuracy vs 83.65% majority baseline (+3.59 pp lift, 1,113 cases) |
 | Schema validation 20/20 | ✅ | `python scripts/validate_outputs.py` → 20/20 pass |
+| Benchmark integration test | ✅ | `tests/integration/test_benchmark_live.py` → 3/3 pass |
 
 ---
 
@@ -60,10 +61,12 @@
 |---|---|---|
 | GSQL schema | ✅ | `tigergraph/schema/fraud_graph.gsql` — 11 vertex types, 14 edge types |
 | 7 GSQL queries | ✅ | `tigergraph/queries/*.gsql` |
-| Live Savanna instance | ⚠️ REQUIRES CONFIG | Set `TIGERGRAPH_HOST`, `TIGERGRAPH_USERNAME`, `TIGERGRAPH_PASSWORD` in `.env` |
-| In-memory simulator | ✅ DEFAULT | `GRAPH_BACKEND=simulator` (default) — all 38 tests pass without .env |
-| Data loader | ✅ | `scripts/setup/load_tigergraph.py` — idempotent |
-| MCP server integration | ✅ | Official TigerGraph MCP server wired when `GRAPH_BACKEND=tigergraph` |
+| Savanna API Token | ✅ VALIDATED | Verified against `api.tgcloud.io/controller/v4/v2/workgroups` (200 OK) |
+| Savanna Workspace URL | ⚠️ PENDING HOST | Set `TIGERGRAPH_HOST=https://<id>.i.tgcloud.io` in `.env` |
+| Fail-fast guard | ✅ | `client.py` and `check_env.py` raise `RuntimeError` immediately if host missing |
+| In-memory simulator | ✅ EXPLICIT ONLY | `GRAPH_BACKEND=simulator` or `--test` flag only; no silent fallback |
+| Data loader | ✅ | `scripts/setup/load_tigergraph.py` — pyTigerGraph idempotent loader with probe |
+| MCP tool provenance | ✅ | `backend/app/graph/mcp_dispatcher.py` logs every call with latency, status, args |
 
 ---
 
@@ -71,9 +74,11 @@
 
 | Item | Status | Notes |
 |---|---|---|
-| Gemini API | ⚠️ REQUIRES KEY | Set `GEMINI_API_KEY` in `.env` |
-| OpenAI API | ⚠️ REQUIRES KEY | Set `OPENAI_API_KEY` and `LLM_PROVIDER=openai` in `.env` |
-| Deterministic fallback | ✅ DEFAULT | Rule-engine-only mode when no API key present — 38 tests pass |
+| Gemini 2.5 Flash | ✅ ACTIVE | `gemini-2.5-flash` verified live via `google-genai` SDK |
+| Temperature 0 | ✅ | Deterministic reasoning for tool planning, stopping rules, narratives |
+| LLM Caching | ✅ ACTIVE | Every call cached to `cache/llm/<case_id>_<type>_<hash>.json` |
+| Token Accounting | ✅ MEASURED | `resp.usage_metadata.total_token_count` logged per call (no arithmetic guesses) |
+| Deterministic fallback | ✅ VIA FLAG | `--test` flag activates deterministic test mode for offline CI/CD |
 | LLM labelled in UI | ✅ | Header shows `LLM: DETERMINISTIC` or `LLM: GEMINI` |
 
 ---

@@ -74,18 +74,28 @@ Two cases demonstrate the evidence loop changing the recommendation:
 
 ## Historical Pattern Detection Backtest (1,113 Held-Out Closed Cases)
 
-> Produced by `scripts/analysis/backtest.py` (38 tests passing).
+> Produced by `scripts/analysis/backtest.py` (42 tests passing).
+
+| Metric | Value |
+|---|---|
+| Dataset | IEEE-CIS HHGOA `closed_cases_history.csv` |
+| Total historical cases | 5,565 |
+| Held-out test set | 1,113 cases (20% stratified split, seed=42) |
+| Majority-class baseline | **83.65%** (always predict 'fraud', 931/1,113) |
+| **System Decision Accuracy** | **87.24%** (971/1,113) |
+| **Lift over Baseline** | **+3.59 pp** |
+| Leakage Audit Status | **PASS** (detector inputs: exposure_usd, n_txns, analyst_notes only) |
 
 | Pattern | True Instances | Precision | Recall | F1 |
 |---|---|---|---|---|
-| `card_not_present_fraud` | 278 | 100.0% | 100.0% | 1.000 |
+| `card_not_present_fraud` | 278 | 99.3% | 100.0% | 0.996 |
 | `account_takeover` | 232 | 100.0% | 100.0% | 1.000 |
 | `card_not_present_new_device` | 244 | 100.0% | 100.0% | 1.000 |
 | `out_of_region_use` | 174 | 55.1% | 100.0% | 0.710 |
 | `card_testing` | 1 | 100.0% | 100.0% | 1.000 |
-| `undocumented` | 2 | 100.0% | 100.0% | 1.000 |
+| `undocumented` | 2 | 0.0% | 0.0% | 0.000 |
 | `none` | 182 | 100.0% | 22.0% | 0.360 |
-| **Overall Decision Accuracy** | **1,113** | — | — | **87.24%** |
+| **Overall Decision Accuracy** | **1,113** | - | - | **87.24%** |
 
 ---
 

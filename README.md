@@ -256,11 +256,12 @@ When `GRAPH_BACKEND=tigergraph`, the agent connects to the official [TigerGraph 
 
 | Pattern | Precision | Recall | F1 |
 |---|---|---|---|
-| card_not_present_fraud | 100.0% | 100.0% | 1.000 |
+| card_not_present_fraud | 99.3% | 100.0% | 0.996 |
 | account_takeover | 100.0% | 100.0% | 1.000 |
 | card_not_present_new_device | 100.0% | 100.0% | 1.000 |
 | out_of_region_use | 55.1% | 100.0% | 0.710 |
-| **Overall decision accuracy** | — | — | **87.24%** |
+| **Majority-class baseline** | — | — | **83.65%** |
+| **System decision accuracy** | — | — | **87.24% (+3.59 pp)** |
 
 ### Undocumented Patterns Discovered
 
@@ -276,11 +277,11 @@ When `GRAPH_BACKEND=tigergraph`, the agent connects to the official [TigerGraph 
 | Real dataset loaded | `python scripts/verify_data.py` → 590,742 transactions ✓ | **VERIFIED** |
 | 20 real benchmark cases | `ls cases/` → 20 JSON files with IDs HHG-001 to HHG-020 | **VERIFIED** |
 | Valid competition schema | `python scripts/validate_outputs.py` → 20/20 pass | **VERIFIED** |
-| No label leakage | `pytest tests/unit/test_no_leakage.py` → 3/3 pass | **VERIFIED** |
-| 38 tests passing | `pytest -q` → 38 passed | **VERIFIED** |
+| No label leakage | `pytest tests/unit/test_no_leakage.py` → 4/4 pass | **VERIFIED** |
+| 42 tests passing | `pytest -q` → 42 passed | **VERIFIED** |
 | Frontend builds clean | `cd frontend && npm run build` → zero errors | **VERIFIED** |
 | Backtest reproducible | `python scripts/analysis/backtest.py` → report.md | **VERIFIED** |
-| NBA flips on evidence | See HHG-001, HHG-005, HHG-012 in `cases/` | **VERIFIED** |
+| NBA flips on evidence | See HHG-001, HHG-005, HHG-007, HHG-012 in `cases/` | **VERIFIED** |
 | Undocumented patterns | CC-2649 series + CC-3748 series in closed cases | **VERIFIED** |
 | TigerGraph schema | `tigergraph/schema/fraud_graph.gsql` (11 vertex types, 14 edge types) | **VERIFIED** |
 | GSQL queries installed | `tigergraph/queries/*.gsql` (7 queries) | **VERIFIED** |
