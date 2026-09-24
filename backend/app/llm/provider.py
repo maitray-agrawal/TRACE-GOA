@@ -114,6 +114,8 @@ class GeminiLLMProvider(BaseLLMProvider):
         self.api_key = api_key
         self.model_name = model_name
         self._client = None
+        self._fallback = DeterministicFallbackProvider()
+        self._quota_exhausted = False
 
     def _get_client(self):
         if self._client is None:
@@ -149,6 +151,9 @@ class GeminiLLMProvider(BaseLLMProvider):
             cached["cached"] = True
             logger.info(f"[{case_id}] {call_type}: cache hit ({cache_file.name})")
             return cached
+
+        if self._quota_exhausted:
+            raise RuntimeError("Gemini daily quota exhausted. Session using rules engine fallback.")
 
         from google import genai
         from google.genai import types
@@ -196,8 +201,13 @@ class GeminiLLMProvider(BaseLLMProvider):
 
             except Exception as e:
                 err_str = str(e).lower()
-                if ("429" in err_str or "resource_exhausted" in err_str or "quota" in err_str) and attempt < max_retries - 1:
-                    sleep_time = 12 * (attempt + 1)
+                # If daily quota limit hit, do not sleep retry - raise immediately for instant deterministic fallback
+                if "perday" in err_str or "generaterequestsperday" in err_str or "quotaid" in err_str or "free_tier" in err_str or "resource_exhausted" in err_str:
+                    self._quota_exhausted = True
+                    logger.warning(f"[{case_id}] Gemini daily quota exhausted. Failing fast to rules engine for session.")
+                    raise
+                if ("429" in err_str) and attempt < max_retries - 1:
+                    sleep_time = 3 * (attempt + 1)
                     logger.warning(f"[{case_id}] Gemini rate limit hit, sleeping {sleep_time}s before retry {attempt + 1}...")
                     time.sleep(sleep_time)
                     continue
@@ -218,13 +228,12 @@ class GeminiLLMProvider(BaseLLMProvider):
             "Add find_similar_cases always. Return ONLY a JSON array of strings."
         )
         user = f"Case context:\n{json.dumps(case_ctx, indent=2)}"
-        result = self._call("plan_tools", case_id, system, user,
-                            response_schema={"type": "array", "items": {"type": "string"}})
         try:
+            result = self._call("plan_tools", case_id, system, user,
+                                response_schema={"type": "array", "items": {"type": "string"}})
             tools = json.loads(result["response"])
             if not isinstance(tools, list):
                 raise ValueError("Not a list")
-            # Guarantee query_neighborhood is first and find_similar_cases is last
             if "query_neighborhood" not in tools:
                 tools = ["query_neighborhood"] + tools
             if "find_similar_cases" not in tools:
@@ -232,8 +241,8 @@ class GeminiLLMProvider(BaseLLMProvider):
             result["_tools"] = tools
             return tools
         except Exception as e:
-            logger.warning(f"[{case_id}] plan_tools parse error: {e}. Using safe default.")
-            return ["query_neighborhood", "detect_device_reuse", "get_temporal_velocity", "find_similar_cases"]
+            logger.warning(f"[{case_id}] plan_tools fallback to rules engine: {e}")
+            return self._fallback.plan_tools(case_ctx)
 
     def decide_enough_to_act(self, evidence_ctx: dict) -> dict:
         case_id = evidence_ctx.get("case_id", "UNKNOWN")
@@ -251,18 +260,18 @@ class GeminiLLMProvider(BaseLLMProvider):
             "confidence (0.0-1.0), explanation (1-2 sentence clear reasoning)."
         )
         user = f"Investigation evidence:\n{json.dumps(evidence_ctx, indent=2)}"
-        result = self._call("decide_enough_to_act", case_id, system, user,
-                            response_schema={
-                                "type": "object",
-                                "properties": {
-                                    "enough": {"type": "boolean"},
-                                    "verdict": {"type": "string"},
-                                    "confidence": {"type": "number"},
-                                    "explanation": {"type": "string"}
-                                },
-                                "required": ["enough", "verdict", "confidence", "explanation"]
-                            })
         try:
+            result = self._call("decide_enough_to_act", case_id, system, user,
+                                response_schema={
+                                    "type": "object",
+                                    "properties": {
+                                        "enough": {"type": "boolean"},
+                                        "verdict": {"type": "string"},
+                                        "confidence": {"type": "number"},
+                                        "explanation": {"type": "string"}
+                                    },
+                                    "required": ["enough", "verdict", "confidence", "explanation"]
+                                })
             parsed = json.loads(result["response"])
             if not isinstance(parsed, dict):
                 raise ValueError("Not an object")
@@ -270,21 +279,16 @@ class GeminiLLMProvider(BaseLLMProvider):
             parsed.setdefault("verdict", "uncertain")
             parsed.setdefault("confidence", evidence_ctx.get("fraud_probability", 0.5))
             parsed.setdefault("explanation", "Insufficient evidence to determine verdict.")
-        except Exception as e:
-            logger.warning(f"[{case_id}] decide_enough_to_act parse error: {e}")
-            parsed = {
-                "enough": False,
-                "verdict": "uncertain",
-                "confidence": evidence_ctx.get("fraud_probability", 0.5),
-                "explanation": f"Parse error in LLM response: {e}"
+            return {
+                **parsed,
+                "model": result["model"],
+                "tokens": result["tokens"],
+                "latency_ms": result["latency_ms"],
+                "cached": result["cached"],
             }
-        return {
-            **parsed,
-            "model": result["model"],
-            "tokens": result["tokens"],
-            "latency_ms": result["latency_ms"],
-            "cached": result["cached"],
-        }
+        except Exception as e:
+            logger.warning(f"[{case_id}] decide_enough_to_act fallback to rules engine: {e}")
+            return self._fallback.decide_enough_to_act(evidence_ctx)
 
     def write_explanation(self, case_ctx: dict) -> str:
         case_id = case_ctx.get("case_id", "UNKNOWN")
@@ -296,8 +300,12 @@ class GeminiLLMProvider(BaseLLMProvider):
             "Do NOT mention internal system names."
         )
         user = f"Investigation summary:\n{json.dumps(case_ctx, indent=2)}"
-        result = self._call("write_explanation", case_id, system, user)
-        return result["response"].strip()
+        try:
+            result = self._call("write_explanation", case_id, system, user)
+            return result["response"].strip()
+        except Exception as e:
+            logger.warning(f"[{case_id}] write_explanation fallback to rules engine: {e}")
+            return self._fallback.write_explanation(case_ctx)
 
 
 # ---------------------------------------------------------------------------

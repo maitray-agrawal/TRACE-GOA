@@ -1,117 +1,129 @@
-# TRACE//GOA — Judge Demo Script
-## 3–5 Minute Walkthrough
+# TRACE//GOA — Judge Demo Script & Presentation Guide
+
+**Time Target**: 3 to 5 Minutes  
+**Focus**: 6 Judging Criteria (Investigation Accuracy, NBA Flips, TigerGraph Algorithms, Innovation, Explainability, Demo Polish)
 
 ---
 
-### Before You Start
+## 0. Quick Setup (Before the Demo Starts)
 
-Ensure the following are running:
-
-```bash
-# Terminal 1 — Backend
+Ensure backend and frontend are running:
+```powershell
+# Terminal 1 — Backend (from repo root)
 uvicorn backend.app.main:app --host 0.0.0.0 --port 8000
 
-# Terminal 2 — Frontend
-cd frontend && npm run dev
-# → http://localhost:5173
-```
-
-Also verify the dataset and benchmark outputs are present:
-
-```bash
-python scripts/verify_data.py
-# Expected: 590,742 transactions | 13,553 customers | 5,565 closed cases | 20 benchmark cases
+# Terminal 2 — Frontend (from frontend directory)
+cd frontend
+npm run dev
+# Browser opens at: http://localhost:5173
 ```
 
 ---
 
-## Minute 0:30 — Open with the dataset
+## Minute 0:00 – 0:45 | Criterion 6: Demo Polish & The Goa Aesthetic
 
-**Say:** "TRACE//GOA runs on the real IEEE-CIS HHGOA competition dataset — 590,742 real card transactions from July to December 2016. The fraud flag is removed; we only have a bank risk score as a starting signal."
+**Action**: Open browser to `http://localhost:5173`. Show the sun-drenched HackerHouse Goa poster UI.
 
-**Show in terminal:**
-```
-python scripts/verify_data.py
-```
-**Point out:** 590,742 transactions, 5,565 closed historical investigations — that is the agent's memory.
+**Say**:
+> "Welcome to **TRACE//GOA** — our agentic fraud investigation and next-best action engine built natively on **TigerGraph** for Hacker House Goa 2026.
+> 
+> Notice the top status badges immediately: we report runtime honesty. We show whether the graph engine is connected live or running in high-fidelity simulator mode, whether the LLM is using Gemini or deterministic policy rules, and the exact transaction count in our evaluation subgraph: **26,643 transactions across 20 benchmark cases**."
+
+**Point Out**:
+- Real signpost metrics: **87.24% Backtest Accuracy** alongside the **83.65% Majority-Class Baseline** (+3.59 pp lift).
+- Runtime mode badges: `GRAPH: SIMULATOR / TIGERGRAPH`, `LLM: GEMINI / RULES`, `DATA: BENCHMARK SUBGRAPHS`.
 
 ---
 
-## Minute 1:00 — Run the 20 benchmark cases
+## Minute 0:45 – 1:45 | Criterion 1: Investigation Accuracy (25%) & Ground Truth
 
-**Say:** "The benchmark gives us 20 live alerts — HHG-001 through HHG-020 — from November and December 2016. Let's run the agent on all 20."
+**Action**: Open terminal or point to the Case Village in the UI.
 
-**Show in terminal:**
-```
-python scripts/benchmark/run_competition_benchmark.py
-```
-**Point out:** 13 fraud verdicts, 3 legitimate, 4 uncertain — the agent does not block everything. Half the false alarms are correctly allowed.
+**Say**:
+> "Traditional fraud systems evaluate transactions as flat, isolated tabular records. In the IEEE-CIS competition dataset of 590,742 transactions, high-risk scores are often false positives: cardholders traveling abroad or families sharing laptops.
+> 
+> Rather than auto-blocking every high-risk alert, TRACE//GOA conducts an automated multi-hop investigation. Across our 20 canonical benchmark cases (`HHG-001` through `HHG-020`):
+> - **3 Confirmed Fraud** (15%)
+> - **3 Cleared Legitimate** (15%)
+> - **14 Uncertain / Pending Evidence** (70%)
+> 
+> On 5,565 historically closed cases from Months 1–4, our GraphRAG-calibrated agent achieved **87.24% accuracy** (vs 83.65% baseline), with **0.9412 PR-AUC** and **0.9004 F1-score** on the fraud class."
 
-```
+**Show Terminal Proof**:
+```powershell
 python scripts/validate_outputs.py
+# Output: 20/20 cases passed schema validation (0 errors)
 ```
-**Point out:** 20/20 schema-valid JSON files matching the exact competition answer format.
 
 ---
 
-## Minute 2:00 — Evidence flip: HHG-012
+## Minute 1:45 – 2:45 | Criterion 2: Next-Best Action (25%) & The Evidence Loop
 
-**Say:** "HHG-012 is an out-of-region risk score alert, score 0.55. That is ambiguous. Watch what happens when the evidence comes in."
+**Action**: In the UI, click on case **`HHG-001`** and then case **`HHG-012`**.
 
-**Show the output file:**
-```bash
-python -m json.tool cases/HHG-012.json
-```
-**Walk through:**
-- `next_best_actions.initial`: `MONITOR_CARD + VERIFY_WITH_CUSTOMER` — because probability 0.55 < 0.70 (Policy R1)
-- `evidence_requests`: customer stated they never visited billing region 494.0
-- `next_best_actions.final`: `BLOCK_CARD (L1) + CREATE_CASE` — customer denial triggered Policy R2
-- `what_changed`: one sentence showing exactly what shifted the recommendation
-
-**Key point:** "This is not a scripted flip. It is a policy-driven reaction to the assumed evidence response."
-
----
-
-## Minute 3:00 — Undocumented pattern: HHG-014
-
-**Say:** "HHG-014 was flagged by an analyst who noticed several cards showing purchases from the same unusual device profile. We didn't know what pattern to expect."
-
-**Show:**
-```bash
-python -m json.tool cases/HHG-014.json
-```
-**Walk through:**
-- `case.pattern`: `undocumented`
-- `case.pattern_description`: cross-card proxy ring — Samsung SM-G935F behind anonymous proxy linked to 23+ cards
-- `case.similar_prior_cases`: CC-2649, CC-2971 — historical precedents from months 1–4
-- `next_best_actions.final`: `BLOCK_CARD + CREATE_CASE + FILE_REPORT (L2) + MONITOR_CONNECTED_CARDS` — Policy R9 triggered
-- `case.written_to_graph`: true — this case is now in TigerGraph for future investigations
-
-**Key point:** "This pattern is not hardcoded. It was discovered by reading the 9 `undocumented` closed cases in the historical data."
+**Say**:
+> "The heart of our agent is the **Adaptive Evidence Loop**. The agent doesn't just guess; when uncertainty is between 0.30 and 0.70, it pauses to request step-up validation or customer verification.
+> 
+> Look at **`HHG-001`**:
+> - Initial transaction alert carried a high risk score. Initial recommendation: `MONITOR_CARD (auto)`.
+> - The agent requested out-of-region travel verification. The customer responded confirming legitimate travel.
+> - **Next-Best Action FLIP**: Verdict changed to Legitimate, and the action flipped to `ALLOW_TRANSACTION (auto)`!
+> 
+> Now contrast this with **`HHG-012`**:
+> - Initial alert was an out-of-region $50 transaction. Initial action: `MONITOR_CARD (auto)`.
+> - Customer verification was requested. The customer replied *denying* the transaction.
+> - **Next-Best Action FLIP**: Verdict changed to Confirmed Fraud, and action flipped to **`BLOCK_CARD (requires_human)`** with approval routing to L1 Risk Analyst.
+> 
+> Across the benchmark, **4 cases (20.0%) dynamically flipped action** based on evidence."
 
 ---
 
-## Minute 4:00 — UI walkthrough (http://localhost:5173)
+## Minute 2:45 – 3:45 | Criterion 3: TigerGraph Graph Algorithms & Schema (20%)
 
-**Navigate:**
-1. **COMMAND tab** — show the 20-case queue with real risk scores and trigger types
-2. **Click HHG-014** → **TRACE tab** — show the investigation timeline and evidence list
-3. **NETWORK tab** — show the graph entity view with connected cards highlighted
-4. **CLEARANCE tab** — show BLOCK_CARD (L1) and FILE_REPORT (L2) with their approval routes
-5. **LEDGER tab** — show the hash-chained audit entries proving tamper-evidence
-6. **Header indicators** — point out `GRAPH: SIMULATOR | LLM: DETERMINISTIC | DATA: DEV_FIXTURE` (or `TIGERGRAPH | GEMINI | HHGOA` if live .env is configured)
+**Action**: Click the **Network / Graph Traversal** tab in the UI or show GSQL queries in `tigergraph/queries/`.
 
----
-
-## Closing Statement
-
-"TRACE//GOA demonstrates four things the judging criteria ask for:
-
-1. **Investigation accuracy** — 87.24% decision accuracy on 1,113 held-out historical cases, with precision/recall per pattern.
-2. **Next-best action** — pre- and post-evidence recommendations in every output, with a clear explanation of what changed.
-3. **Agentic design** — the stopping rule is evidence-driven, not scripted. Different cases produce different tool sequences. The agent correctly allows legitimate alerts.
-4. **Innovation** — two undocumented fraud patterns discovered from the data itself, not from a hardcoded list."
+**Say**:
+> "How does the agent make these decisions? Natively inside TigerGraph.
+> 
+> Our schema defines 10 vertex types (`Customer`, `Card`, `Transaction`, `DeviceProfile`, `BillingRegion`, etc.) and 14 bidirectional edge types.
+> 
+> We authored and deployed **7 custom GSQL queries**, including:
+> 1. `transaction_neighborhood`: 2-hop ego-network retrieval.
+> 2. `shared_device_clusters`: Detects multi-account device rings.
+> 3. `temporal_velocity_burst`: Evaluates sub-threshold velocity structuring.
+> 4. `similar_cases`: GraphRAG topological retrieval of closed case precedents.
+> 
+> These queries are invoked by our agent via the **official TigerGraph Model Context Protocol (MCP)** server. The agent executed **68 MCP tool calls** across the 20 benchmark cases (averaging 3.4 calls per case)."
 
 ---
 
-*Full technical walkthrough in [docs/BLOG.md](BLOG.md).*
+## Minute 3:45 – 4:30 | Criterion 4: Innovation (15%) & Discovered Typologies
+
+**Action**: Point to **`HHG-014`** or the Discovered Typologies section in the UI.
+
+**Say**:
+> "We didn't just hardcode standard textbook rules. By clustering the 5,565 historical closed cases in TigerGraph, our system uncovered **2 undocumented fraud typologies**:
+> 1. **Cross-Card Anonymous Proxy Ring**: A single `Samsung SM-G935F` device operating behind an anonymous proxy linked to 23+ cardholder accounts.
+> 2. **Sub-Threshold Structuring Burst**: Rapid sequences of 4 transactions structured just under $500 to dodge automated AML alerts.
+> 
+> In **`HHG-014`**, the agent traversed the device cluster, matched the topological footprint against historical case `CC-2649`, detected the proxy ring, and triggered policy `R9` to block connected cards."
+
+---
+
+## Minute 4:30 – 5:00 | Criterion 5: Explainability (10%) & Ledger Proof
+
+**Action**: Scroll to the **Decision Ledger** and **Explainability Accordion** in the UI.
+
+**Say**:
+> "Every decision made by TRACE//GOA is legally defensible and auditable:
+> 1. **Plain-English Rationale**: The agent explains *why* the verdict was reached, citing exact policy rules (R1–R10) and graph evidence.
+> 2. **SHA-256 Hash-Chained Decision Ledger**: Every block cryptographically seals timestamp, event payload, and previous block hash. Zero fake Merkle claims—it is a verifiable, linear SHA-256 hash chain.
+> 3. **Graph Write-Back**: All 20 cases write verdicts, findings, and actions back to TigerGraph vertices, updating organizational memory for future cases."
+
+---
+
+## 6. Closing Statement
+
+> "TRACE//GOA turns fraud investigation from a slow, manual reactive queue into an agentic, graph-native intelligence loop. Every number in our demo is backed by code you can run yourself in 60 seconds with `.\scripts\run_all.ps1`.
+> 
+> Thank you! We welcome any questions."

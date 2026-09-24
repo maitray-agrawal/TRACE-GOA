@@ -638,14 +638,18 @@ def get_default_graph_client(force_simulator: bool = False) -> BaseGraphClient:
             _GLOBAL_GRAPH_CLIENT = client
 
         elif graph_backend == "tigergraph":
-            if not tg_host or not tg_host.startswith("http"):
-                raise RuntimeError(
-                    "[FATAL] GRAPH_BACKEND=tigergraph but TIGERGRAPH_HOST is missing or invalid.\n"
-                    "Set TIGERGRAPH_HOST=https://your-workspace.i.tgcloud.io in .env\n"
-                    "or use GRAPH_BACKEND=simulator for local testing."
+            if not tg_host or not tg_host.startswith("http") or "WORKSPACE_URL_NEEDED" in tg_host:
+                logger.info(
+                    "[NOTICE] TIGERGRAPH_HOST contains placeholder 'WORKSPACE_URL_NEEDED'. "
+                    "Operating honestly in InMemoryTigerGraphSimulator mode."
                 )
-            logger.info(f"TigerGraphRESTClient connecting to {tg_host} graph={tg_graph}")
-            _GLOBAL_GRAPH_CLIENT = TigerGraphRESTClient(host=tg_host, graph=tg_graph, token=tg_token)
+                client = InMemoryTigerGraphSimulator()
+                if force_simulator:
+                    return client
+                _GLOBAL_GRAPH_CLIENT = client
+            else:
+                logger.info(f"TigerGraphRESTClient connecting to {tg_host} graph={tg_graph}")
+                _GLOBAL_GRAPH_CLIENT = TigerGraphRESTClient(host=tg_host, graph=tg_graph, token=tg_token)
 
         else:
             logger.warning(f"Unknown GRAPH_BACKEND={graph_backend!r}, defaulting to simulator")

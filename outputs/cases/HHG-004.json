@@ -15,7 +15,7 @@
     "exposure_usd": 0.0,
     "evidence": [
       {
-        "claim": "Deterministic rule: prob=0.70, sources=1, confirmed=False, denied=False.",
+        "claim": "Deterministic rule: prob=0.70, sources=2, confirmed=False, denied=False.",
         "source": "llm_initial",
         "ref": "gemini:DETERMINISTIC_RULES:decide_enough_to_act",
         "entity_ids": [
@@ -103,9 +103,9 @@
         "depth": 2
       },
       "status": "SUCCESS",
-      "latency_ms": 0.02,
-      "timestamp": 1790248024.6288736,
-      "response_preview": "{\"nodes\": [], \"edges\": [], \"node_count\": 0, \"edge_count\": 0, \"summary\": \"Transaction 3583227 not in graph\"}",
+      "latency_ms": 1.14,
+      "timestamp": 1790270670.9951181,
+      "response_preview": "{\"target_transaction\": \"3583227\", \"depth\": 2, \"nodes\": [{\"id\": \"3232716\", \"type\": \"Transaction\", \"attributes\": {\"amount\": 21.55, \"risk_score\": 0.05, \"channel\": \"online\", \"addr1\": \"\", \"addr2\": \"\"}}, {\"",
       "error": null
     },
     {
@@ -117,7 +117,7 @@
       },
       "status": "SUCCESS",
       "latency_ms": 0.02,
-      "timestamp": 1790248024.6333637,
+      "timestamp": 1790270671.0014174,
       "response_preview": "{\"account_id\": \"C08106\", \"burst_detected\": false, \"burst_count\": 0, \"burst_volume\": 0.0}",
       "error": null
     },
@@ -142,11 +142,11 @@
         ]
       },
       "status": "SUCCESS",
-      "latency_ms": 0.13,
-      "timestamp": 1790248024.6383672,
+      "latency_ms": 0.06,
+      "timestamp": 1790270671.00711,
       "response_preview": "{\"success\": true, \"case_id\": \"BENCH-HHG-004\", \"vertex_type\": \"Case\", \"edges_created\": 2, \"status\": \"RESOLVED\"}",
       "error": null
     }
   ],
-  "latency_s": 0.018
+  "latency_s": 0.023
 }

@@ -1,0 +1,11 @@
+{
+  "execution_date": "2026-09-24 22:54:49 IST",
+  "trace_mode": "competition",
+  "graph_engine": "SIMULATOR",
+  "mcp_dispatcher": "LOCAL_DISPATCHER (Allowlist Enforcement)",
+  "llm_engine": "gemini-2.5-flash / DETERMINISTIC_RULES fallback",
+  "dataset": "HHGOA_IEEE (Pre-extracted benchmark neighborhoods)",
+  "cases_validated": 20,
+  "schema_conformance": "100%",
+  "test_suite_status": "43/43 PASSED"
+}

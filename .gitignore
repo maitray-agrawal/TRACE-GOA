@@ -25,6 +25,8 @@ data/competition/*.csv
 data/competition/transactions.csv
 data/competition/identity.csv
 data/competition/closed_cases_history.csv
+data/raw/
+data/processed/
 
 # LLM response cache - committed for deterministic offline reproduction of benchmark
 # cache/llm/*.json

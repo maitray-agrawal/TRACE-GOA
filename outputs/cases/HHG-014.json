@@ -15,7 +15,7 @@
     "exposure_usd": 0.0,
     "evidence": [
       {
-        "claim": "Deterministic rule: prob=0.70, sources=1, confirmed=False, denied=False.",
+        "claim": "Deterministic rule: prob=0.70, sources=2, confirmed=False, denied=False.",
         "source": "llm_initial",
         "ref": "gemini:DETERMINISTIC_RULES:decide_enough_to_act",
         "entity_ids": [
@@ -103,9 +103,9 @@
         "depth": 2
       },
       "status": "SUCCESS",
-      "latency_ms": 0.02,
-      "timestamp": 1790248024.840536,
-      "response_preview": "{\"nodes\": [], \"edges\": [], \"node_count\": 0, \"edge_count\": 0, \"summary\": \"Transaction 3478561 not in graph\"}",
+      "latency_ms": 1.56,
+      "timestamp": 1790270671.5985506,
+      "response_preview": "{\"target_transaction\": \"3478561\", \"depth\": 2, \"nodes\": [{\"id\": \"3489320\", \"type\": \"Transaction\", \"attributes\": {\"amount\": 252.28, \"risk_score\": 0.22, \"channel\": \"online\", \"addr1\": \"191.0\", \"addr2\": \"8",
       "error": null
     },
     {
@@ -116,8 +116,8 @@
         "threshold": 2
       },
       "status": "SUCCESS",
-      "latency_ms": 0.03,
-      "timestamp": 1790248024.846731,
+      "latency_ms": 0.05,
+      "timestamp": 1790270671.6097872,
       "response_preview": "{\"device_id\": \"SM-G935F Build/NRD90M\", \"is_suspicious\": false, \"accounts\": [], \"cards\": [], \"reused_count\": 0}",
       "error": null
     },
@@ -129,8 +129,8 @@
         "window_seconds": 3600
       },
       "status": "SUCCESS",
-      "latency_ms": 0.02,
-      "timestamp": 1790248024.8518271,
+      "latency_ms": 0.03,
+      "timestamp": 1790270671.6161962,
       "response_preview": "{\"account_id\": \"C13487\", \"burst_detected\": false, \"burst_count\": 0, \"burst_volume\": 0.0}",
       "error": null
     },
@@ -155,11 +155,11 @@
         ]
       },
       "status": "SUCCESS",
-      "latency_ms": 0.13,
-      "timestamp": 1790248024.857304,
+      "latency_ms": 0.09,
+      "timestamp": 1790270671.6257846,
       "response_preview": "{\"success\": true, \"case_id\": \"BENCH-HHG-014\", \"vertex_type\": \"Case\", \"edges_created\": 2, \"status\": \"RESOLVED\"}",
       "error": null
     }
   ],
-  "latency_s": 0.027
+  "latency_s": 0.049
 }

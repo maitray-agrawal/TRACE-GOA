@@ -1,0 +1,11 @@
+{
+  "response": "{\"enough\": false, \"verdict\": \"uncertain\", \"confidence\": 0.61, \"explanation\": \"Fraud probability (0.61) is not high enough (>=0.85) for fraud nor low enough (<=0.15) for legitimate, and the customer has not confirmed or denied.\"}",
+  "tokens": 1553,
+  "prompt_tokens": 355,
+  "completion_tokens": 69,
+  "latency_ms": 11305.6,
+  "model": "gemini-2.5-flash",
+  "cached": false,
+  "call_type": "decide_enough_to_act",
+  "case_id": "HHG-001"
+}
