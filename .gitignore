@@ -26,3 +26,7 @@ data/competition/transactions.csv
 data/competition/identity.csv
 data/competition/closed_cases_history.csv
 
+# LLM response cache
+cache/llm/*.json
+!cache/llm/.gitkeep
+
