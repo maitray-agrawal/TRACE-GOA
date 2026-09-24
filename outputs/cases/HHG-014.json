@@ -1,120 +1,165 @@
 {
   "case_id": "HHG-014",
   "case": {
-    "status": "closed_fraud",
-    "verdict": "fraud",
-    "fraud_probability": 0.92,
-    "pattern": "undocumented",
-    "pattern_description": "Cross-card device sharing syndicate: the unusual device profile is linked to multiple customer cards within a short window behind an anonymous proxy.",
-    "affected_txn_ids": [
-      "3478561"
-    ],
-    "first_suspicious_txn_id": "3478561",
-    "connected_card_ids": [
-      "C00255-K1",
-      "C01935-K1",
-      "C03551-K2"
-    ],
+    "status": "open",
+    "verdict": "uncertain",
+    "fraud_probability": 0.7,
+    "pattern": "none",
+    "pattern_description": "",
+    "affected_txn_ids": [],
+    "first_suspicious_txn_id": "",
+    "connected_card_ids": [],
     "connected_device_profiles": [
-      "SM-G935F Build/NRD90M | Android 7.0 | chrome 62.0 for android | 1920x1080"
+      "SM-G935F Build/NRD90M | Android 7.0 | chrome 62.0 for android"
     ],
-    "exposure_usd": 74.96,
+    "exposure_usd": 0.0,
     "evidence": [
       {
-        "claim": "Analyst flagged unusual device profile observed on multiple distinct payment cards",
-        "source": "graph",
-        "ref": "query:shared_device_clusters",
+        "claim": "Deterministic rule: prob=0.70, sources=1, confirmed=False, denied=False.",
+        "source": "llm_initial",
+        "ref": "gemini:DETERMINISTIC_RULES:decide_enough_to_act",
         "entity_ids": [
           "3478561",
-          "C13487-K1"
-        ]
-      },
-      {
-        "claim": "Device profile SM-G935F Build/NRD90M | Android 7.0 | chrome 62.0 for android | 1920x1080 linked to 3+ external accounts in the past 14 days",
-        "source": "graph",
-        "ref": "query:device_neighbors",
-        "entity_ids": [
-          "C00255-K1",
-          "C01935-K1",
-          "C03551-K2"
+          "C13487"
         ]
       }
     ],
     "similar_prior_cases": [
-      "CC-2649",
-      "CC-2971"
+      "CC-0003",
+      "CC-0009"
     ],
-    "summary": "Investigation for case HHG-014 concluded with verdict: FRAUD (pattern: undocumented). Assessed fraud probability: 0.92. Identified 1 affected transaction(s) with total exposure of $74.96 USD. Policy actions executed under rule compliance.",
+    "summary": "Investigation for case HHG-014 concluded with verdict: UNCERTAIN (pattern: none). Assessed fraud probability: 0.70. Total identified exposure: $0.00 USD. LLM model: DETERMINISTIC_RULES. MCP tool calls: 4. LLM tokens (measured): 0.",
+    "explanation": "Deterministic investigation of HHG-014 yielded verdict UNCERTAIN (pattern: none, fraud_probability: 0.70). Decision driven by rule-based policy engine without LLM reasoning.",
     "written_to_graph": true,
-    "graph_case_id": "CASE-2016-HHG-014"
+    "write_back_verified": true,
+    "graph_case_id": "BENCH-HHG-014"
   },
-  "evidence_requests": [],
+  "evidence_requests": [
+    {
+      "type": "customer_validation",
+      "asked_after_step": 3,
+      "assumed_response": "No response received within 24 hours."
+    }
+  ],
   "next_best_actions": {
     "initial": [
       {
-        "action": "BLOCK_CARD",
-        "route": "L1",
-        "reason": "Policy R2/R5: Confirmed unauthorized use; exposure $74.96"
-      },
-      {
-        "action": "CREATE_CASE",
+        "action": "MONITOR_CARD",
         "route": "auto",
-        "reason": "Policy R2: Open internal case and record in graph"
+        "reason": "Policy R1: Ambiguous signal; monitor pending evidence"
       },
       {
-        "action": "FILE_REPORT",
-        "route": "L2",
-        "reason": "Policy R2/R6/R9: High exposure or cross-card ring"
-      },
-      {
-        "action": "MONITOR_CONNECTED_CARDS",
+        "action": "VERIFY_WITH_CUSTOMER",
         "route": "auto",
-        "reason": "Policy R6: Monitor cards sharing device profile"
+        "reason": "Policy R1: Request customer validation before punitive action"
       }
     ],
     "final": [
       {
-        "action": "BLOCK_CARD",
-        "route": "L1",
-        "reason": "Policy R2/R5: Confirmed unauthorized use; exposure $74.96"
-      },
-      {
-        "action": "CREATE_CASE",
+        "action": "MONITOR_CARD",
         "route": "auto",
-        "reason": "Policy R2: Open internal case and record in graph"
+        "reason": "Policy R1: Ambiguous signal; monitor pending evidence"
       },
       {
-        "action": "FILE_REPORT",
-        "route": "L2",
-        "reason": "Policy R2/R6/R9: High exposure or cross-card ring"
-      },
-      {
-        "action": "MONITOR_CONNECTED_CARDS",
+        "action": "VERIFY_WITH_CUSTOMER",
         "route": "auto",
-        "reason": "Policy R6: Monitor cards sharing device profile"
+        "reason": "Policy R1: Request customer validation before punitive action"
       }
     ],
     "what_changed": "nothing"
   },
   "sar": {
-    "file": true,
-    "reason": "Policy R2/R6/R9: Confirmed unauthorized activity exceeding filing threshold or involving shared network ring.",
-    "narrative": "On 2016-11-22, card C13487-K1 belonging to customer C13487 was identified with unauthorized activity. Flagged transaction 3478561 for $74.96 exhibited pattern characteristics of undocumented. Investigation revealed 1 suspicious transaction(s) totaling $74.96 USD. Activity originated via online channel using device profile (SM-G935F Build/NRD90M | Android 7.0 | chrome 62.0 for android | 1920x1080). The cardholder did not authorize this activity and confirmed no legitimate relationship with the transactions. Evidence indicates intentional card compromise linked to 3 additional payment cards. The financial institution has blocked card C13487-K1 and placed all associated accounts under enhanced surveillance.",
-    "subjects": [
-      "C13487",
-      "C13487-K1",
-      "C00255-K1",
-      "C01935-K1",
-      "C03551-K2"
-    ],
-    "total_amount_usd": 74.96,
-    "activity_dates": [
-      "2016-11-22",
-      "2016-11-22"
-    ]
+    "file": false,
+    "reason": "Activity did not meet SAR threshold (amount < $5,000 and no qualifying cross-card ring under Policy R2/R6).",
+    "narrative": "",
+    "subjects": [],
+    "total_amount_usd": 0.0,
+    "activity_dates": []
   },
-  "stop_reason": "Policy stopping rule met: decisive fraud/legitimate threshold reached with multi-source supporting evidence.",
-  "tool_calls": 8,
-  "tokens": 3210,
-  "latency_s": 0.12
+  "stop_reason": "Insufficient evidence; case remains open pending customer response.",
+  "tool_calls": 4,
+  "tokens": 0,
+  "model": "DETERMINISTIC_RULES",
+  "llm_calls": [
+    {
+      "call_type": "decide_enough_to_act_initial",
+      "tokens": 0,
+      "latency_ms": 0.0,
+      "cached": false
+    },
+    {
+      "call_type": "decide_enough_to_act_post_evidence",
+      "tokens": 0,
+      "latency_ms": 0.0,
+      "cached": false
+    }
+  ],
+  "mcp_call_log": [
+    {
+      "case_id": "HHG-014",
+      "tool": "query_neighborhood",
+      "args_scrubbed": {
+        "txn_id": "3478561",
+        "depth": 2
+      },
+      "status": "SUCCESS",
+      "latency_ms": 0.02,
+      "timestamp": 1790238299.2294488,
+      "response_preview": "{\"nodes\": [], \"edges\": [], \"node_count\": 0, \"edge_count\": 0, \"summary\": \"Transaction 3478561 not in graph\"}",
+      "error": null
+    },
+    {
+      "case_id": "HHG-014",
+      "tool": "detect_device_reuse",
+      "args_scrubbed": {
+        "device_id": "SM-G935F Build/NRD90M",
+        "threshold": 2
+      },
+      "status": "SUCCESS",
+      "latency_ms": 0.02,
+      "timestamp": 1790238299.2337725,
+      "response_preview": "{\"device_id\": \"SM-G935F Build/NRD90M\", \"is_suspicious\": false, \"accounts\": [], \"cards\": [], \"reused_count\": 0}",
+      "error": null
+    },
+    {
+      "case_id": "HHG-014",
+      "tool": "get_temporal_velocity",
+      "args_scrubbed": {
+        "account_id": "C13487",
+        "window_seconds": 3600
+      },
+      "status": "SUCCESS",
+      "latency_ms": 0.02,
+      "timestamp": 1790238299.238368,
+      "response_preview": "{\"account_id\": \"C13487\", \"burst_detected\": false, \"burst_count\": 0, \"burst_volume\": 0.0}",
+      "error": null
+    },
+    {
+      "case_id": "HHG-014",
+      "tool": "write_back_case",
+      "args_scrubbed": {
+        "case_id": "BENCH-HHG-014",
+        "trigger_txn_id": "3478561",
+        "subject_customer_id": "C13487",
+        "risk_score": 0.7,
+        "confidence": 0.7,
+        "status": "RESOLVED",
+        "final_outcome": "CLEARED",
+        "fraud_patterns": [],
+        "findings": [
+          "Deterministic investigation of HHG-014 yielded verdict UNCERTAIN (pattern: none, fraud_probability: 0.70). Decision driven by rule-based policy engine without LLM reasoning."
+        ],
+        "actions": [
+          "MONITOR_CARD",
+          "VERIFY_WITH_CUSTOMER"
+        ]
+      },
+      "status": "SUCCESS",
+      "latency_ms": 0.12,
+      "timestamp": 1790238299.2435913,
+      "response_preview": "{\"success\": true, \"case_id\": \"BENCH-HHG-014\", \"vertex_type\": \"Case\", \"edges_created\": 2, \"status\": \"RESOLVED\"}",
+      "error": null
+    }
+  ],
+  "latency_s": 0.024
 }
