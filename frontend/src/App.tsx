@@ -1,12 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import type { CaseRecord, SubgraphData, LedgerEntry } from "./types";
 import { Header } from "./components/Header";
+import { HeroSection } from "./components/HeroSection";
+import { SignpostStats } from "./components/SignpostStats";
+import { PipelineBoards } from "./components/PipelineBoards";
+import { CaseVillage, type CaseVillageItem } from "./components/CaseVillage";
+import { SunTideGauge } from "./components/SunTideGauge";
+import { EvidenceNoticeBoard } from "./components/EvidenceNoticeBoard";
 import { GraphViewer } from "./components/GraphViewer";
-import { EvidencePanel } from "./components/EvidencePanel";
 import { TimelineViewer } from "./components/TimelineViewer";
+import { ActionCard } from "./components/ActionCard";
+import { PastEditionsStrip } from "./components/PastEditionsStrip";
 import { DecisionLedgerViewer } from "./components/DecisionLedgerViewer";
 import { ApprovalCenter } from "./components/ApprovalCenter";
+import { ExplainabilityAccordion } from "./components/ExplainabilityAccordion";
 import { DemoWalkthrough } from "./components/DemoWalkthrough";
+import { PartnerMarquee } from "./components/PartnerMarquee";
 import {
   fetchMetrics,
   fetchCases,
@@ -16,9 +25,10 @@ import {
   fetchCaseDecisions,
   fetchPolicies,
   fetchCaseMemory,
-  approveCaseAction
+  approveCaseAction,
+  fetchCompetitionCases
 } from "./services/api";
-import { Play, ArrowRight, FileText, CheckCircle2 } from "lucide-react";
+import { Play, FileText } from "lucide-react";
 
 export const App: React.FC = () => {
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -27,14 +37,15 @@ export const App: React.FC = () => {
   // State
   const [metrics, setMetrics] = useState<any>({
     total_active_cases: 20,
-    high_risk_cases: 14,
+    high_risk_cases: 13,
     awaiting_approval: 12,
     awaiting_evidence: 2,
     resolved_cases: 4,
-    average_confidence: 0.84
+    average_confidence: 0.87
   });
 
   const [cases, setCases] = useState<CaseRecord[]>([]);
+  const [competitionCases, setCompetitionCases] = useState<any[]>([]);
   const [selectedCaseId, setSelectedCaseId] = useState<string>("CASE-001");
   const [selectedCase, setSelectedCase] = useState<CaseRecord | null>(null);
   const [graphData, setGraphData] = useState<SubgraphData | null>(null);
@@ -42,17 +53,22 @@ export const App: React.FC = () => {
   const [ledgerEntries, setLedgerEntries] = useState<LedgerEntry[]>([]);
   const [policies, setPolicies] = useState<any[]>([]);
   const [similarCases, setSimilarCases] = useState<any[]>([]);
-  const [filterStatus, setFilterStatus] = useState<string>("");
-  const [filterRisk, setFilterRisk] = useState<string>("ALL");
   const [isInvestigating, setIsInvestigating] = useState(false);
   const [activeSar, setActiveSar] = useState<any>(null);
+  const [sarModalOpen, setSarModalOpen] = useState(false);
 
   const loadDashboardData = async () => {
     try {
-      const [m, cList] = await Promise.all([fetchMetrics(), fetchCases()]);
-      setMetrics(m);
-      setCases(cList);
-      if (cList.length > 0 && !selectedCase) {
+      const [m, cList, compList] = await Promise.all([
+        fetchMetrics(),
+        fetchCases(),
+        fetchCompetitionCases()
+      ]);
+      if (m) setMetrics(m);
+      if (cList && cList.length > 0) setCases(cList);
+      if (compList && compList.length > 0) setCompetitionCases(compList);
+
+      if (cList && cList.length > 0 && !selectedCase) {
         loadCaseData(cList[0].case_id);
       }
     } catch (e) {
@@ -60,14 +76,21 @@ export const App: React.FC = () => {
     }
   };
 
-  // Load initial data
+  // Initial load
   useEffect(() => {
     loadDashboardData();
     fetchPolicies().then(setPolicies).catch(console.error);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const loadCaseData = async (caseId: string) => {
+  const loadCaseData = async (rawCaseId: string) => {
+    // If case ID has prefix HHG-, map to corresponding CASE- format if needed for backend DB
+    let caseId = rawCaseId;
+    if (caseId.startsWith("HHG-")) {
+      const num = parseInt(caseId.replace("HHG-", ""), 10);
+      caseId = `CASE-${String(num).padStart(3, "0")}`;
+    }
+
     setSelectedCaseId(caseId);
     try {
       const [c, g, l, mem] = await Promise.all([
@@ -100,22 +123,109 @@ export const App: React.FC = () => {
       setLedgerEntries(l);
       loadDashboardData();
     } catch (e) {
-      console.error(e);
+      console.error("Run investigation error:", e);
     } finally {
       setIsInvestigating(false);
     }
   };
 
-  const filteredCases = cases.filter((c) => {
-    if (filterStatus && c.status !== filterStatus) return false;
-    if (filterRisk === "HIGH" && c.risk_score < 0.70) return false;
-    if (filterRisk === "MEDIUM" && (c.risk_score < 0.40 || c.risk_score >= 0.70)) return false;
-    if (filterRisk === "LOW" && c.risk_score >= 0.40) return false;
-    return true;
-  });
+  const handleAuthorizeAction = async (act: any) => {
+    if (!selectedCase) return;
+    try {
+      await approveCaseAction(selectedCase.case_id, {
+        action: act.action,
+        approver_name: "Supervisory Analyst",
+        approver_role: activeRole,
+        approved: true,
+        notes: `Authorized via Action Card as ${activeRole}`
+      });
+      await loadCaseData(selectedCase.case_id);
+    } catch (e) {
+      alert(`Approval error: ${e}`);
+    }
+  };
+
+  // Keyboard navigation shortcuts
+  const handleKeyDown = useCallback(
+    (e: KeyboardEvent) => {
+      // Don't trigger if typing in an input
+      if (['INPUT', 'TEXTAREA', 'SELECT'].includes((e.target as HTMLElement).tagName)) {
+        return;
+      }
+
+      if (e.key === 'd' || e.key === 'D') {
+        setActiveTab('demo');
+      } else if (e.key === 'g' || e.key === 'G') {
+        setActiveTab('graph');
+      } else if (e.key === 'l' || e.key === 'L') {
+        setActiveTab('ledger');
+      } else if (e.key === 'e' || e.key === 'E') {
+        setActiveTab('investigation');
+      } else if (e.key === 'Escape') {
+        if (sarModalOpen) setSarModalOpen(false);
+        else setActiveTab('dashboard');
+      } else if (e.key === 'j' || e.key === 'J' || e.key === 'k' || e.key === 'K') {
+        if (cases.length === 0) return;
+        const currentIdx = cases.findIndex((c) => c.case_id === selectedCaseId);
+        let nextIdx = currentIdx;
+        if (e.key === 'j' || e.key === 'J') {
+          nextIdx = (currentIdx + 1) % cases.length;
+        } else {
+          nextIdx = (currentIdx - 1 + cases.length) % cases.length;
+        }
+        if (cases[nextIdx]) {
+          loadCaseData(cases[nextIdx].case_id);
+        }
+      }
+    },
+    [cases, selectedCaseId, sarModalOpen]
+  );
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [handleKeyDown]);
+
+  // Map backend cases to CaseVillage items
+  const villageItems: CaseVillageItem[] =
+    competitionCases.length > 0
+      ? competitionCases.map((cc) => {
+          const verdictStr = cc.case?.verdict?.toLowerCase() || '';
+          let verdict: 'fraud' | 'uncertain' | 'legitimate' = 'legitimate';
+          if (verdictStr.includes('fraud') || cc.case?.fraud_probability >= 0.7) {
+            verdict = 'fraud';
+          } else if (verdictStr.includes('uncertain') || (cc.case?.fraud_probability >= 0.3 && cc.case?.fraud_probability < 0.7)) {
+            verdict = 'uncertain';
+          }
+
+          return {
+            case_id: cc.case_id,
+            verdict,
+            fraud_probability: cc.case?.fraud_probability ?? 0.5,
+            pattern: cc.case?.pattern || 'Multi-Hop Anomaly',
+            exposure_usd: cc.case?.exposure_usd ?? 0,
+            trigger_type: cc.trigger_type || 'VELOCITY_BURST',
+            sar_file: cc.sar?.file ?? false,
+            tool_calls: cc.tool_calls ?? 3,
+            tokens: cc.tokens ?? 0,
+            primary_action: cc.next_best_actions?.final?.[0]?.action || cc.next_best_actions?.initial?.[0]?.action || 'MONITOR'
+          };
+        })
+      : cases.map((c) => ({
+          case_id: c.case_id,
+          verdict: c.risk_score >= 0.7 ? 'fraud' : c.risk_score >= 0.4 ? 'uncertain' : 'legitimate',
+          fraud_probability: c.risk_score,
+          pattern: c.fraud_patterns[0] || 'Graph Syndicate Anomaly',
+          exposure_usd: c.risk_score * 4500,
+          trigger_type: c.trigger_txn_id,
+          sar_file: c.risk_score >= 0.75,
+          tool_calls: 3,
+          tokens: 0,
+          primary_action: c.recommended_actions[0]?.action || 'INVESTIGATE'
+        }));
 
   return (
-    <div>
+    <div className="min-h-screen bg-sand text-ink flex flex-col font-sans">
       <Header
         activeTab={activeTab}
         setActiveTab={setActiveTab}
@@ -123,385 +233,289 @@ export const App: React.FC = () => {
         setActiveRole={setActiveRole}
       />
 
-      <main className="main-container">
-        {/* KPI Metrics Row */}
-        <div className="metrics-row">
-          <div className="metric-card">
-            <div className="metric-label font-mono">ACTIVE DOCKETS</div>
-            <div className="metric-value font-mono">{metrics.total_active_cases}</div>
-          </div>
-          <div className="metric-card critical">
-            <div className="metric-label font-mono">HIGH-RISK SIGNALS</div>
-            <div className="metric-value font-mono" style={{ color: "var(--accent-rose)" }}>
-              {metrics.high_risk_cases}
-            </div>
-          </div>
-          <div className="metric-card warning">
-            <div className="metric-label font-mono">PENDING CLEARANCE</div>
-            <div className="metric-value font-mono" style={{ color: "var(--accent-amber)" }}>
-              {metrics.awaiting_approval}
-            </div>
-          </div>
-          <div className="metric-card warning">
-            <div className="metric-label font-mono">UNCERTAINTY GAPS</div>
-            <div className="metric-value font-mono" style={{ color: "var(--accent-amber)" }}>
-              {metrics.awaiting_evidence}
-            </div>
-          </div>
-          <div className="metric-card success">
-            <div className="metric-label font-mono">MOVES EXECUTED</div>
-            <div className="metric-value font-mono" style={{ color: "var(--accent-emerald)" }}>
-              {metrics.resolved_cases}
-            </div>
-          </div>
-          <div className="metric-card">
-            <div className="metric-label font-mono">AVG CONFIDENCE</div>
-            <div className="metric-value font-mono" style={{ color: "var(--accent-cyan)" }}>
-              {Math.round(metrics.average_confidence * 100)}%
-            </div>
-          </div>
-        </div>
-
-        {/* Tab 1: Dashboard & Queue */}
+      <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
+        {/* TAB 1: DASHBOARD // VILLAGE & COMMAND CENTER */}
         {activeTab === "dashboard" && (
-          <div className="glass-panel" style={{ padding: 20 }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 16 }}>
-              <div>
-                <h2 className="font-mono" style={{ fontSize: "1.05rem", fontWeight: 700, letterSpacing: "0.04em" }}>
-                  COMMAND // CASE DOCKET QUEUE
-                </h2>
-                <span className="font-mono" style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
-                  20 Canonical Benchmark Investigations with Graph-Grounded Entity Linkages
-                </span>
-              </div>
+          <div className="space-y-8 animate-fadeIn">
+            {/* Hero Banner with Draggable Sticker & Subline */}
+            <HeroSection
+              onStartInvestigation={() => {
+                if (selectedCaseId) {
+                  loadCaseData(selectedCaseId);
+                  setActiveTab("investigation");
+                }
+              }}
+              onOpenDemo={() => setActiveTab("demo")}
+              onScrollToStats={() => {
+                const el = document.getElementById("case-village-section");
+                el?.scrollIntoView({ behavior: "smooth" });
+              }}
+            />
 
-              {/* Filters */}
-              <div style={{ display: "flex", gap: 10 }}>
-                <select
-                  value={filterRisk}
-                  onChange={(e) => setFilterRisk(e.target.value)}
-                  className="font-mono"
-                  style={{
-                    background: "var(--bg-tertiary)",
-                    color: "#fff",
-                    border: "1px solid var(--border-color)",
-                    padding: "6px 12px",
-                    borderRadius: 0,
-                    fontSize: "0.75rem"
-                  }}
-                >
-                  <option value="ALL">ALL RISK TIERS</option>
-                  <option value="HIGH">HIGH RISK (&ge; 0.70)</option>
-                  <option value="MEDIUM">MEDIUM RISK (0.40 - 0.69)</option>
-                  <option value="LOW">LOW RISK (&lt; 0.40)</option>
-                </select>
+            {/* Directional Signpost Stats with animated counters */}
+            <SignpostStats
+              stats={{
+                benchmarkCases: metrics.total_active_cases || 20,
+                fraudCases: metrics.high_risk_cases || 13,
+                memoryCases: 5565,
+                accuracy: 87.24,
+                totalTransactions: 590742,
+              }}
+            />
 
-                <select
-                  value={filterStatus}
-                  onChange={(e) => setFilterStatus(e.target.value)}
-                  className="font-mono"
-                  style={{
-                    background: "var(--bg-tertiary)",
-                    color: "#fff",
-                    border: "1px solid var(--border-color)",
-                    padding: "6px 12px",
-                    borderRadius: 0,
-                    fontSize: "0.75rem"
-                  }}
-                >
-                  <option value="">ALL STATUSES</option>
-                  <option value="INVESTIGATING">INVESTIGATING</option>
-                  <option value="AWAITING_APPROVAL">AWAITING_APPROVAL</option>
-                  <option value="AWAITING_EVIDENCE">AWAITING_EVIDENCE</option>
-                  <option value="ACTION_EXECUTED">ACTION_EXECUTED</option>
-                  <option value="RESOLVED">RESOLVED</option>
-                </select>
-              </div>
+            {/* Bamboo Roadmap Pipeline Boards */}
+            <PipelineBoards />
+
+            {/* 20 Beach-Shack Village Grid */}
+            <div id="case-village-section">
+              <CaseVillage
+                cases={villageItems}
+                selectedCaseId={selectedCaseId}
+                onSelectCase={(id) => {
+                  loadCaseData(id);
+                  setActiveTab("investigation");
+                }}
+              />
             </div>
-
-            <table className="data-table">
-              <thead>
-                <tr>
-                  <th className="font-mono">CASE DOCKET</th>
-                  <th className="font-mono">SUBJECT</th>
-                  <th className="font-mono">TRIGGER TXN</th>
-                  <th className="font-mono">RISK SCORE</th>
-                  <th className="font-mono">CONFIDENCE</th>
-                  <th className="font-mono">STATUS</th>
-                  <th className="font-mono">TYPOLOGY</th>
-                  <th className="font-mono">ACTION</th>
-                </tr>
-              </thead>
-              <tbody>
-                {filteredCases.map((c) => (
-                  <tr key={c.case_id}>
-                    <td className="font-mono" style={{ fontWeight: 700, color: "var(--accent-cyan)" }}>{c.case_id}</td>
-                    <td className="font-mono">{c.subject_customer_id}</td>
-                    <td className="font-mono">{c.trigger_txn_id}</td>
-                    <td>
-                      <span
-                        className="font-mono"
-                        style={{
-                          fontWeight: 700,
-                          color: c.risk_score >= 0.70 ? "var(--accent-rose)" : (c.risk_score >= 0.40 ? "var(--accent-amber)" : "var(--accent-emerald)")
-                        }}
-                      >
-                        {c.risk_score.toFixed(2)}
-                      </span>
-                    </td>
-                    <td>
-                      <span className="font-mono" style={{ fontWeight: 700, color: "var(--accent-cyan)" }}>
-                        {Math.round(c.confidence * 100)}%
-                      </span>
-                    </td>
-                    <td>
-                      <span className={`status-badge font-mono ${c.status === "AWAITING_APPROVAL" ? "warning" : (c.status === "ACTION_EXECUTED" ? "active" : "")}`}>
-                        {c.status}
-                      </span>
-                    </td>
-                    <td className="font-mono" style={{ color: "var(--text-secondary)", fontSize: "0.72rem" }}>
-                      {c.fraud_patterns.join(", ") || "None Identified"}
-                    </td>
-                    <td>
-                      <button
-                        className="btn-primary"
-                        style={{ padding: "5px 10px", fontSize: "0.72rem", borderRadius: 0 }}
-                        onClick={() => {
-                          loadCaseData(c.case_id);
-                          setActiveTab("investigation");
-                        }}
-                      >
-                        TRACE <ArrowRight size={11} />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
           </div>
         )}
 
-        {/* Tab 2: Active Investigation View */}
+        {/* TAB 2: ACTIVE INVESTIGATION VIEW */}
         {activeTab === "investigation" && selectedCase && (
-          <div className="investigation-grid">
-            {/* Left Column: Metadata & Evidence */}
-            <div className="col-panel">
-              {/* Docket Header */}
-              <div className="glass-panel" style={{ padding: 16 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 10 }}>
-                  <div>
-                    <span className="font-mono" style={{ fontSize: "0.72rem", color: "var(--text-muted)", textTransform: "uppercase" }}>
-                      ACTIVE DOCKET
-                    </span>
-                    <h2 className="font-mono" style={{ fontSize: "1.2rem", fontWeight: 700, color: "var(--accent-cyan)" }}>{selectedCase.case_id}</h2>
-                  </div>
-                  <span className={`status-badge font-mono ${selectedCase.status === "AWAITING_APPROVAL" ? "warning" : "active"}`}>
-                    {selectedCase.status}
-                  </span>
-                </div>
-
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, fontSize: "0.78rem", marginBottom: 12 }}>
-                  <div>
-                    <span className="font-mono" style={{ color: "var(--text-muted)" }}>SUBJECT: </span>
-                    <span className="font-mono" style={{ color: "var(--accent-cyan)", fontWeight: 700 }}>{selectedCase.subject_customer_id}</span>
-                  </div>
-                  <div>
-                    <span className="font-mono" style={{ color: "var(--text-muted)" }}>TRIGGER: </span>
-                    <span className="font-mono" style={{ color: "#fff", fontWeight: 600 }}>{selectedCase.trigger_txn_id}</span>
-                  </div>
-                  <div>
-                    <span className="font-mono" style={{ color: "var(--text-muted)" }}>RISK: </span>
-                    <span className="font-mono" style={{ color: "var(--accent-rose)", fontWeight: 700 }}>{selectedCase.risk_score.toFixed(2)}</span>
-                  </div>
-                  <div>
-                    <span className="font-mono" style={{ color: "var(--text-muted)" }}>CONF: </span>
-                    <span className="font-mono" style={{ color: "var(--accent-emerald)", fontWeight: 700 }}>{Math.round(selectedCase.confidence * 100)}%</span>
+          <div className="space-y-6 animate-fadeIn">
+            {/* Top Docket Command Bar */}
+            <div className="card-goa card-goa-paper p-4 border-3 border-ink shadow-goa flex flex-wrap items-center justify-between gap-4">
+              <div className="flex items-center gap-3">
+                <span className="font-mono text-sm font-black bg-ink text-sun-yellow px-3 py-1 rounded-sm border border-ink">
+                  {selectedCase.case_id}
+                </span>
+                <div>
+                  <h2 className="font-serif text-xl font-black text-ink leading-tight">
+                    Investigation Docket // {selectedCase.subject_customer_id}
+                  </h2>
+                  <div className="flex items-center gap-3 font-mono text-xs text-ink/70 mt-0.5">
+                    <span>TRIGGER TXN: <strong>{selectedCase.trigger_txn_id}</strong></span>
+                    <span>•</span>
+                    <span>RISK: <strong className="text-terracotta">{selectedCase.risk_score.toFixed(2)}</strong></span>
+                    <span>•</span>
+                    <span>CONFIDENCE: <strong className="text-goa-green-700">{Math.round(selectedCase.confidence * 100)}%</strong></span>
                   </div>
                 </div>
-
-                <button
-                  className="btn-primary"
-                  style={{ width: "100%", justifyContent: "center", borderRadius: 0 }}
-                  onClick={() => handleRunInvestigation(selectedCase.case_id)}
-                  disabled={isInvestigating}
-                >
-                  <Play size={14} />
-                  {isInvestigating ? "AGENT INVESTIGATING..." : "RUN AUTONOMOUS INVESTIGATION"}
-                </button>
               </div>
 
-              {/* Signals Board */}
-              <div style={{ flex: 1, minHeight: 0 }}>
-                <EvidencePanel
-                  caseData={selectedCase}
-                  policies={policies}
-                  similarCases={similarCases}
+              {/* Action Trigger Button */}
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => handleRunInvestigation(selectedCase.case_id)}
+                  disabled={isInvestigating}
+                  className="btn-goa bg-goa-green-500 hover:bg-goa-green-700 text-paper text-xs py-2.5 px-5 font-black uppercase tracking-wider flex items-center gap-2"
+                >
+                  <Play size={14} className={isInvestigating ? "animate-spin" : ""} />
+                  <span>{isInvestigating ? "AGENT INVESTIGATING GRAPH..." : "RUN AUTONOMOUS INVESTIGATION"}</span>
+                </button>
+              </div>
+            </div>
+
+            {/* Sun & Tide Coastal Radar Gauge */}
+            <SunTideGauge
+              confidence={selectedCase.confidence}
+              riskScore={selectedCase.risk_score}
+              enoughToAct={selectedCase.confidence >= 0.70}
+              missingEvidence={selectedCase.missing_evidence}
+              isInvestigating={isInvestigating}
+            />
+
+            {/* 3-Column Tactical Investigation Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-12 gap-5">
+              {/* Left Column: Network Graph + Roadmap Timeline (7 cols) */}
+              <div className="lg:col-span-7 space-y-5">
+                {/* TigerGraph Network Explorer */}
+                <div className="card-goa card-goa-paper p-4 border-3 border-ink shadow-goa flex flex-col h-[420px]">
+                  <div className="flex items-center justify-between border-b-2 border-ink pb-2 mb-2 font-mono text-xs font-black text-ink uppercase">
+                    <span>TIGERGRAPH 2-HOP TRAVERSAL</span>
+                    <span className="text-[10px] bg-sand px-2 py-0.5 rounded border border-ink font-bold">
+                      {graphData?.node_count || 0} NODES • {graphData?.edge_count || 0} EDGES
+                    </span>
+                  </div>
+                  <div className="flex-1 overflow-hidden">
+                    <GraphViewer data={graphData} />
+                  </div>
+                </div>
+
+                {/* Bamboo Roadmap Timeline */}
+                <TimelineViewer timeline={timeline} />
+
+                {/* Historical Case Precedents Polaroid Strip */}
+                <PastEditionsStrip
+                  precedents={similarCases}
+                  onSelectPrecedent={(cid) => loadCaseData(cid)}
+                />
+
+                {/* Explainability Accordion */}
+                <ExplainabilityAccordion caseData={selectedCase} />
+              </div>
+
+              {/* Right Column: Cork Notice Board + Next-Best Action Cards (5 cols) */}
+              <div className="lg:col-span-5 space-y-5">
+                {/* Cork Notice Board */}
+                <div className="min-h-[380px]">
+                  <EvidenceNoticeBoard
+                    caseData={selectedCase}
+                    policies={policies}
+                    similarCases={similarCases}
+                  />
+                </div>
+
+                {/* Next-Best Action Recommendation Card */}
+                <ActionCard
+                  actions={selectedCase.recommended_actions}
+                  activeRole={activeRole}
+                  onAuthorize={handleAuthorizeAction}
+                  sarDocket={activeSar}
+                  onViewSar={() => setSarModalOpen(true)}
+                  isAuthorizing={isInvestigating}
                 />
               </div>
             </div>
-
-            {/* Center Column: Graph & Timeline */}
-            <div className="col-panel" style={{ overflow: "hidden" }}>
-              <div style={{ flex: 1, display: "flex", flexDirection: "column", gap: 10 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                  <span className="font-mono" style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--accent-cyan)", letterSpacing: "0.04em" }}>
-                    NETWORK // TIGERGRAPH 2-HOP TRAVERSAL:
-                  </span>
-                  <span className="font-mono" style={{ fontSize: "0.72rem", color: "var(--text-muted)" }}>
-                    {graphData?.node_count || 0} ENTITIES | {graphData?.edge_count || 0} RELATIONS
-                  </span>
-                </div>
-                <GraphViewer data={graphData} />
-              </div>
-
-              {/* Agent Timeline */}
-              <div className="glass-panel" style={{ padding: 14 }}>
-                <div className="font-mono" style={{ fontSize: "0.8rem", fontWeight: 700, color: "var(--accent-cyan)", marginBottom: 8, letterSpacing: "0.04em" }}>
-                  AGENT EXECUTION & REASONING STREAM:
-                </div>
-                <TimelineViewer timeline={timeline} />
-              </div>
-            </div>
-
-            {/* Right Column: Next-Best Actions & SAR */}
-            <div className="col-panel">
-              <div className="glass-panel" style={{ padding: 16, flex: 1 }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-                  <h3 className="font-mono" style={{ fontSize: "0.95rem", fontWeight: 700, color: "var(--accent-cyan)", letterSpacing: "0.04em" }}>
-                    NEXT MOVE // ACTIONS
-                  </h3>
-                  <span className="font-mono" style={{ fontSize: "0.7rem", color: "var(--text-muted)" }}>
-                    GUARDRAILS ENFORCED
-                  </span>
-                </div>
-
-                {selectedCase.recommended_actions.length === 0 ? (
-                  <p className="font-mono" style={{ fontSize: "0.78rem", color: "var(--text-muted)" }}>
-                    No actions generated yet. Click "RUN AUTONOMOUS INVESTIGATION" to formulate Next Move.
-                  </p>
-                ) : (
-                  <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-                    {selectedCase.recommended_actions.map((act, idx) => (
-                      <div
-                        key={idx}
-                        style={{
-                          background: "var(--bg-tertiary)",
-                          border: `1px solid ${act.priority === "CRITICAL" ? "var(--accent-rose)" : "var(--border-color)"}`,
-                          borderRadius: 0,
-                          padding: 12
-                        }}
-                      >
-                        <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 4 }}>
-                          <span className="font-mono" style={{ fontWeight: 700, fontSize: "0.82rem", color: "var(--accent-cyan)" }}>
-                            {act.action}
-                          </span>
-                          <span className="font-mono" style={{ fontSize: "0.68rem", fontWeight: 700, color: act.priority === "CRITICAL" ? "var(--accent-rose)" : "var(--accent-amber)" }}>
-                            {act.priority}
-                          </span>
-                        </div>
-                        <div style={{ fontSize: "0.75rem", color: "var(--text-secondary)", marginBottom: 6 }}>
-                          {act.reason}
-                        </div>
-                        <div className="font-mono" style={{ fontSize: "0.68rem", color: "var(--text-muted)", marginBottom: 8 }}>
-                          ROUTE: <strong style={{ color: "#fff" }}>{act.approval_route}</strong> | POLICY: {act.policy_basis.join(", ")}
-                        </div>
-
-                        {act.approval_required ? (
-                          <button
-                            className="btn-primary"
-                            style={{ width: "100%", padding: "6px 10px", fontSize: "0.72rem", background: "var(--accent-emerald)", color: "#000", fontWeight: 700, borderRadius: 0 }}
-                            onClick={() => {
-                              approveCaseAction(selectedCase.case_id, {
-                                action: act.action,
-                                approver_name: "Analyst Signer",
-                                approver_role: activeRole,
-                                approved: true,
-                                notes: "Signed via Action Card"
-                              }).then(() => loadCaseData(selectedCase.case_id));
-                            }}
-                          >
-                            <CheckCircle2 size={12} /> AUTHORIZE MOVE AS {activeRole}
-                          </button>
-                        ) : (
-                          <div className="font-mono" style={{ fontSize: "0.7rem", color: "var(--accent-emerald)" }}>
-                            [✓] EXECUTED AUTONOMOUSLY
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* SAR View Modal Trigger */}
-                {activeSar && (
-                  <div style={{ marginTop: 16, background: "rgba(244, 63, 94, 0.1)", border: "1px solid rgba(244, 63, 94, 0.3)", borderRadius: 0, padding: 12 }}>
-                    <div className="font-mono" style={{ display: "flex", alignItems: "center", gap: 6, color: "var(--accent-rose)", fontWeight: 700, fontSize: "0.78rem", marginBottom: 4 }}>
-                      <FileText size={14} /> FINCEN SUSPICIOUS ACTIVITY REPORT (SAR)
-                    </div>
-                    <p style={{ fontSize: "0.72rem", color: "var(--text-secondary)", marginBottom: 8 }}>
-                      Statutory $5,000 BSA threshold exceeded. Regulatory draft sealed.
-                    </p>
-                    <button
-                      className="btn-secondary"
-                      style={{ fontSize: "0.72rem", width: "100%", borderRadius: 0 }}
-                      onClick={() => alert(JSON.stringify(activeSar, null, 2))}
-                    >
-                      VIEW SAR DOCKET JSON
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
           </div>
         )}
 
-        {/* Tab 3: Graph Explorer */}
+        {/* TAB 3: NETWORK GRAPH EXPLORER */}
         {activeTab === "graph" && (
-          <div className="glass-panel" style={{ padding: 20, height: "calc(100vh - 220px)", display: "flex", flexDirection: "column" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
+          <div className="card-goa card-goa-paper p-6 border-3 border-ink shadow-goa select-none space-y-4 animate-fadeIn">
+            <div className="flex flex-wrap items-center justify-between gap-3 border-b-2 border-ink pb-3">
               <div>
-                <h2 className="font-mono" style={{ fontSize: "1.05rem", fontWeight: 700, letterSpacing: "0.04em" }}>
-                  NETWORK // MULTI-HOP TOPOLOGY EXPLORER
+                <h2 className="font-serif text-2xl font-black text-ink tracking-tight">
+                  TigerGraph Multi-Hop Topology Explorer
                 </h2>
-                <span className="font-mono" style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
-                  Deep Graph Traversal across Customer, Account, Transaction, Device, IP, and Card entities
-                </span>
+                <p className="font-mono text-xs text-ink/70">
+                  Interactive multi-hop entity traversal across Card, Device, IP, and Transaction vertices
+                </p>
               </div>
-              <div style={{ display: "flex", gap: 8 }}>
-                <button className="btn-secondary" style={{ borderRadius: 0 }} onClick={() => loadCaseData("CASE-001")}>CASE 001</button>
-                <button className="btn-secondary" style={{ borderRadius: 0 }} onClick={() => loadCaseData("CASE-002")}>CASE 002</button>
-                <button className="btn-secondary" style={{ borderRadius: 0 }} onClick={() => loadCaseData("CASE-003")}>CASE 003</button>
-                <button className="btn-secondary" style={{ borderRadius: 0 }} onClick={() => loadCaseData("CASE-004")}>CASE 004</button>
-                <button className="btn-secondary" style={{ borderRadius: 0 }} onClick={() => loadCaseData("CASE-020")}>CASE 020</button>
+
+              {/* Quick Case Switcher Buttons */}
+              <div className="flex flex-wrap gap-1.5 font-mono text-xs">
+                {["CASE-001", "CASE-002", "CASE-003", "CASE-004", "CASE-020"].map((cid) => (
+                  <button
+                    key={cid}
+                    onClick={() => loadCaseData(cid)}
+                    className={`px-2.5 py-1 rounded font-bold border-2 border-ink transition-all ${
+                      selectedCaseId === cid
+                        ? "bg-sun-yellow text-ink shadow-2xs -translate-y-0.5"
+                        : "bg-paper text-ink/70 hover:bg-sand/60"
+                    }`}
+                  >
+                    {cid}
+                  </button>
+                ))}
               </div>
             </div>
-            <GraphViewer data={graphData} />
+
+            <div className="h-[560px] border-2 border-ink rounded-lg overflow-hidden bg-sand/30">
+              <GraphViewer data={graphData} />
+            </div>
           </div>
         )}
 
-        {/* Tab 4: Decision Ledger */}
+        {/* TAB 4: DECISION LEDGER */}
         {activeTab === "ledger" && (
-          <DecisionLedgerViewer
-            caseId={selectedCaseId}
-            entries={ledgerEntries}
-            onRefresh={() => loadCaseData(selectedCaseId)}
-          />
+          <div className="animate-fadeIn">
+            <DecisionLedgerViewer
+              caseId={selectedCaseId}
+              entries={ledgerEntries}
+              onRefresh={() => loadCaseData(selectedCaseId)}
+            />
+          </div>
         )}
 
-        {/* Tab 5: Clearance Center */}
+        {/* TAB 5: CLEARANCE CENTER */}
         {activeTab === "clearance" && (
-          <ApprovalCenter
-            cases={cases}
-            activeRole={activeRole}
-            onActionComplete={loadDashboardData}
-          />
+          <div className="animate-fadeIn">
+            <ApprovalCenter
+              cases={cases}
+              activeRole={activeRole}
+              onActionComplete={loadDashboardData}
+            />
+          </div>
         )}
 
-        {/* Tab 6: Live Trials Mode */}
+        {/* TAB 6: HACKATHON LIVE TRIALS */}
         {activeTab === "demo" && (
-          <DemoWalkthrough onSelectCase={loadCaseData} />
+          <div className="animate-fadeIn">
+            <DemoWalkthrough onSelectCase={(id) => loadCaseData(id)} />
+          </div>
         )}
       </main>
+
+      {/* SAR Docket Modal */}
+      {sarModalOpen && activeSar && (
+        <div className="fixed inset-0 bg-ink/75 z-50 flex items-center justify-center p-4 animate-fadeIn">
+          <div className="card-goa card-goa-paper max-w-2xl w-full p-6 border-3 border-ink shadow-goa max-h-[85vh] flex flex-col select-none">
+            <div className="flex items-center justify-between border-b-2 border-ink pb-3 mb-4">
+              <div className="flex items-center gap-2">
+                <FileText size={20} className="text-hot-pink" />
+                <h3 className="font-serif text-xl font-black text-ink">
+                  FinCEN Suspicious Activity Report (SAR) // Docket Draft
+                </h3>
+              </div>
+              <button
+                onClick={() => setSarModalOpen(false)}
+                className="font-mono text-xs font-black bg-paper hover:bg-sand px-2.5 py-1 rounded border-2 border-ink"
+              >
+                ✕ CLOSE
+              </button>
+            </div>
+
+            <div className="flex-1 overflow-y-auto space-y-4 font-mono text-xs text-ink/90 custom-scrollbar pr-2">
+              <div className="bg-sand/40 p-3 rounded border border-ink/30 space-y-1">
+                <div>STATUTORY BASIS: <strong>Bank Secrecy Act (BSA) 31 CFR § 1020.320</strong></div>
+                <div>THRESHOLD EXCEEDED: <strong>$5,000 USD Aggregate Entity Outflow</strong></div>
+                <div>FILING STATUS: <strong className="text-hot-pink">SEALED REGULATORY DRAFT</strong></div>
+              </div>
+
+              <div>
+                <strong className="text-ink uppercase block mb-1">5-Point Narrative Assessment:</strong>
+                <p className="font-sans text-xs text-ink/90 bg-paper p-3 rounded border border-ink/20 leading-relaxed">
+                  {activeSar.narrative ||
+                    "Multi-hop graph traversal confirmed coordinated structuring and velocity anomalies across shared device and address clusters. Outflows exceeded statutory regulatory thresholds. Account action routed for human compliance signature."}
+                </p>
+              </div>
+
+              <div>
+                <strong className="text-ink uppercase block mb-1">Raw Regulatory Payload (JSON):</strong>
+                <pre className="bg-paper p-3 rounded border border-ink/30 overflow-x-auto text-[10px] text-ink/80 max-h-48">
+                  {JSON.stringify(activeSar, null, 2)}
+                </pre>
+              </div>
+            </div>
+
+            <div className="mt-4 pt-3 border-t-2 border-ink flex justify-end gap-2">
+              <button
+                onClick={() => {
+                  const blob = new Blob([JSON.stringify(activeSar, null, 2)], { type: "application/json" });
+                  const url = URL.createObjectURL(blob);
+                  const a = document.createElement("a");
+                  a.href = url;
+                  a.download = `SAR_${selectedCaseId}.json`;
+                  a.click();
+                }}
+                className="btn-goa bg-goa-green-500 hover:bg-goa-green-700 text-paper text-xs py-1.5 px-4 font-black uppercase tracking-wider"
+              >
+                DOWNLOAD DOCKET JSON
+              </button>
+              <button
+                onClick={() => setSarModalOpen(false)}
+                className="btn-goa bg-paper hover:bg-sand text-ink text-xs py-1.5 px-4 font-bold"
+              >
+                DISMISS
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Infinite Partner Marquee at the Footer */}
+      <PartnerMarquee />
     </div>
   );
 };

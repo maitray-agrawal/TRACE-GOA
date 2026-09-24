@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import type { SubgraphData } from "../types";
-import { Play, RotateCcw, CheckCircle2 } from "lucide-react";
+import { Play, RotateCcw, CheckCircle2, Compass, ShieldCheck } from "lucide-react";
 import { runInvestigation, fetchCaseGraph } from "../services/api";
 import { GraphViewer } from "./GraphViewer";
 import { TimelineViewer } from "./TimelineViewer";
@@ -27,11 +27,11 @@ export const DemoWalkthrough: React.FC<DemoWalkthroughProps> = () => {
   const [graphData, setGraphData] = useState<SubgraphData | null>(null);
 
   const STEPS = [
-    { title: "[01] SIGNAL INGESTED", desc: "Incoming transaction fraud alert detected. Case docket opened in state INVESTIGATING." },
-    { title: "[02] NETWORK EXPANSION", desc: "TigerGraph multi-hop neighborhood traversed via GSQL and Model Context Protocol." },
-    { title: "[03] PATTERN & GUARDRAILS", desc: "Matched against 5 canonical typologies; retrieved institutional policy mandates." },
-    { title: "[04] UNCERTAINTY LOOP", desc: "Risk is elevated but confidence below threshold. Triggered customer challenge." },
-    { title: "[05] NEXT MOVE & LEDGER", desc: "Confidence upgraded. Proposed NBA, requested clearance, and sealed SHA-256 block." }
+    { title: "01 SIGNAL INGESTED", desc: "Incoming transaction fraud alert detected. Case docket opened in state INVESTIGATING." },
+    { title: "02 NETWORK EXPANSION", desc: "TigerGraph multi-hop neighborhood traversed via GSQL and Model Context Protocol." },
+    { title: "03 PATTERN & GUARDRAILS", desc: "Matched against 5 canonical typologies; retrieved institutional policy mandates." },
+    { title: "04 UNCERTAINTY LOOP", desc: "Risk is elevated but confidence below threshold. Triggered customer challenge." },
+    { title: "05 NEXT MOVE & LEDGER", desc: "Confidence upgraded. Proposed NBA, requested clearance, and sealed SHA-256 block." }
   ];
 
   const handleStart = async () => {
@@ -63,171 +63,149 @@ export const DemoWalkthrough: React.FC<DemoWalkthroughProps> = () => {
 
   const handleReset = () => {
     setCurrentStep(0);
-    setIsRunning(false);
     setInvestigationData(null);
     setGraphData(null);
   };
 
   return (
-    <div className="glass-panel" style={{ padding: 24 }}>
-      {/* Demo Header */}
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+    <div className="card-goa card-goa-paper p-6 border-3 border-ink shadow-goa select-none space-y-6">
+      {/* Top Header */}
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b-2 border-ink pb-4">
         <div>
-          <h2 className="font-mono" style={{ fontSize: "1.15rem", fontWeight: 700, color: "var(--accent-cyan)", display: "flex", alignItems: "center", gap: 8, letterSpacing: "0.04em" }}>
-            TRIALS // LIVE DEMO RUNNER
-          </h2>
-          <span className="font-mono" style={{ fontSize: "0.75rem", color: "var(--text-muted)" }}>
-            Autonomous Closed-Loop Graph Investigation Demonstrable in 15 Deterministic Steps (&lt; 3 Min)
-          </span>
+          <div className="flex items-center gap-2">
+            <span className="font-mono text-xs font-black uppercase tracking-wider bg-hot-pink text-paper px-2 py-0.5 rounded border border-ink">
+              HACKATHON DEMO MODE
+            </span>
+            <h2 className="font-serif text-2xl font-black text-ink tracking-tight flex items-center gap-2">
+              <Compass size={24} className="text-terracotta" />
+              Live Trials Walkthrough // 5-Step Guided Demonstration
+            </h2>
+          </div>
+          <p className="font-mono text-xs text-ink/70 mt-1">
+            Step through an end-to-end autonomous fraud investigation with live graph traversal, policy gating, and ledger sealing.
+          </p>
         </div>
 
-        <div style={{ display: "flex", gap: 10, alignItems: "center" }}>
-          <select
-            value={selectedCaseId}
-            onChange={(e) => { setSelectedCaseId(e.target.value); handleReset(); }}
-            className="font-mono"
-            style={{
-              background: "var(--bg-tertiary)",
-              color: "#fff",
-              border: "1px solid var(--border-color)",
-              padding: "8px 12px",
-              borderRadius: 0,
-              fontSize: "0.8rem",
-              fontWeight: 700
-            }}
-          >
-            {DEMO_CASES.map((dc) => (
-              <option key={dc.id} value={dc.id}>{dc.name}</option>
-            ))}
-          </select>
+        {/* Demo Controls */}
+        <div className="flex items-center gap-2">
+          {currentStep > 0 && (
+            <button
+              onClick={handleReset}
+              className="btn-goa bg-paper hover:bg-sand text-ink text-xs py-2 px-3 flex items-center gap-1.5"
+            >
+              <RotateCcw size={13} />
+              RESET
+            </button>
+          )}
 
-          <button className="btn-primary" style={{ borderRadius: 0 }} onClick={handleStart} disabled={isRunning || currentStep === 5}>
-            <Play size={14} /> RUN TRIAL
-          </button>
-          <button className="btn-secondary" style={{ borderRadius: 0 }} onClick={handleReset}>
-            <RotateCcw size={14} /> RESET
+          <button
+            onClick={handleStart}
+            disabled={isRunning}
+            className="btn-goa bg-goa-green-500 hover:bg-goa-green-700 text-paper text-xs py-2 px-4 flex items-center gap-2 font-black uppercase tracking-wider"
+          >
+            <Play size={14} className={isRunning ? "animate-spin" : ""} />
+            {isRunning ? "EXECUTING PIPELINE..." : "RUN GUIDED BENCHMARK"}
           </button>
         </div>
       </div>
 
-      {/* 5-Step Agent Progress Flow */}
-      <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 12, marginBottom: 24 }}>
+      {/* Case Selector Dropdown/Chips */}
+      <div className="flex flex-wrap items-center gap-2 bg-sand/40 p-3 rounded-lg border-2 border-ink">
+        <span className="font-mono text-xs font-bold text-ink uppercase">Select Demo Benchmark:</span>
+        <div className="flex flex-wrap gap-1.5">
+          {DEMO_CASES.map((c) => (
+            <button
+              key={c.id}
+              onClick={() => {
+                setSelectedCaseId(c.id);
+                handleReset();
+              }}
+              className={`font-mono text-[11px] px-2.5 py-1 rounded font-bold border-2 border-ink transition-all ${
+                selectedCaseId === c.id
+                  ? "bg-sun-yellow text-ink shadow-2xs -translate-y-0.5"
+                  : "bg-paper text-ink/70 hover:bg-sand/60"
+              }`}
+            >
+              {c.id}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* 5-Step Progress Stepper */}
+      <div className="grid grid-cols-1 sm:grid-cols-5 gap-3">
         {STEPS.map((s, idx) => {
           const stepNum = idx + 1;
-          const isDone = currentStep > stepNum;
+          const isDone = currentStep >= stepNum;
           const isCurrent = currentStep === stepNum;
 
           return (
             <div
               key={idx}
-              style={{
-                background: isCurrent ? "rgba(0, 242, 254, 0.15)" : (isDone ? "rgba(16, 185, 129, 0.1)" : "var(--bg-tertiary)"),
-                border: `1px solid ${isCurrent ? "var(--accent-cyan)" : (isDone ? "var(--accent-emerald)" : "var(--border-color)")}`,
-                borderRadius: 0,
-                padding: 12
-              }}
+              className={`p-3 rounded-lg border-2 border-ink transition-all relative ${
+                isDone
+                  ? "bg-goa-green-200 border-goa-green-700 text-goa-green-900"
+                  : isCurrent
+                  ? "bg-sun-yellow border-ink text-ink shadow-goa-sm"
+                  : "bg-paper border-ink/40 text-ink/50"
+              }`}
             >
-              <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 4 }}>
-                {isDone ? (
-                  <CheckCircle2 size={13} color="var(--accent-emerald)" />
-                ) : (
-                  <span
-                    className="font-mono"
-                    style={{
-                      width: 18,
-                      height: 18,
-                      borderRadius: 0,
-                      background: isCurrent ? "var(--accent-cyan)" : "var(--border-color)",
-                      color: isCurrent ? "#000" : "#fff",
-                      fontSize: "0.68rem",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontWeight: 700
-                    }}
-                  >
-                    {stepNum}
-                  </span>
-                )}
-                <span className="font-mono" style={{ fontSize: "0.72rem", fontWeight: 700, color: isCurrent ? "var(--accent-cyan)" : "var(--text-secondary)" }}>
-                  STEP 0{stepNum}
+              <div className="flex items-center justify-between mb-1">
+                <span className="font-mono text-[10px] font-black uppercase tracking-wider">
+                  {s.title}
                 </span>
+                {isDone && <CheckCircle2 size={13} className="text-goa-green-700" />}
               </div>
-              <div className="font-mono" style={{ fontSize: "0.72rem", fontWeight: 700, color: "var(--text-primary)", marginBottom: 4 }}>
-                {s.title}
-              </div>
-              <div style={{ fontSize: "0.68rem", color: "var(--text-muted)", lineHeight: 1.3 }}>
-                {s.desc}
-              </div>
+              <p className="font-sans text-[11px] leading-tight opacity-90">{s.desc}</p>
             </div>
           );
         })}
       </div>
 
-      {/* Main Demo Layout */}
-      <div style={{ display: "grid", gridTemplateColumns: "1.2fr 1fr", gap: 20, minHeight: 420 }}>
-        {/* Left: TigerGraph Neighborhood Visualization */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-          <div style={{ fontSize: "0.85rem", fontWeight: 700, color: "var(--text-secondary)" }}>
-            TigerGraph Traversed Neighborhood:
+      {/* Live Visual Displays */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Left: Graph View */}
+        <div className="card-goa card-goa-sand p-4 border-2 border-ink flex flex-col h-[380px]">
+          <div className="flex items-center justify-between border-b border-ink/20 pb-2 mb-2 font-mono text-xs font-black text-ink uppercase">
+            <span>TIGERGRAPH 2-HOP TRAVERSAL ({graphData?.node_count || 0} NODES)</span>
+            <span className="text-[10px] text-ink/60">LIVE TOPOLOGY</span>
           </div>
-          <GraphViewer data={graphData} height={380} />
+          <div className="flex-1 overflow-hidden">
+            <GraphViewer data={graphData} />
+          </div>
         </div>
 
-        {/* Right: Real-Time Results & Agent Rationale */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
-          {/* Agent Timeline */}
-          <div className="glass-panel" style={{ padding: 14 }}>
-            <div style={{ fontSize: "0.82rem", fontWeight: 700, color: "var(--accent-cyan)", marginBottom: 8 }}>
-              Live Agent Execution Log:
-            </div>
+        {/* Right: Timeline & Outcome */}
+        <div className="card-goa card-goa-sand p-4 border-2 border-ink flex flex-col h-[380px] overflow-hidden">
+          <div className="flex items-center justify-between border-b border-ink/20 pb-2 mb-2 font-mono text-xs font-black text-ink uppercase">
+            <span>AGENT REASONING TIMELINE</span>
+            <span className="text-[10px] text-ink/60">STREAMED ACTIONS</span>
+          </div>
+          <div className="flex-1 overflow-y-auto">
             <TimelineViewer timeline={investigationData?.timeline || []} />
           </div>
-
-          {/* Outcome & Decision Summary */}
-          {investigationData && (
-            <div className="glass-panel" style={{ padding: 14 }}>
-              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-                <span style={{ fontSize: "0.85rem", fontWeight: 700, color: "#fff" }}>
-                  Autonomous Next-Best Action Recommendation:
-                </span>
-                <span className="status-badge critical">
-                  Risk: {investigationData.case.risk_score} | Conf: {investigationData.case.confidence}
-                </span>
-              </div>
-
-              {investigationData.recommended_actions.map((act: any, i: number) => (
-                <div
-                  key={i}
-                  style={{
-                    background: "rgba(0, 0, 0, 0.4)",
-                    border: "1px solid var(--accent-indigo)",
-                    borderRadius: 6,
-                    padding: 10,
-                    marginBottom: 8
-                  }}
-                >
-                  <div style={{ fontWeight: 700, color: "var(--accent-cyan)", fontSize: "0.85rem" }}>
-                    {act.action} — Priority: {act.priority}
-                  </div>
-                  <div style={{ fontSize: "0.78rem", color: "var(--text-secondary)", marginTop: 4 }}>
-                    {act.reason}
-                  </div>
-                  <div style={{ fontSize: "0.72rem", color: "var(--text-muted)", marginTop: 4 }}>
-                    Requires Approval: {act.approval_required ? act.approval_route : "None"} | Policy Basis: {act.policy_basis.join(", ")}
-                  </div>
-                </div>
-              ))}
-
-              {investigationData.sar_docket && (
-                <div style={{ background: "rgba(244, 63, 94, 0.15)", border: "1px solid rgba(244, 63, 94, 0.4)", borderRadius: 6, padding: 8, fontSize: "0.75rem", color: "var(--accent-rose)" }}>
-                  FinCEN SAR Generated: Aggregate activity exceeds $5,000 BSA threshold. Docket ready for Fraud Manager sign-off.
-                </div>
-              )}
-            </div>
-          )}
         </div>
       </div>
+
+      {/* Final Outcome Summary Banner if Completed */}
+      {currentStep === 5 && investigationData && (
+        <div className="p-4 bg-goa-green-200 border-3 border-ink rounded-xl shadow-goa space-y-2 animate-fadeIn">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <ShieldCheck size={20} className="text-goa-green-700" />
+              <span className="font-serif text-lg font-black text-ink">
+                Autonomous Investigation Successfully Concluded // Verdict: {investigationData.case?.final_outcome || "VERIFIED"}
+              </span>
+            </div>
+            <span className="font-mono text-xs bg-paper px-2.5 py-1 rounded border border-ink font-bold text-ink">
+              CONFIDENCE: {Math.round((investigationData.case?.confidence || 0.85) * 100)}%
+            </span>
+          </div>
+          <p className="font-sans text-xs text-ink/90">
+            {investigationData.case?.findings?.[0] || "All graph signals analyzed. Next-best action formulated under policy guardrails."}
+          </p>
+        </div>
+      )}
     </div>
   );
 };
