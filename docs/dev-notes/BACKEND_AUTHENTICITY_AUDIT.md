@@ -29,7 +29,7 @@ TRACE//GOA was subjected to an exhaustive codebase forensic audit. While the rep
 | **Approval Engine (RBAC)** | **REAL** | 3-tier human-in-the-loop authorization (`ANALYST [L1]`, `SENIOR ANALYST [L2]`, `FRAUD MANAGER [L3]`). |
 | **Case Write-Back** | **MISSING** | Cases are stored in SQLite (`cases.db`), but NEVER written back to TigerGraph vertices (`Case`) or edges (`FLAGGED_IN_CASE`, `INVOLVES_ENTITY`). |
 | **Case Memory** | **REAL** | SQLite database with similarity search across historical fraud dockets. |
-| **Decision Ledger** | **REAL** | SHA-256 Merkle-style hash-chained block audit trail with cryptographic tamper detection. |
+| **Decision Ledger** | **REAL** | SHA-256 hash-chained block audit trail with cryptographic tamper detection. |
 | **Benchmark Pipeline** | **PARTIALLY REAL** | Generates `outputs/case_XX/`, but script name differs from spec (`run_benchmarks.py` vs `run_benchmark.py`), and consolidated `results.json`, `results.csv`, `report.md` are missing. |
 
 ---
@@ -52,7 +52,7 @@ TRACE//GOA was subjected to an exhaustive codebase forensic audit. While the rep
 | **Approval** | `REAL` | `ApprovalEngine` enforces `ANALYST [L1]`, `SENIOR_ANALYST [L2]`, `FRAUD_MANAGER [L3]` and prevents unauthorized role execution. | None. Fully functional and covered by unit tests. | Maintain current RBAC and add edge-case failure tests. |
 | **Case Write-Back** | `MISSING` | Schema defines `Case` vertex and `FLAGGED_IN_CASE` / `INVOLVES_ENTITY` / `IDENTIFIED_PATTERN` edges, but client has no write method. | Cases are never written to TigerGraph! Investigation findings remain trapped in SQLite and memory. | Implement `write_back_case()` on `BaseGraphClient`, `InMemoryTigerGraphSimulator`, and `TigerGraphRESTClient`. Call upon case resolution. |
 | **Memory** | `REAL` | SQLite database `case_memory.db` with keyword/topology similarity search. | Embeddings are simple string matches rather than semantic dense vector embeddings. | Add vector representation fallback (TF-IDF / hashed n-gram cosine similarity) for robust cross-typology retrieval. |
-| **Ledger** | `REAL` | SHA-256 Merkle-style hash-chained block ledger with `verify_case_ledger()`. | None. Fully functional, tested for tamper detection. | Maintain current cryptographic guarantees. |
+| **Ledger** | `REAL` | SHA-256 hash-chained block ledger with `verify_case_ledger()`. | None. Fully functional, tested for tamper detection. | Maintain current cryptographic guarantees. |
 | **Benchmark** | `PARTIALLY REAL` | `scripts/benchmark/run_benchmarks.py` processes 20 cases and outputs individual JSON files in `outputs/case_XX/`. | Missing consolidated `outputs/benchmark/results.json`, `results.csv`, `report.md`. Script is named `run_benchmarks.py` instead of `run_benchmark.py`. | Implement `scripts/benchmark/run_benchmark.py` generating `results.json`, `results.csv`, and `report.md` with pre/post evidence comparisons. |
 
 ---

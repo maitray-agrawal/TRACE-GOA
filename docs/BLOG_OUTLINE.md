@@ -51,7 +51,7 @@
 - **Role-Based Approvals (RBAC)**:
   - Analyst, Senior Analyst, and Fraud Manager authorization tiers.
 - **SHA-256 Chained Decision Ledger**:
-  - Every agent thought, tool call, policy evaluation, and supervisor sign-off produces a Merkle-chained block.
+  - Every agent thought, tool call, policy evaluation, and supervisor sign-off produces a SHA-256 hash-chained block.
   - Cryptographic verification endpoint guarantees mathematical proof against retrospective whitewashing.
 - **Persistent Case Memory**:
   - Closed cases stored with topological summaries, enabling historical similarity search for future dockets.
