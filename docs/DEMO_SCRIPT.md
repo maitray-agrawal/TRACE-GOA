@@ -1,5 +1,6 @@
 # TRACE//GOA — Judge Demo Script & Presentation Guide
 
+**Recorded Video Walkthrough**: [https://youtu.be/ZbGbMlKf6bQ](https://youtu.be/ZbGbMlKf6bQ)  
 **Time Target**: 3 to 5 Minutes  
 **Focus**: 6 Judging Criteria (Investigation Accuracy, NBA Flips, TigerGraph Algorithms, Innovation, Explainability, Demo Polish)
 

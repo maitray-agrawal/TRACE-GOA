@@ -4,6 +4,10 @@
 
 *Hacker House Goa 2026 — Submission Walkthrough*
 
+**Published on Hashnode**: [https://tracegoa.hashnode.dev/trace-goa](https://tracegoa.hashnode.dev/trace-goa)  
+**Video Demo Walkthrough**: [https://youtu.be/ZbGbMlKf6bQ](https://youtu.be/ZbGbMlKf6bQ)  
+**GitHub Repository**: [https://github.com/maitray-agrawal/TRACE-GOA](https://github.com/maitray-agrawal/TRACE-GOA)
+
 ---
 
 ### What We Built

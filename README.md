@@ -6,7 +6,8 @@
 [![Python: 3.11+](https://img.shields.io/badge/Python-3.11%2B-blue.svg)](https://www.python.org/)
 [![Node: 20+](https://img.shields.io/badge/Node-20%2B-green.svg)](https://nodejs.org/)
 [![Tests: 43 Passing](https://img.shields.io/badge/Tests-43%20Passing-brightgreen.svg)](tests/)
-[![Code Style: Clean](https://img.shields.io/badge/Linter-0%20Warnings-success.svg)](frontend/)
+[![YouTube Demo](https://img.shields.io/badge/YouTube-Watch%20Demo-red?logo=youtube)](https://youtu.be/ZbGbMlKf6bQ)
+[![Hashnode Blog](https://img.shields.io/badge/Hashnode-Read%20Blog-blue?logo=hashnode)](https://tracegoa.hashnode.dev/trace-goa)
 
 ---
 
@@ -29,12 +30,14 @@
 
 ---
 
-## Submission Links
+## Submission & Demo Links
 
-- **Live Code Repository**: [github.com/maitray-agrawal/TRACE-GOA](https://github.com/maitray-agrawal/TRACE-GOA)
-- **Demo Video (3–5 min)**: `TODO-add-after-publish`
-- **Technical Deep-Dive Blog Post**: `TODO-add-after-publish` (Full draft in [`docs/BLOG.md`](docs/BLOG.md))
-- **Social Announcement (X / LinkedIn)**: `TODO-add-after-publish` (Draft in [`docs/SOCIAL_POST.md`](docs/SOCIAL_POST.md))
+- 🎥 **YouTube Video Walkthrough (Demo)**: [https://youtu.be/ZbGbMlKf6bQ](https://youtu.be/ZbGbMlKf6bQ)
+- 📝 **Technical Blog Post (Hashnode)**: [https://tracegoa.hashnode.dev/trace-goa](https://tracegoa.hashnode.dev/trace-goa)
+- 📂 **Official Public Cases Submission**: [`/cases/`](cases/) (`cases/HHG-001.json` – `cases/HHG-020.json`)
+- 💻 **Live Code Repository**: [https://github.com/maitray-agrawal/TRACE-GOA](https://github.com/maitray-agrawal/TRACE-GOA)
+- 📄 **Technical Article Draft (Repo)**: [`docs/BLOG.md`](docs/BLOG.md)
+- 🎯 **Judging Scorecard Mapping**: [`docs/JUDGE_SCORECARD.md`](docs/JUDGE_SCORECARD.md)
 
 ---
 

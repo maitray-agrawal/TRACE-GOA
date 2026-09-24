@@ -1,5 +1,5 @@
 import React from "react";
-import { Terminal, Network, ShieldCheck, Activity, SlidersHorizontal, Play } from "lucide-react";
+import { Terminal, Network, ShieldCheck, Activity, SlidersHorizontal, Play, ExternalLink, Video } from "lucide-react";
 import { fetchDiagnostics } from "../services/api";
 
 interface HeaderProps {
@@ -123,18 +123,40 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
           </nav>
 
-          {/* Right: RBAC Role Selector Dropdown */}
-          <div className="flex items-center gap-1 bg-sand border-2 border-ink rounded-md px-2.5 py-1 shadow-xs shrink-0">
-            <span className="text-[10px] font-mono font-black text-ink/70 uppercase">ROLE:</span>
-            <select
-              value={activeRole}
-              onChange={(e) => setActiveRole(e.target.value)}
-              className="bg-transparent text-ink font-mono text-xs font-bold border-none outline-none cursor-pointer"
+          {/* Right: Public Links & RBAC Role Selector Dropdown */}
+          <div className="flex items-center gap-2">
+            <a
+              href="https://youtu.be/ZbGbMlKf6bQ"
+              target="_blank"
+              rel="noreferrer"
+              className="hidden sm:inline-flex items-center gap-1 bg-terracotta hover:bg-hot-pink text-paper text-[10px] font-mono font-black uppercase px-2 py-1 rounded border-2 border-ink shadow-xs transition-colors"
+              title="Watch 3-minute Video Demo on YouTube"
             >
-              <option value="ANALYST">ANALYST [L1]</option>
-              <option value="SENIOR_ANALYST">SENIOR ANALYST [L2]</option>
-              <option value="FRAUD_MANAGER">FRAUD MANAGER [L3]</option>
-            </select>
+              <Video size={11} /> VIDEO DEMO <ExternalLink size={9} />
+            </a>
+
+            <a
+              href="https://tracegoa.hashnode.dev/trace-goa"
+              target="_blank"
+              rel="noreferrer"
+              className="hidden sm:inline-flex items-center gap-1 bg-sea-blue hover:bg-goa-green-500 text-paper text-[10px] font-mono font-black uppercase px-2 py-1 rounded border-2 border-ink shadow-xs transition-colors"
+              title="Read Technical Deep-Dive on Hashnode"
+            >
+              BLOG <ExternalLink size={9} />
+            </a>
+
+            <div className="flex items-center gap-1 bg-sand border-2 border-ink rounded-md px-2.5 py-1 shadow-xs shrink-0">
+              <span className="text-[10px] font-mono font-black text-ink/70 uppercase">ROLE:</span>
+              <select
+                value={activeRole}
+                onChange={(e) => setActiveRole(e.target.value)}
+                className="bg-transparent text-ink font-mono text-xs font-bold border-none outline-none cursor-pointer"
+              >
+                <option value="ANALYST">ANALYST [L1]</option>
+                <option value="SENIOR_ANALYST">SENIOR ANALYST [L2]</option>
+                <option value="FRAUD_MANAGER">FRAUD MANAGER [L3]</option>
+              </select>
+            </div>
           </div>
         </div>
 
