@@ -12,6 +12,7 @@ import pytest
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(BASE_DIR))
 DATA_DIR = BASE_DIR / "data" / "competition"
 
 def test_benchmark_inputs_have_no_ground_truth_labels():
@@ -41,3 +42,20 @@ def test_benchmark_cases_are_in_exam_period():
             opened = row["opened_at"]
             assert opened >= "2016-11-01", f"Benchmark case {row['case_id']} opened outside exam period: {opened}"
             assert opened <= "2016-12-31 23:59:59"
+
+
+def test_pattern_detector_signature_has_no_forbidden_columns():
+    """Verify detect_pattern receives only exposure, n_txns, analyst_notes (no outcome or graph ground truth)."""
+    import inspect
+    from scripts.analysis.backtest import detect_pattern, FORBIDDEN_COLS
+
+    sig = inspect.signature(detect_pattern)
+    param_names = set(sig.parameters.keys())
+
+    # None of the forbidden columns should ever be parameter names to the detector
+    for forbidden in FORBIDDEN_COLS:
+        assert forbidden not in param_names, f"Forbidden feature '{forbidden}' found in detector signature: {param_names}"
+
+    # Expected exact parameters
+    assert param_names == {"exposure", "n_txns", "notes"}
+
