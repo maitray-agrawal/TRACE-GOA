@@ -1,14 +1,41 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { PalmTree } from '../art/PalmTree';
+import { fetchDiagnostics } from '../services/api';
 
 export const PartnerMarquee: React.FC<{ className?: string }> = ({ className = '' }) => {
+  const [diag, setDiag] = useState<any>({
+    graph_engine: 'SIMULATOR',
+    mcp: 'LOCAL_DISPATCHER',
+    llm: 'DETERMINISTIC_RULES',
+    dataset: 'HHGOA_IEEE',
+    ledger: 'ACTIVE'
+  });
+
+  useEffect(() => {
+    fetchDiagnostics().then(setDiag).catch(console.error);
+  }, []);
+
+  const isTigerGraphLive = diag.graph_engine === 'TIGERGRAPH' || diag.graph_engine === 'TIGERGRAPH (LIVE)';
+  const isGeminiLive = Boolean(diag.llm && diag.llm.toUpperCase().includes('GEMINI'));
+  const isOfficialMcp = diag.mcp === 'OFFICIAL';
+
   const partners = [
-    { label: 'TIGERGRAPH GRAPH DATABASE', tag: 'GRAPH_ENGINE' },
+    {
+      label: isTigerGraphLive ? 'TIGERGRAPH LIVE GRAPH DATABASE' : 'TIGERGRAPH GRAPH SIMULATOR',
+      tag: isTigerGraphLive ? 'LIVE_GRAPH' : 'SIMULATOR'
+    },
     { label: 'HACKER HOUSE GOA 2026', tag: 'HHGOA' },
-    { label: 'GOOGLE CLOUD GEMINI 2.5', tag: 'REASONING_LLM' },
-    { label: 'MODEL CONTEXT PROTOCOL (MCP)', tag: 'TOOL_DISPATCH' },
-    { label: 'FINCEN REGULATORY BSA', tag: 'SAR_REPORTING' },
-    { label: 'SHA-256 AUDIT LEDGER', tag: 'GOVERNANCE' },
+    {
+      label: isGeminiLive ? `GOOGLE GEMINI (${diag.llm})` : 'DETERMINISTIC REASONING ENGINE',
+      tag: isGeminiLive ? 'REASONING_LLM' : 'POLICY_ENGINE'
+    },
+    {
+      label: isOfficialMcp ? 'TIGERGRAPH MCP SERVER' : 'MCP LOCAL DISPATCHER',
+      tag: isOfficialMcp ? 'OFFICIAL_MCP' : 'LOCAL_MCP'
+    },
+    { label: 'SHA-256 HASH-CHAINED AUDIT LEDGER', tag: 'GOVERNANCE' },
+    { label: 'SAR REGULATORY COMPLIANCE GATEWAY', tag: 'POLICY_R1' },
+    { label: 'GRAPHRAG CONTEXT SYNTHESIZER', tag: 'KNOWLEDGE_BASE' }
   ];
 
   return (
