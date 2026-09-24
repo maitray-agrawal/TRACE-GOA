@@ -250,9 +250,9 @@ def list_competition_cases() -> List[Dict[str, Any]]:
     from pathlib import Path
     import json
     base_dir = Path(__file__).resolve().parent.parent.parent.parent
-    cases_dir = base_dir / "cases"
+    cases_dir = base_dir / "outputs" / "cases"
     if not cases_dir.exists():
-        cases_dir = base_dir / "outputs" / "cases"
+        cases_dir = base_dir / "cases"
 
     results = []
     for i in range(1, 21):

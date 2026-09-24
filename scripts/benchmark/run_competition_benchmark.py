@@ -32,10 +32,9 @@ from dotenv import load_dotenv
 load_dotenv(BASE_DIR / ".env")
 
 DATA_DIR = BASE_DIR / "data" / "competition"
-CASES_DIR = BASE_DIR / "cases"
 OUTPUTS_CASES_DIR = BASE_DIR / "outputs" / "cases"
-CASES_DIR.mkdir(parents=True, exist_ok=True)
 OUTPUTS_CASES_DIR.mkdir(parents=True, exist_ok=True)
+CASES_DIR = OUTPUTS_CASES_DIR
 
 
 # ─── Evidence scenarios ─────────────────────────────────────────────────────
@@ -632,8 +631,8 @@ def run_all(test_mode: bool = False, sim_graph: bool = False):
             continue
 
         # Save outputs
-        for outpath in (CASES_DIR / f"{case_id}.json", OUTPUTS_CASES_DIR / f"{case_id}.json"):
-            outpath.write_text(json.dumps(result, indent=2), encoding="utf-8")
+        outpath = OUTPUTS_CASES_DIR / f"{case_id}.json"
+        outpath.write_text(json.dumps(result, indent=2), encoding="utf-8")
 
         v = result["case"]["verdict"]
         verdicts[v] = verdicts.get(v, 0) + 1

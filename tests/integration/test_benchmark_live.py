@@ -8,8 +8,8 @@ import pytest
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
-CASES_DIR = BASE_DIR / "cases"
-OUTPUTS_DIR = BASE_DIR / "outputs" / "cases"
+CASES_DIR = BASE_DIR / "outputs" / "cases"
+OUTPUTS_DIR = CASES_DIR
 
 
 def test_all_twenty_benchmark_cases_exist_and_valid():

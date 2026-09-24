@@ -48,9 +48,9 @@ def sync_competition_cases(db_path: str = None):
             pass
 
     # Populate the 20 official competition HHG cases
-    cases_dir = BASE_DIR / "cases"
+    cases_dir = BASE_DIR / "outputs" / "cases"
     if not cases_dir.exists():
-        cases_dir = BASE_DIR / "outputs" / "cases"
+        cases_dir = BASE_DIR / "cases"
 
     for i in range(1, 21):
         cid = f"HHG-{i:03d}"
